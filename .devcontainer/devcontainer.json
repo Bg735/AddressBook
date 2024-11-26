@@ -1,8 +1,7 @@
 {
     "name": "IdS-Codespace",
-    "image": "mcr.microsoft.com/vscode/devcontainers/java:0-8",
+    "image": "mcr.microsoft.com/devcontainers/java:dev-21",
     "features": {
-        "doxygen": "latest",
         "ghcr.io/devcontainers/features/java:1": {
             "installMaven": true
         }
@@ -15,5 +14,6 @@
                 "eamodio.gitlens"
             ]
         }
-    }
+    },
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y doxygen"
 }

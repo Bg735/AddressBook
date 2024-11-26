@@ -5,3 +5,11 @@
 > Lanzara Francesco  
 > Melillo Maurizio  
 > Palmisano Elettra
+
+
+Nel progetto si fa utilizzo dell'API:   
+https://github.com/mangstadt/ez-vcard   
+per facilitare la manipolazione di file in formato VCard.      
+
+La documentazione è disponibile al seguente link:   
+https://mangstadt.github.io/ez-vcard/javadocs/latest/index.html
