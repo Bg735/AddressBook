@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * JavaFX App
  */
-public class App extends Application {
+public class AddressBookApplication extends Application {
 
     private static Scene scene;
 
@@ -19,6 +19,9 @@ public class App extends Application {
         scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
+        //loadFromFile()
+        //foreach(profile){cancella i vecchi dagli eliminati di recente}
+        //verifica che i path esistono e li crea in caso contrario
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -26,7 +29,7 @@ public class App extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + "View.fxml"));
         try { 
             fxmlLoader.setController(Class.forName("it.unisa.diem."+fxml.substring(0, 1).toUpperCase() + fxml.substring(1)+"Controller").getConstructor().newInstance());
         } catch (Exception e) {
