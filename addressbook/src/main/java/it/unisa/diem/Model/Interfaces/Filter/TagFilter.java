@@ -1,6 +1,5 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
-import java.util.Set;
 import it.unisa.diem.Model.Contact;
 
 public class TagFilter extends FilterDecorator {
@@ -9,8 +8,8 @@ public class TagFilter extends FilterDecorator {
     }
 
     @Override
-    public Set<Contact> filter(Set<Contact> contacts, String string) {
-        // Implement tag filtering logic here
-        return super.filter(contacts, string);
+    public boolean test(Contact contact) {
+        // TODO: Implement this method
+        return false;
     }
 }

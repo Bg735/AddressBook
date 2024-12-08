@@ -4,31 +4,31 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
 
 public class RecentlyDeleted implements Serializable {
-    private transient TreeMap<LocalDateProperty, ArrayList<Contact>> recentlyDeleted;
+    private transient MapProperty<LocalDateProperty, SetProperty<Contact>> trashCan;
 
     public RecentlyDeleted() {
-        recentlyDeleted = new TreeMap<>((o1,o2)->o1.get().compareTo(o2.get()));
+        trashCan = new SimpleMapProperty<>(FXCollections.observableMap(new TreeMap<>((o1, o2) -> o1.get().compareTo(o2.get()))));
     }
 
-    public void add(Contact contact) {}
-
-    public Contact retrieveContact(Contact contact) {
-        return null;
+    public MapProperty<LocalDateProperty, SetProperty<Contact>> get() {
+        return trashCan;
     }
 
-    public void removePermanently(Contact contact) {}
-
-    public void removeOlderThan(int days) {}
+    public void removeOlderThan(int days) {
+        // TODO: Implement this method
+    }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        for(Map.Entry<LocalDateProperty, ArrayList<Contact>> entry : recentlyDeleted.entrySet()) {
+        for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
             out.writeObject(entry.getKey());
             out.writeObject(entry.getValue());
         }
@@ -37,11 +37,9 @@ public class RecentlyDeleted implements Serializable {
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        recentlyDeleted = new TreeMap<>((o1,o2)->o1.get().compareTo(o2.get()));
-        try (in) {
-            while (in.available() > 0) {
-            recentlyDeleted.put((LocalDateProperty) in.readObject(),(ArrayList<Contact>) in.readObject());
-            }
+        trashCan = new SimpleMapProperty<>(FXCollections.observableMap(new TreeMap<>((o1, o2) -> o1.get().compareTo(o2.get()))));
+        while (in.available() > 0) {
+            trashCan.put((LocalDateProperty) in.readObject(), (SetProperty<Contact>) in.readObject());
         }
     }
 }

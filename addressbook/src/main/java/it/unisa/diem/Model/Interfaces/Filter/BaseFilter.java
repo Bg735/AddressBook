@@ -1,13 +1,23 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import it.unisa.diem.Model.Contact;
+import javafx.beans.property.StringProperty;
 
 public class BaseFilter implements Filter {
+    private StringProperty substring;
+
+    public BaseFilter(StringProperty substring) {
+        this.substring = substring;
+    }
+
     @Override
-    public Set<Contact> filter(Set<Contact> contacts, String string) {
-        return new TreeSet<>();
+    public StringProperty getSubstring() {
+        return substring;
+    }
+
+    @Override
+    public boolean test(Contact contact) {
+        // TODO: Implement this method
+        return false;
     }
 }

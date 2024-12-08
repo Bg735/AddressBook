@@ -1,0 +1,387 @@
+@startuml class diagram
+
+class AddressBookApplication {
+   +start(Stage stage) 
+   +main(String[] args) {static}
+}
+
+class SceneManager <<utility>> {
+   +loadScene(String fxml) {static}
+   +loadProfileSelection() {static}
+   +loadAddressBook() {static}
+   -loadFXML(String fxml) {static}
+   +profileSelectionController: ProfileSelectionController
+   +addressBookController: AddressBookController
+}
+
+class FileManager <<utility>>{
+   +final profileListPath: String {static} 
+   +final profilePictureDir: String {static} 
+   +final addressBookDir: String {static}
+   +final contactPictureDir: String {static}
+
+   +getProfileListPath(): String {static}
+   +getAddressBookDir(): String {static}
+   +getContactPictureDir(): String {static}
+   +getProfilePictureDir(): String {static}
+   +<T> importFromFile(String path): T {static}
+   +<T> exportToFile(String path, T) {static}
+   +importFromVCard(String path): VCard {static}
+   +exportAsVCard(String path, AddressBook  ab) {static}
+}
+
+class FXCollectionConverter <<utility>>{
+   -<C extends Collection<?>, E>propertize(C collection): C {static}
+   -propertize(Map<LocalDate, Contact> map): Map<LocalDateProperty, Contact> {static}
+   +<E> packList(List<E>): ListProperty<Property<E>> {static}
+   +<E> unPackList(ListProperty<Property<E>>): List<E> {static}
+   +<E> SetProperty<Property<E>> packSortedSet(TreeSet<E>) {static}
+   +<E> unPackSortedSet(SetProperty<Property<E>>): TreeSet<E> {static}
+   +packSortedMap(TreeMap<LocalDate, Contact>): MapProperty<LocalDateProperty, Contact> {static}
+   +unPackMap(MapProperty<LocalDateProperty, Contact>): TreeMap<LocalDate, Contact> {static}
+}
+
+exception StreamCorruptedExceptionㅤ
+FileManager ..> "throws" StreamCorruptedExceptionㅤ
+
+exception ClassCastException
+FileManager<..SceneManager
+FileManager..>FXCollectionConverter
+FileManager ..> "throws" ClassCastException
+
+class LocalDateProperty{
+   +LocalDateProperty(LocalDate date) 
+   +LocalDateProperty() 
+   +get(): LocalDate 
+   +set(LocalDate date)
+   +compareTo(LocalDateProperty other): int
+}
+interface Property<LocalDate>
+RecentlyDeleted --> "0..*" LocalDateProperty
+LocalDateProperty ..|> Property
+class RecentlyDeleted{
+   +trashCan: MapProperty<LocalDateProperty, SetProperty<Contact>>
+   +RecentlyDeleted()
+   +get(): MapProperty<LocalDateProperty, SetProperty<Contact>>
+   +removeOlderThan(int days) /'richiamata dall'AddressBookController'/
+   -writeObject(ObjectOutputStream out)
+   -readObject(ObjectInputStream in)
+}
+
+class Profile{
+   -name: StringProperty 
+   -phone: StringProperty
+   -profilePicture: String       /' path della foto profilo '/
+   -addressBookPath: String
+   +Profile(/*all of the above*/)
+   +getName(): StringProperty
+   +setName(String) 
+   +getPhone(): StringProperty
+   +setPhone(int) 
+   +getProfilePicture(): StringProperty
+   +setProfilePicture(String)
+   +getAddressBookPath(): String
+   +setAddressBookPath(String)
+   -writeObject(ObjectOutputStream out)
+   -readObject(ObjectInputStream in)
+}
+
+class ProfileSelectionController <<Controller>> implements OnEditable{
+   -profileList : ListProperty<Profile> 
+   -ProfileSelectionController(List<Profile>)
+   +onSelect(ActionEvent event)
+   +onAdd(ActionEvent event)
+   +onDelete(ActionEvent event)
+   +onAddImport(ActionEvent event)
+   +onImport(ActionEvent event)
+   +onExport(ActionEvent event)
+}
+ProfileSelectionController ..> FileManager
+
+interface TrashCan{
+   +trashCan(): RecentlyDeleted
+   +delete(Contact c)
+   +restore(Contact c)
+}
+TrashCan ..> RecentlyDeleted
+
+interface Taggable{
+   +addTag(Tag tag): boolean
+   +removeTag(Tag tag): boolean
+}
+
+
+class AddressBook implements ContactList, TrashCan{
+   -contactList: SetProperty<Contact> 
+   -tagMap: MapProperty<Tag, SetProperty<Contact>>
+   -recentlyDeleted:RecentlyDeleted
+   ' -tagFilter: Filter {static}
+   ' -fullFilter: Filter {static}
+   +AddressBook(String path)
+   +AddressBook()
+   +contacts() : SetProperty<Contact>
+   +getTagMap() : MapProperty<Tag, SetProperty<Contact>>
+   +trashCan() : RecentlyDeleted
+   +add(Contact c)
+   +delete(Contact c)
+   +get(Contact c): Contact /'returns null if not found'/
+   +restore(Contact c)
+   +addTagToContact(Tag tag, Contact c)
+   +removeTagFromContact(Tag tag, Contact c)
+}
+
+
+
+
+class AddressBookController <<Controller>> implements OnEditable{
+   -shownList: ListView<Contact>
+   -filteredList: FilteredList<Contact>
+   -trashCan: TrashCan
+   -contactList: ContactList
+   -taggableList: TaggableList
+   +AddressBookController(AddressBook)   /' ad ogni avvio il costruttore dell'AddressBookController richiama deleteOlderThan() di RecentlyDeleted'/
+   +onAdd(ActionEvent event) 
+   +onDelete(ActionEvent event)
+   +onEdit(ActionEvent event)
+   +onSelect(ActionEvent event)
+   +onSetTagFilter(ActionEvent event) /'pulsanti tag laterali cliccabili che dicono a Filter che devo cercare solo per tag'/
+   +onResetTagFilter() /'Chiamato quando si esce dalla modalità di visualizzazione dei tag'/
+   +onImportBookFromFile(String path)
+   +onExportBookToFile(String path)
+   +onImportFromVCardFile(String path)
+   +onExportToVCardFile(String path)
+}
+AddressBookController --> TaggableList
+AddressBookController --> TrashCan
+AddressBookController --> ContactList
+AddressBookController ..> Filter
+
+class Tag {
+   -name: StringProperty
+   +Tag()
+   +Tag(String name)
+   +getName(): StringProperty
+   +setName(StringProeprty string)
+   +getNameValue(): String
+   +setNameValue(String)
+   -writeObject(ObjectOutputStream out)
+   -readObject(ObjectInputStream in)
+}
+
+interface TaggableList {
+   +getTagMap(): MapProperty<Tag,SetProperty<Contact>
+   +addTagToContact(Tag t, Contact c)
+   +removeTagFromContact(Tag t, Contact c)
+}
+TaggableList ..> Taggable
+AddressBook ..|> TaggableList
+
+
+
+interface java.util.function.Predicate<T>{
+   +test(T t): boolean {abstract}
+}
+
+
+interface Filter {
+   +test(Contact t): boolean {abstract}
+   +getSubstring(): StringProperty {abstract}
+}
+Filter "<Contact>" --|> java.util.function.Predicate
+
+class BaseFilter{
+   -substring: StringProperty
+   +BaseFilter(StringProperty string)
+   +getSubstring(): StringProperty
+   +test(Contact t): boolean
+}
+BaseFilter --|> Filter
+
+class FilterDecorator <<abstract>> {
+   -f: Filter 
+   +FilterDecorator(Filter)
+   +getSubstring(): StringProperty
+   +test(Contact t): boolean {abstract}
+}
+FilterDecorator --|> Filter
+
+class TagFilter{
+   +TagFilter(Filter)
+   +test(Contact t): boolean
+}
+TagFilter <|.. FilterDecorator
+
+class NameFilter{
+   +NameFilter(Filter)
+   +test(Contact t): boolean
+}
+NameFilter <|.. FilterDecorator
+
+
+class EmailFilter{
+   +EmailFilter(Filter)
+   +test(Contact t): boolean
+}
+EmailFilter <|.. FilterDecorator
+
+
+class PhoneFilter{
+   +PhoneFilter(Filter)
+   +test(Contact t): boolean
+}
+PhoneFilter <|.. FilterDecorator
+
+
+class Contact implements Taggable{
+   -public MAXEMAILS: int {static}
+   -public MAXPHONENUMBERS: int {static}
+   -public MAXNAMELEN: int {static}
+   -public MAXSURNAMELEN: int {static}
+   -name: StringProperty
+   -surname: StringProperty
+   -fullName: StringProperty
+   -picture: String
+   -email: String[]
+   -phoneNumber: String[]
+   -tags: SetProperty<Tag>
+   +Contact()
+   +Contact(String name, String surname)
+   +Contact(String name, String surname, String... phoneNumber)
+   +setName(String): boolean
+   +getName(): StringProperty
+   +getNameValue(): String
+   +setSurname(String)
+   +getSurname(): StringProperty
+   +getSurnameValue(): String
+   +setPicture(String): boolean
+   +getPicture(): String
+   +getEmailList(): String[]
+   +getEmailAtIndex(int index): String
+   +getPhoneNumberList(): String[]
+   +getPhoneNumberAtIndex(int index): String
+   +getTagsSet(): SetProperty<Tag>
+   +addEmail(String...): boolean
+   +setEmail(String, int): boolean
+   +removeEmailAtIndex(int)
+   +addPhoneNumber(String...): boolean
+   +setPhoneNumber(String, int): boolean
+   +removePhoneNumberAtIndex(int)
+   +addTag(Tag): boolean
+   +removeTag(Tag): boolean
+   +getEmail(): String[]
+   +getMaxEmails(): int {static}
+   +getPhoneNumber(): String[]
+   +getMaxPhonenumbers(): int {static}
+   +getTags(): SetProperty<Tag>
+   +getFullName(): StringProperty
+   +getFullNameValue(): String
+   +containsName(String): boolean
+   +containsEmail(String): boolean
+   +containsPhone(String): boolean
+   +containsTag(String): boolean
+   +toString(): String
+   +compareTo(Contact): int
+   -writeObject(ObjectOutputStream out)
+   -readObject(ObjectInputStream in)
+}
+
+class SafeContact extends Contact{
+   +SafeContact()
+   +SafeContact(String name, String surname)
+   +SafeContact(String name, String surname, String... phoneNumber)
+   +setName(String name)
+   +setSurname(String surname)
+   +setPicture(String picture): boolean
+   +addEmail(String... email): boolean
+   +setEmail(String email, int index): boolean
+   +removeEmailAtIndex(int index)
+   +addPhoneNumber(String... phoneNumber): boolean
+   +setPhoneNumber(String phoneNumber, int index): boolean
+   +removePhoneNumberAtIndex(int index)
+   +addTag(Tag tag): boolean
+   +removeTag(Tag tag): boolean
+}
+
+interface OnEditable{
+   +onAdd(ActionEvent event); 
+   +onDelete(ActionEvent event); 
+   +onEdit(ActionEvent event); 
+   +onSelect(ActionEvent event); 
+}
+
+interface ContactList{
+   +add(Contact c)
+   +delete(Contact c)
+   +get(Contact c): Contact
+}
+ContactList ..> Contact
+
+interface Checker{
+   +check(String string): boolean {abstract}
+}
+
+
+interface EmailChecker{
+   +check(String string): boolean   /' Di default, verifica che la stringa rispetti il formato []@[].[] '/
+}
+
+
+interface PhoneChecker{
+   +check(String string): boolean   /' Di default, verifica che la stringa contenga solo caratteri numerici '/
+}
+
+
+interface StringChecker{
+   +check(String string): boolean {abstract}
+}
+
+class SimpleEmailChecker{
+   +check(String string): boolean    /'Richiama semplicemente il default di EmailChecker'/
+}
+SimpleEmailChecker <|.. EmailChecker
+
+class CharacterLimitStringChecker{
+   +check(String string): boolean   /'Controlla che la stringa rientri in un massimo di caratteri'/
+}
+CharacterLimitStringChecker <|.. StringChecker
+
+class ItalianPhoneChecker{
+   +check(String string): boolean   /' Aggiunge al comportamento di default la verifica che i caratteri siano o 9 o 10 (come da accordo con lo standard italiano) '/
+}
+ItalianPhoneChecker <|.. PhoneChecker
+
+EmailChecker <|-- Checker
+PhoneChecker <|-- Checker
+StringChecker <|-- Checker
+
+
+SceneManager --> "1..3" Profile
+
+
+RecentlyDeleted o-- "0..*" Contact
+AddressBook o-- "0..*" Contact
+
+
+Profile --> AddressBook
+AddressBook --> RecentlyDeleted   
+AddressBook --> "0..*" Tag
+Contact o-- "0..*" Tag
+
+Profile ..> CharacterLimitStringChecker
+Profile ..> ItalianPhoneChecker
+
+
+SafeContact ..> SimpleEmailChecker
+SafeContact ..> ItalianPhoneChecker
+SafeContact ..> CharacterLimitStringChecker
+
+AddressBookController ..> FileManager
+
+AddressBookApplication ..> SceneManager
+
+
+ProfileSelectionController ..> SceneManager
+AddressBookController ..> SceneManager
+AddressBookApplication ..> ProfileSelectionController
+
+@enduml

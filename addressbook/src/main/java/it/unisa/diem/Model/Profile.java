@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Profile implements Serializable{
+    public static final int MAXNAMELEN = 3;
     private transient StringProperty name;
     private transient StringProperty phone;
     private String profilePicture; // path della foto profilo
@@ -17,23 +18,23 @@ public class Profile implements Serializable{
     }
 
     public StringProperty getName() {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     public void setName(String name) {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     public StringProperty getPhone() {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     public void setPhone(int phone) {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     public String getProfilePicture() {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     public String getAddressBookPath() {
@@ -45,7 +46,7 @@ public class Profile implements Serializable{
     }
 
     public void setProfilePicture(String profilePicture) {
-        // Method implementation
+        // TODO: Implement this method
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {

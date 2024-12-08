@@ -5,6 +5,6 @@ import it.unisa.diem.Model.RecentlyDeleted;
 
 public interface TrashCan {
     RecentlyDeleted trashCan();
+    void delete(Contact c);
     void restore(Contact c);
-    void permaDelete(Contact c);
 }

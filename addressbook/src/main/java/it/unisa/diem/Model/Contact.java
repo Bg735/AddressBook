@@ -4,18 +4,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.LinkedHashSet;
 
-import javafx.beans.binding.Bindings;
+import it.unisa.diem.Model.Interfaces.Taggable;
 import javafx.beans.property.SetProperty;
-import javafx.beans.property.SimpleSetProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 
-public class Contact implements Serializable, Comparable<Contact> {
-    private static final int MAX_EMAILS = 3;
-    private static final int MAX_PHONENUMBERS = 3;
+public class Contact implements Comparable<Contact>, Serializable, Taggable {
+    public static final int MAXEMAILS = 3;
+    public static final int MAXPHONENUMBERS = 3;
+    public static final int MAXNAMELEN = 3;
+    public static final int MAXSURNAMELEN = 3;
 
     private transient StringProperty name;
     private transient StringProperty surname;
@@ -26,185 +24,190 @@ public class Contact implements Serializable, Comparable<Contact> {
     private String picture;
 
     public Contact() {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public Contact(String name, String surname) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public Contact(String name, String surname, String... phoneNumber) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public void setName(String name) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public StringProperty getName() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String getNameValue() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public void setSurname(String surname) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public StringProperty getSurname() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String getSurnameValue() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
-    public void setPicture(String picture) {
-        // Method Implementation
+    public boolean setPicture(String picture) {
+        // TODO: Implement this method
+        return false;
     }
 
     public String getPicture() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String[] getEmailList() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String getEmailAtIndex(int index) {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String[] getPhoneNumberList() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String getPhoneNumberAtIndex(int index) {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public SetProperty<Tag> getTagsSet() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public boolean addEmail(String... email) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
-    public void setEmail(String email, int index) {
-        // Method Implementation
+    public boolean setEmail(String email, int index)  {
+        // TODO: Implement this method
+        return false;
     }
 
     public void removeEmailAtIndex(int index) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     public boolean addPhoneNumber(String... phoneNumber) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
-    public void setPhoneNumber(String phoneNumber, int index) {
-        // Method Implementation
+    public boolean setPhoneNumber(String phoneNumber, int index) {
+        // TODO: Implement this method
+        return false;
     }
 
     public void removePhoneNumberAtIndex(int index) {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
-    public void addTag(Tag tag) {
-        // Method Implementation
+    public boolean addTag(Tag tag) {
+        // TODO: Implement this method
+        return false;
     }
 
-    public void removeTag(Tag tag) {
-        // Method Implementation
+    public boolean removeTag(Tag tag) {
+        // TODO: Implement this method
+        return false;
     }
 
     public String[] getEmail() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public static int getMaxEmails() {
-        // Method Implementation
+        // TODO: Implement this method
         return 0;
     }
 
     public String[] getPhoneNumber() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public static int getMaxPhonenumbers() {
-        // Method Implementation
+        // TODO: Implement this method
         return 0;
     }
 
     public SetProperty<Tag> getTags() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public StringProperty getFullName() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public String getFullNameValue() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     public boolean containsName(String str) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
     public boolean containsEmail(String str) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
     public boolean containsPhone(String str) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
     public boolean containsTag(String str) {
-        // Method Implementation
+        // TODO: Implement this method
         return false;
     }
 
     @Override
     public String toString() {
-        // Method Implementation
+        // TODO: Implement this method
         return null;
     }
 
     @Override
     public int compareTo(Contact other) {
-        // Method Implementation
+        // TODO: Implement this method
         return 0;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
-        // Method Implementation
+        // TODO: Implement this method
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        // Method Implementation
+        // TODO: Implement this method
     }
 }

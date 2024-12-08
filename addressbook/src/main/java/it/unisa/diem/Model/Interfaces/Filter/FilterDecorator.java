@@ -1,17 +1,20 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
-import java.util.Set;
 import it.unisa.diem.Model.Contact;
+import javafx.beans.property.StringProperty;
 
 public abstract class FilterDecorator implements Filter {
-    protected Filter filter;
+    protected Filter f;
 
-    public FilterDecorator(Filter filter) {
-        this.filter = filter;
+    public FilterDecorator(Filter f) {
+        this.f = f;
     }
 
     @Override
-    public Set<Contact> filter(Set<Contact> contacts, String string) {
-        return filter.filter(contacts, string);
+    public StringProperty getSubstring() {
+        return f.getSubstring();
     }
+
+    @Override
+    public abstract boolean test(Contact t);
 }

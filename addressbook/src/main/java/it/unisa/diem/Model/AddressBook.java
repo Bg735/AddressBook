@@ -1,22 +1,18 @@
 package it.unisa.diem.Model;
 
-import java.util.TreeSet;
-
 import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
 import it.unisa.diem.Model.Interfaces.Filter.Filter;
 import javafx.beans.property.SetProperty;
-
-import java.util.Set;
-import java.util.TreeMap;
+import javafx.beans.property.MapProperty;
 
 public class AddressBook implements ContactList, TaggableList, TrashCan {
-    private TreeSet<Contact> contactsList;
-    private TreeMap<Tag, TreeSet<Contact>> tagMap;
+    private SetProperty<Contact> contactsList;
+    private MapProperty<Tag, SetProperty<Contact>> tagMap;
     private RecentlyDeleted recentlyDeleted;
-    private static Filter fullFilter=null;
-    private static Filter tagFilter=null;
+    private static Filter fullFilter = null;
+    private static Filter tagFilter = null;
 
     public AddressBook(String path) {
         // Constructor implementation
@@ -26,54 +22,49 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
         // Constructor implementation
     }
 
-
-    public TreeSet<Contact> contacts() { //Should be readonly. To write use methods of the ContactList interface
-        // Method implementation (returns contactsList)
+    public SetProperty<Contact> contacts() {
+        // TODO: Implement this method (returns contactsList)
+        return null;
     }
 
-    public TreeMap<Tag, TreeSet<Contact>> getTagMap() {
-        // Method implementation (returns tagMap())
+    public MapProperty<Tag, SetProperty<Contact>> getTagMap() {
+        // TODO: Implement this method (returns tagMap)
+        return null;
     }
 
     public RecentlyDeleted trashCan() {
-        // Method implementation (returns recentlyDeleted)
+        // TODO: Implement this method (returns recentlyDeleted)
+        return null;
     }
 
     @Override
     public void add(Contact c) {
-        // Method implementation
+        // TODO: Implement this method
     }
+
     @Override
-    public boolean delete(Contact c) {
-        // Method implementation, returns false if not found
+    public void delete(Contact c) {
+        // TODO: Implement this method, returns false if not found
     }
+
     @Override
     public Contact get(Contact c) {
-        // Method implementation, returns null if not found
+        // TODO: Implement this method, returns null if not found
+        return null;
     }
 
     @Override
-    public SetProperty<Contact> search(String string, Filter filter) {
-        //Method implementation
+    public void restore(Contact c) {
+        // TODO: Implement this method
     }
 
     @Override
-    public void restore(Contact c){
-        // Method implementation
+    public void addTagToContact(Tag tag, Contact c) {
+        // TODO: Implement this method
     }
 
     @Override
-    public void permaDelete(Contact c){
-        // Method implementation (calls recentlyDeleted.removePermanently())
-    }
-
-    @Override
-    public void addTagToContact(Tag tag, Contact c){
-        // Method implementation
-    }
-
-    @Override
-    public void removeTagFromContact(Tag tag, Contact c){
-        // Method implementation
+    public void removeTagFromContact(Tag tag, Contact c) {
+        // TODO: Implement this method
     }
 }
