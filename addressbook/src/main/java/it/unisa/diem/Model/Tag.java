@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
  * At the actual state, this class is a wrapper for a StringProperty, but it could be extended eventually to include more information about the tag.
  */
 public class Tag {
+    public static final int MAXTAGLENGTH = 20; ///< The maximum length of a tag
     private transient StringProperty name; ///< The name of the tag
 
     /**

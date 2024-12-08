@@ -12,8 +12,6 @@ import javafx.beans.property.StringProperty;
 public class Contact implements Comparable<Contact>, Serializable, Taggable {
     public static final int MAXEMAILS = 3;
     public static final int MAXPHONENUMBERS = 3;
-    public static final int MAXNAMELEN = 50;
-    public static final int MAXSURNAMELEN = 50;
 
     private transient StringProperty name;
     private transient StringProperty surname;
@@ -35,7 +33,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         // TODO: Implement this method
     }
 
-    public void setName(String name) {
+    public boolean setName(String name) {
         // TODO: Implement this method
     }
 
@@ -49,7 +47,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         return null;
     }
 
-    public void setSurname(String surname) {
+    public boolean setSurname(String surname) {
         // TODO: Implement this method
     }
 
@@ -63,7 +61,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         return null;
     }
 
-    public boolean setPicture(String picture) {
+    public void setPicture(String picture) {
         // TODO: Implement this method
         return false;
     }
@@ -108,7 +106,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         return false;
     }
 
-    public void removeEmailAtIndex(int index) {
+    public boolean removeEmailAtIndex(int index) {
         // TODO: Implement this method
     }
 
@@ -122,7 +120,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         return false;
     }
 
-    public void removePhoneNumberAtIndex(int index) {
+    public boolean removePhoneNumberAtIndex(int index) {
         // TODO: Implement this method
     }
 

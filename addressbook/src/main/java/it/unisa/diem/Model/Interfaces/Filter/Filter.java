@@ -4,17 +4,16 @@ import it.unisa.diem.Model.Contact;
 import javafx.beans.property.StringProperty;
 
 /**
- * Passed as a Predicate<Contact> that verifies a condition based on the fact that a Contact contains a string.
- *  
- * @see FileDecorator, BaseFilter, NameFilter, EmailFilter, PhoneFilter, AddressFilter, TagFilter
+ * Passed as a Predicate<Contact> that verifies a condition based on the fact that a {@link Contact} contains a string.
+ * Abstract component of the Decorator pattern.
  */
 public interface Filter extends java.util.function.Predicate<Contact> {
     
     /**
      * Returns true if the given Contact satisfies the condition of the filter.
      * 
-     * @param[in] t the Contact to test
-     * @return true if the Contact satisfies the condition of the filter
+     * @param[in] t the Contact on which to apply the filter, verifying if it satisfies the condition.
+     * @return true if the Contact satisfies the condition of the filter, false otherwise
 
      */
     @Override

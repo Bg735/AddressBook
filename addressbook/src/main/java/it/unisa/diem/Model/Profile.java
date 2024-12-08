@@ -19,6 +19,7 @@ public class Profile implements Serializable{
 
     public StringProperty getName() {
         // TODO: Implement this method
+        
     }
 
     public void setName(String name) {
