@@ -69,6 +69,7 @@ class RecentlyDeleted{
 }
 
 class Profile{
+   +final MAXNAMELEN: int {static}
    -name: StringProperty 
    -phone: StringProperty
    -profilePicture: String       /' path della foto profilo '/
@@ -115,8 +116,6 @@ class AddressBook implements ContactList, TrashCan{
    -contactList: SetProperty<Contact> 
    -tagMap: MapProperty<Tag, SetProperty<Contact>>
    -recentlyDeleted:RecentlyDeleted
-   ' -tagFilter: Filter {static}
-   ' -fullFilter: Filter {static}
    +AddressBook(String path)
    +AddressBook()
    +contacts() : SetProperty<Contact>
@@ -128,6 +127,8 @@ class AddressBook implements ContactList, TrashCan{
    +restore(Contact c)
    +addTagToContact(Tag tag, Contact c)
    +removeTagFromContact(Tag tag, Contact c)
+   +readFromFile(String path): AddressBook {static}
+   +writeToFile(String path): void
 }
 
 
@@ -144,10 +145,10 @@ class AddressBookController <<Controller>> implements OnEditable{
    +onDelete(ActionEvent event)
    +onEdit(ActionEvent event)
    +onSelect(ActionEvent event)
+   +onRemovePermanently(ActionEvent event) /'chiamato da recently deleted'/
    +onSetTagFilter(ActionEvent event) /'pulsanti tag laterali cliccabili che dicono a Filter che devo cercare solo per tag'/
    +onResetTagFilter() /'Chiamato quando si esce dalla modalità di visualizzazione dei tag'/
-   +onImportBookFromFile(String path)
-   +onExportBookToFile(String path)
+   +toProfileSelection(ActionEvent event)
    +onImportFromVCardFile(String path)
    +onExportToVCardFile(String path)
 }
@@ -233,10 +234,10 @@ PhoneFilter <|.. FilterDecorator
 
 
 class Contact implements Taggable{
-   -public MAXEMAILS: int {static}
-   -public MAXPHONENUMBERS: int {static}
-   -public MAXNAMELEN: int {static}
-   -public MAXSURNAMELEN: int {static}
+   +final MAXEMAILS: int {static}
+   +final MAXPHONENUMBERS: int {static}
+   +final MAXNAMELEN: int {static}
+   +final MAXSURNAMELEN: int {static}
    -name: StringProperty
    -surname: StringProperty
    -fullName: StringProperty
@@ -310,6 +311,7 @@ interface OnEditable{
 }
 
 interface ContactList{
+   +contacts(): SetProperty<Contact>
    +add(Contact c)
    +delete(Contact c)
    +get(Contact c): Contact
@@ -319,7 +321,6 @@ ContactList ..> Contact
 interface Checker{
    +check(String string): boolean {abstract}
 }
-
 
 interface EmailChecker{
    +check(String string): boolean   /' Di default, verifica che la stringa rispetti il formato []@[].[] '/

@@ -40,6 +40,7 @@ public class ProfileSelectionController implements OnEditable {
         // Method implementation
     }
 
+    
     @FXML
     @Override
     public void onDelete(ActionEvent event) {

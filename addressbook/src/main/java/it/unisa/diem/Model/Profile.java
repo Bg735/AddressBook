@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Profile implements Serializable{
-    public static final int MAXNAMELEN = 3;
+    public static final int MAXNAMELEN = 50;
     private transient StringProperty name;
     private transient StringProperty phone;
     private String profilePicture; // path della foto profilo

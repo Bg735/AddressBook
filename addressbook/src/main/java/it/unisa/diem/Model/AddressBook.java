@@ -22,16 +22,19 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
         // Constructor implementation
     }
 
+    @Override
     public SetProperty<Contact> contacts() {
         // TODO: Implement this method (returns contactsList)
         return null;
     }
-
+    
+    @Override
     public MapProperty<Tag, SetProperty<Contact>> getTagMap() {
         // TODO: Implement this method (returns tagMap)
         return null;
     }
 
+    @Override
     public RecentlyDeleted trashCan() {
         // TODO: Implement this method (returns recentlyDeleted)
         return null;
@@ -67,4 +70,16 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     public void removeTagFromContact(Tag tag, Contact c) {
         // TODO: Implement this method
     }
+
+    //uses FileManger.importFromFile
+    public static AddressBook readFromFile(String path) {
+        // TODO: Implement this method
+        return null;
+    }
+
+    //uses FileManger.exportToFile
+    public void writeToFile(String path) {
+        // TODO: Implement this method
+    }
+
 }

@@ -5,7 +5,6 @@ import it.unisa.diem.Model.Contact;
 import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
-import it.unisa.diem.Model.Interfaces.Filter.Filter;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,11 +34,24 @@ public class AddressBookController implements OnEditable {
      * @param pathToAddressboook the path to the internal address book file to load
      */
     public AddressBookController(String pathToAddressBook) {
-        AddressBook addressBook = new AddressBook(pathToAddressBook);
+        AddressBook addressBook = AddressBook.readFromFile(pathToAddressBook);
         this.taggableList = addressBook;
         this.trashCan = addressBook;
         this.contactList = addressBook;
         addressBook.trashCan().removeOlderThan(30); // Example call to removeOlderThan
+    }
+
+
+    /**
+     * Exits the application.
+     * Called when the user clicks on the exit button on the window from the main view.
+     * 
+     * @post The Addressbook is loaded to internal file, then the application is closed.
+     * @see AddressBook#writeToFile(String)
+     */
+    @FXML
+    public void exit() {
+        // Method implementation
     }
 
     /**
@@ -98,57 +110,65 @@ public class AddressBookController implements OnEditable {
      *
      * @pre The contact to be viewed must exist in the address book.
      * @post The contact's details are displayed in the visualization panel.
-     * @see AddressBook#get(Contact)
+     * @see ContactList#get(Contact)
      */
     @FXML
     public void onSelect(ActionEvent event) {
         // Method implementation
     }
 
+    /**
+     * Delete permanently a contact from recently deleted.
+     * Called when the user clicks on the contact deletion button in the recently deleted's view.
+     *
+     * @pre The contact to be deleted must exist in the recently deleted.
+     * @post The contact is removed from the recently deleted.
+     * @see ContactList#delete(Contact)
+     */
+    @FXML
+    public void onRemovePermanently(ActionEvent event) {
+        // Method implementation
+    }
 
     /**
      * Shows the list of contacts marked with the selected tag.
      * Called when the user selects a tag from the tag list in the main view.
      * 
-     * @pre The tag must exist in the address book.
+     * @pre There must be at least one tag in the list to select.
+     * @post {@link #filteredList} is linked to the addressbook's tag map; the list of contacts is filtered to show only those marked with the selected tag.
+     * @see TaggableList#getTagMap()
      */
     @FXML
     public void onSetTagFilter(ActionEvent event) {
         // Method implementation
     }
 
+    /**
+     * Resets the visualized list of contacts, linking it to the full contact list.
+     * Called when the user clicks on the addresbook home button or types a substring in the search bar.
+     *
+     * @pre {@link #onSetTagFilter(ActionEvent)} must have been called after the last time this method was called.
+     * @post {@link #filteredList} is linked back to the addressbook's list of contacts; the list of contacts shows the complete list of the addressbook, or a filtered list based on the content of the search bar, if it is not empty.
+     * @see ContactList#contacts()
+     */
     public void onResetTagFilter(ActionEvent event) {
         // Method implementation
     }
 
     /**
-     * Import AddressBook object from internal file.
-     * Called when the user opens the addressbook view and an AddressBookController already exists.
-     * In that case, this method is called instead of the constructor in order to get the selected AddressBook object.
-     *
-     * @pre The internal file must exist and be accessible.
-     * @post The address book is imported from the internal file.
-     * @invariant The address book must remain consistent.
-     * @see AddressBook#importFromFile(String)
+     * Goes back to the profile selection view.
+     * Called when the user clicks on the back button in the main view.
+     * 
+     * @post The address book is saved to the application's assets and the user is taken back to the profile selection view.
+     * @see SceneManager#loadProfileSelection()
+     * @see AddressBook#writeToFile(String)
      */
     @FXML
-    public void onImportBookFromFile(ActionEvent event) {
+    public void toProfileSelection(ActionEvent event) {
         // Method implementation
     }
 
-    /**
-     * Export AddressBook object to internal file.
-     * Called when the user exits the addressbook view (or the application).
-     *
-     * @pre The address book must be loaded and not null.
-     * @post The address book is exported to the internal file.
-     * @invariant The address book must remain consistent.
-     * @see AddressBook#exportToFile(String)
-     */
-    @FXML
-    public void onExportBookToFile(ActionEvent event) {
-        // Method implementation
-    }
+
 
     /**
      * Import contacts from a VCard file.
@@ -161,7 +181,7 @@ public class AddressBookController implements OnEditable {
      * @see AddressBook#importFromVCard(String)
      */
     @FXML
-    public void onImportFromVCardFile(String path) {
+    public void onImportFromVCardFile(ActionEvent event) {
         // Method implementation
     }
 
@@ -176,7 +196,7 @@ public class AddressBookController implements OnEditable {
      * @see AddressBook#exportToVCard(String)
      */
     @FXML
-    public void onExportToVCardFile(String path) {
+    public void onExportToVCardFile(ActionEvent event) {
         // Method implementation
     }
 }

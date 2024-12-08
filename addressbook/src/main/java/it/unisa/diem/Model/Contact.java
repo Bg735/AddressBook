@@ -12,8 +12,8 @@ import javafx.beans.property.StringProperty;
 public class Contact implements Comparable<Contact>, Serializable, Taggable {
     public static final int MAXEMAILS = 3;
     public static final int MAXPHONENUMBERS = 3;
-    public static final int MAXNAMELEN = 3;
-    public static final int MAXSURNAMELEN = 3;
+    public static final int MAXNAMELEN = 50;
+    public static final int MAXSURNAMELEN = 50;
 
     private transient StringProperty name;
     private transient StringProperty surname;
