@@ -88,14 +88,14 @@ class Profile{
 }
 
 class ProfileSelectionController <<Controller>> implements OnEditable{
+   + final MAXPROFILES: int {static}
    -profileList : ListProperty<Profile> 
-   -ProfileSelectionController(List<Profile>)
-   +onSelect(ActionEvent event)
+   -ProfileSelectionController(String pathToProfileList)
+   +onSave()
    +onAdd(ActionEvent event)
    +onDelete(ActionEvent event)
-   +onAddImport(ActionEvent event)
-   +onImport(ActionEvent event)
-   +onExport(ActionEvent event)
+   +onEdit(ActionEvent event)
+   +toAddressBook(ActionEvent event)
 }
 ProfileSelectionController ..> FileManager
 
@@ -141,10 +141,14 @@ class AddressBookController <<Controller>> implements OnEditable{
    -contactList: ContactList
    -taggableList: TaggableList
    +AddressBookController(AddressBook)   /' ad ogni avvio il costruttore dell'AddressBookController richiama deleteOlderThan() di RecentlyDeleted'/
+   +exit()
    +onAdd(ActionEvent event) 
    +onDelete(ActionEvent event)
    +onEdit(ActionEvent event)
    +onSelect(ActionEvent event)
+   +onSave()
+   +trashCan()
+   +onRestore(ActionEvent event)
    +onRemovePermanently(ActionEvent event) /'chiamato da recently deleted'/
    +onSetTagFilter(ActionEvent event) /'pulsanti tag laterali cliccabili che dicono a Filter che devo cercare solo per tag'/
    +onResetTagFilter() /'Chiamato quando si esce dalla modalità di visualizzazione dei tag'/
@@ -179,7 +183,7 @@ AddressBook ..|> TaggableList
 
 
 
-interface java.util.function.Predicate<T>{
+interface Predicate<T>{
    +test(T t): boolean {abstract}
 }
 
@@ -188,7 +192,7 @@ interface Filter {
    +test(Contact t): boolean {abstract}
    +getSubstring(): StringProperty {abstract}
 }
-Filter "<Contact>" --|> java.util.function.Predicate
+Filter "<Contact>" --|> Predicate
 
 class BaseFilter{
    -substring: StringProperty
@@ -307,7 +311,6 @@ interface OnEditable{
    +onAdd(ActionEvent event); 
    +onDelete(ActionEvent event); 
    +onEdit(ActionEvent event); 
-   +onSelect(ActionEvent event); 
 }
 
 interface ContactList{

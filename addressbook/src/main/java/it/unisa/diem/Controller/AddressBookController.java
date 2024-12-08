@@ -32,6 +32,7 @@ public class AddressBookController implements OnEditable {
      * Constructs an AddressBookController with the given profile.
      *
      * @param pathToAddressboook the path to the internal address book file to load
+     * @see AddressBook#readFromFile(String)
      */
     public AddressBookController(String pathToAddressBook) {
         AddressBook addressBook = AddressBook.readFromFile(pathToAddressBook);
@@ -44,10 +45,10 @@ public class AddressBookController implements OnEditable {
 
     /**
      * Exits the application.
-     * Called when the user clicks on the exit button on the window from the main view.
+     * Called when the user clicks on the exit button on the window from the address book view.
      * 
      * @post The Addressbook is loaded to internal file, then the application is closed.
-     * @see AddressBook#writeToFile(String)
+     * @see #onSave()
      */
     @FXML
     public void exit() {
@@ -86,6 +87,12 @@ public class AddressBookController implements OnEditable {
      * @pre The contact to be edited must exist in the address book.
      * @post The contact is opened in edit mode.
      * @see ContactList#get(Contact)
+     * @see Contact#setEmail(String, int)
+     * @see Contact#setPhoneNumber(String, int)
+     * @see Contact#addTag(Tag)
+     * @see Contact#removeTag(Tag)
+     * @see Contact#setName(String)
+     * @see Contact#setSurname(String)
      */
     @FXML
     public void onEdit(ActionEvent event) {
@@ -93,14 +100,12 @@ public class AddressBookController implements OnEditable {
     }
 
     /**
-     * Save the changes made to a contact.
+     * Save the changes made to the address book.
      * Called by {@link #onEdit(ActionEvent)} and {@link #onAdd(ActionEvent)} when the user clicks on the save button in the contact's edit view.
-     *
-     * @pre The contact to be saved must exist in the address book.
-     * @post The changes made to the contact are saved.
+     * @post The changes made to the AddressBook are saved.
+     * @see AddressBook#writeToFile(String)
      */
-    @FXML
-    public void onSave(ActionEvent event) {
+    public void onSave() {
         // Method implementation
     }
 
@@ -118,12 +123,38 @@ public class AddressBookController implements OnEditable {
     }
 
     /**
-     * Delete permanently a contact from recently deleted.
-     * Called when the user clicks on the contact deletion button in the recently deleted's view.
+     * Opens the visualization of the recently deleted contacts.
+     * Called when the user clicks on the trash can button in the address book view.
+     * @post The list of contacts is filtered to show only those in the trash can.
+     * @see TrashCan#trashCan()
+     */
+    @FXML
+    public void onTrashCanSelected(ActionEvent event) {
+        // Method implementation
+    }
+
+    /**
+     * Restores a contact from the trash can.
+     * Called when the user clicks on the contact restoration button in the trash can view.
+     * The user will be asked if they are sure to restore the selected contact.
      *
-     * @pre The contact to be deleted must exist in the recently deleted.
-     * @post The contact is removed from the recently deleted.
-     * @see ContactList#delete(Contact)
+     * @pre The trash can must contain at least one contact.
+     * @post The contact is removed from the trash can and added back to the address book.
+     * @see TrashCan#restore(Contact)
+     */
+    @FXML
+    public void onRestore(ActionEvent event) {
+        // Method implementation
+    }
+
+    /**
+     * Delete permanently a contact from recently deleted.
+     * Called when the user clicks on the contact deletion button in the recently deleted view.
+     * The user will be asked if they are sure to irreversibly delete the selected contact.
+     *
+     * @pre The recently deleted list must contain at least one contact.
+     * @post The contact is removed from the recently deleted list.
+     * @see TrashCan#delete(Contact)
      */
     @FXML
     public void onRemovePermanently(ActionEvent event) {
@@ -161,7 +192,7 @@ public class AddressBookController implements OnEditable {
      * 
      * @post The address book is saved to the application's assets and the user is taken back to the profile selection view.
      * @see SceneManager#loadProfileSelection()
-     * @see AddressBook#writeToFile(String)
+     * @see #onSave()
      */
     @FXML
     public void toProfileSelection(ActionEvent event) {
