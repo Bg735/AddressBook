@@ -1,7 +1,0 @@
-<map id="it.unisa.diem.Model.SafeContact" name="it.unisa.diem.Model.SafeContact">
-<area shape="rect" id="node1" title="A safe version of the Contact class, which uses Checker instances to ensure that no illegal value is ..." alt="" coords="168,169,352,211"/>
-<area shape="rect" id="node2" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book." alt="" coords="157,95,363,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,13,187,39"/>
-<area shape="rect" id="node4" title=" " alt="" coords="211,13,309,39"/>
-<area shape="rect" id="node5" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Taggable.html" title="Interface for objects that can be marked with a Tags." alt="" coords="333,5,557,47"/>
-</map>

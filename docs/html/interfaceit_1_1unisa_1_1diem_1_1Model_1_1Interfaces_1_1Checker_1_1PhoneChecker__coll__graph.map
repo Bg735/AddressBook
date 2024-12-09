@@ -1,4 +1,0 @@
-<map id="it.unisa.diem.Model.Interfaces.Checker.PhoneChecker" name="it.unisa.diem.Model.Interfaces.Checker.PhoneChecker">
-<area shape="rect" id="node1" title="Classes implementing this interface will be used to check if a certain string is a valid phone number..." alt="" coords="5,95,229,136"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1Checker.html" title="Classes implementing this interface will be used to check if a certain string has a valid format." alt="" coords="5,5,229,47"/>
-</map>
