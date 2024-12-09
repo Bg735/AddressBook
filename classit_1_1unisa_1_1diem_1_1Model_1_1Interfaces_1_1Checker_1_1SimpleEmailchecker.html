@@ -99,7 +99,7 @@ Collaboration diagram for it.unisa.diem.Model.Interfaces.Checker.SimpleEmailchec
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a46a2791dfde8b756ffc504841a8f8c5f"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1SimpleEmailchecker.html#a46a2791dfde8b756ffc504841a8f8c5f">check</a> (String string)</td></tr>
-<tr class="memdesc:a46a2791dfde8b756ffc504841a8f8c5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">@inheritDoc  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1SimpleEmailchecker.html#a46a2791dfde8b756ffc504841a8f8c5f">More...</a><br /></td></tr>
+<tr class="memdesc:a46a2791dfde8b756ffc504841a8f8c5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the String parameter is a valid email.  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1SimpleEmailchecker.html#a46a2791dfde8b756ffc504841a8f8c5f">More...</a><br /></td></tr>
 <tr class="separator:a46a2791dfde8b756ffc504841a8f8c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a261c382e2b15657ee78b43c82c30f991"><td class="memItemLeft" align="right" valign="top">default boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1EmailChecker.html#a261c382e2b15657ee78b43c82c30f991">check</a> (String string)</td></tr>
 <tr class="memdesc:a261c382e2b15657ee78b43c82c30f991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the String parameter is a valid email.  <a href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1EmailChecker.html#a261c382e2b15657ee78b43c82c30f991">More...</a><br /></td></tr>
@@ -132,7 +132,14 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>@inheritDoc </p>
+<p>Checks if the String parameter is a valid email. </p>
+<p >By default, checks if the string respects the format defined by the regular expression: {@value <a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1EmailChecker.html#a91d7443d82e07e5846d148fed6b82a91">regex</a>}. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>the email string to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the email is valid, false otherwise </dd></dl>
 
 <p>Implements <a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1EmailChecker.html#a261c382e2b15657ee78b43c82c30f991">it.unisa.diem.Model.Interfaces.Checker.EmailChecker</a>.</p>
 
