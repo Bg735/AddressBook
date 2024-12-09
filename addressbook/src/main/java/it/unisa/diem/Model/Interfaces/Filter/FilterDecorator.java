@@ -10,7 +10,7 @@ import javafx.beans.property.StringProperty;
  * @see Filter
  */
 public abstract class FilterDecorator implements Filter {
-    protected Filter f;///< The inner Filter
+    protected Filter f;/**< The inner Filter */
 
     /**
      * Constructs a Filter decorator with the given inner Filter.

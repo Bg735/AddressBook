@@ -23,8 +23,8 @@ import javafx.fxml.FXML;
  */
 public class ProfileSelectionController implements OnEditable {
 
-    public static final int MAXPROFILES = 3;///< The maximum number of profiles that can be managed
-    private List<Profile> profileList;///< The list of profiles to manage
+    public static final int MAX_PROFILES = 3;/**< The maximum number of profiles that can be managed by the application */
+    private List<Profile> profileList;/**< The list of profiles to manage */
 
     /**
      * Constructs a ProfileSelectionController with the given list of profiles.
@@ -48,7 +48,7 @@ public class ProfileSelectionController implements OnEditable {
     }
 
     /**
-     * Opens the profile creation popup to increment the list of profiles, up to {@link #MAXPROFILES}
+     * Opens the profile creation popup to increment the list of profiles, up to {@link #MAX_PROFILES}
      * Called when the user clicks on the profile creation button in the profile selection view.
      * If the maximum number of profiles is reached, the user is notified of the impossibility to add a new profile.
      * @post The new profile is added to the list of profiles or an error message is shown.

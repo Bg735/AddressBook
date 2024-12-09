@@ -25,14 +25,10 @@ import javafx.collections.FXCollections;
 import it.unisa.diem.Model.Contact;
 import it.unisa.diem.Model.LocalDateProperty;
 
+/**
+ * @internal
+ */
 public class FXCollectionConverter {
-    /**
-     * Sorted collections returning from this method use the natural ordering of the elements.
-     * @param <C>
-     * @param <E>
-     * @param collection
-     * @return
-     */
     @SuppressWarnings("unchecked")
     private static <C extends Collection<?>,E> C propertize(C collection) {
         if (collection instanceof List) {

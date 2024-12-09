@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import it.unisa.diem.Model.Interfaces.Checker.CharacterLimitStringChecker;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -15,24 +16,14 @@ import javafx.beans.property.StringProperty;
  * At the actual state, this class is a wrapper for a StringProperty, but it could be extended eventually to include more information about the tag.
  */
 public class Tag {
-    public static final int MAXTAGLENGTH = 20; ///< The maximum length of a tag
-    private transient StringProperty name; ///< The name of the tag
+    public static final int MAX_TAGLENGTH = 20; /**< The maximum length of a tag */
+    private transient StringProperty name; /**< The name of the tag */
 
     /**
      * Constructs a Tag with an empty name.
      */
     public Tag() {
         name = new SimpleStringProperty();
-    }
-
-    /**
-     * Constructs a Tag with the given name.
-     *
-     * @param name the name of the tag
-     */
-    public Tag(String name) {
-        this();
-        this.name.set(name);
     }
 
     /**
@@ -45,12 +36,16 @@ public class Tag {
     }
 
     /**
-     * Sets the name of the tag.
+     * Sets the StringProperty containing the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@value #MAX_TAGLENGTH}).
      *
-     * @param name the new name of the tag
+     * @param name the StringProperty containing the name of the tag
      */
-    public void setName(StringProperty name) {
-        this.name = name;
+    public boolean setName(StringProperty name) {
+        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name.get())){
+            this.name = name;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -63,12 +58,16 @@ public class Tag {
     }
 
     /**
-     * Sets the name of the tag.
+     * Sets the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@value #MAX_TAGLENGTH}).
      *
      * @param name the new name of the tag
      */
-    public void setNameValue(String name) {
-        this.name.set(name);
+    public boolean setNameValue(String name) {
+        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
+            this.name.set(name);
+            return true;
+        }
+        return false;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {

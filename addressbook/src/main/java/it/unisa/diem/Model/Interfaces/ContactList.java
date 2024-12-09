@@ -22,24 +22,24 @@ public interface ContactList {
      * Adds a Contact to the list.
      * 
      * @param[in] c the Contact to add
-     * @return true, as specified by Collection.add(Contact)
+     * @post the Contact is in the list
      */
-    boolean add(Contact c);
+    void add(Contact c);
 
     /**
      * Deletes a Contact from the list.
      * 
      * @pre the Contact is in the list
+     * @post the Contact is not in the list
      * @param[in] c the Contact to delete
-     * @return true if the Contact has been successfully deleted
-     *         false otherwise
      */
-    boolean delete(Contact c);
+    void delete(Contact c);
 
     /**
      * Returns a Contact from the list.
      * 
      * @param[in] c the Contact to get
+     * @pre the Contact is in the list
      * @return the Contact from the list
      *         null if the Contact is not in the list
      */

@@ -20,12 +20,12 @@ import javafx.scene.control.ListView;
  * - mantain a "trash can", allowing to view and retrieve recently eliminated contacts.
  */
 public class AddressBookController implements OnEditable {
-    private TaggableList taggableList; ///< Reference to access the tag-related methods of the address book.
-    private TrashCan trashCan; ///< Reference to access the recently-deleted-related methods of the address book.
-    private ContactList contactList; ///< Reference to access the contact-list-related methods of the address book.
-    private FilteredList<Contact> filteredList; ///< Data structure to store the list of contacts of the main view.
+    private TaggableList taggableList; /**< Reference to access the tag-related methods of the address book. */
+    private TrashCan trashCan; /**< Reference to access the recently-deleted-related methods of the address book. */
+    private ContactList contactList; /**< Reference to access the contact-list-related methods of the address book. */
+    private FilteredList<Contact> filteredList; /**< Data structure to store the list of contacts of the main view. */
     @FXML
-    private ListView<Contact> shownList; ///< Reference to the list view in the main view.
+    private ListView<Contact> shownList; /**< Reference to the list view in the main view. */
 
 
     /**

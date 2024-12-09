@@ -6,6 +6,8 @@
 > Melillo Maurizio  
 > Palmisano Elettra
 
+Documentazione sul progetto disponibile [qui](https://bg735.github.io/AddressBook/)
+
 
 Nel progetto si fa utilizzo dell'API:   
 https://github.com/mangstadt/ez-vcard   

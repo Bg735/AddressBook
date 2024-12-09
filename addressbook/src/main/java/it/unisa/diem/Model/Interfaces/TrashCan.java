@@ -24,6 +24,7 @@ public interface TrashCan {
 
     /**
      * Restores a deleted contact from the trash can back to the active Collection of contacts.
+     * @return 
      * 
      * @param[in] c the recently deleted contact to restore
      */

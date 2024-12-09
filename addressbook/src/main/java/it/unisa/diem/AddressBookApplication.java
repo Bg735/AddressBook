@@ -8,7 +8,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * JavaFX App
+ * The main class of the application, which loads the assets and starts the GUI.
+ * @see Application
  */
 public class AddressBookApplication extends Application {
 
