@@ -11,14 +11,14 @@ import it.unisa.diem.Model.Contact;
 public class EmailFilter extends FilterDecorator {
    
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::FilterDecorator()
      */
     public EmailFilter(Filter filter) {
         super(filter);
     }
 
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::test()  
      * For this class, the condition is that the Contact's email field contains the substring passed to the BaseFilter in the construction chain.
      */
     @Override

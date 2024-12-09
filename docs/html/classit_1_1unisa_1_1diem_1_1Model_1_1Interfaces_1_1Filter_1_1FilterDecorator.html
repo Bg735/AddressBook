@@ -110,7 +110,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6188a4462426a68bf3e0ca2b8f17ea3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the substring to search for in the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a>, obtained whith a nested call to the inner Filters of the chain, down to the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1BaseFilter.html" title="Concrete component of the Filter Decorator pattern.">BaseFilter</a>.  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1FilterDecorator.html#a6188a4462426a68bf3e0ca2b8f17ea3a">More...</a><br /></td></tr>
 <tr class="separator:a6188a4462426a68bf3e0ca2b8f17ea3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29b51b55a92ad5b9b363ace52f98af34"><td class="memItemLeft" align="right" valign="top">abstract boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1FilterDecorator.html#a29b51b55a92ad5b9b363ace52f98af34">test</a> (<a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html">Contact</a> t)</td></tr>
-<tr class="memdesc:a29b51b55a92ad5b9b363ace52f98af34"><td class="mdescLeft">&#160;</td><td class="mdescRight">@inheritDoc  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1FilterDecorator.html#a29b51b55a92ad5b9b363ace52f98af34">More...</a><br /></td></tr>
+<tr class="memdesc:a29b51b55a92ad5b9b363ace52f98af34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter.  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1FilterDecorator.html#a29b51b55a92ad5b9b363ace52f98af34">More...</a><br /></td></tr>
 <tr class="separator:a29b51b55a92ad5b9b363ace52f98af34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5528fe6d44dfb474de17505a1ff93da0"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">test</a> (<a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html">Contact</a> t)</td></tr>
 <tr class="memdesc:a5528fe6d44dfb474de17505a1ff93da0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter.  <a href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">More...</a><br /></td></tr>
@@ -204,7 +204,14 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>@inheritDoc </p>
+<p>Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">t</td><td>the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> on which to apply the filter, verifying if it satisfies the condition. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter, false otherwise </dd></dl>
 
 <p>Implements <a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">it.unisa.diem.Model.Interfaces.Filter.Filter</a>.</p>
 

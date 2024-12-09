@@ -81,7 +81,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::setName(String)
      * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_NAMELEN}).
      * @pre The name satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@value #MAX_NAMELEN}
      * @return true if the condition is met, false otherwise
@@ -92,7 +92,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::setSurname(String)
      * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_SURNAMELEN}). 
      * @pre The surname satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@value #MAX_SURNAMELEN}
      * @return true if the condition is met, false otherwise
@@ -103,7 +103,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::setPicture(String)
      */
     @Override
     public void setPicture(String picture) throws IOException {
@@ -111,7 +111,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::addEmail(String...)
      * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailchecker}. 
      * @pre All the email addresses satisfy the condition of {@link SimpleEmailchecker#check(String)}
      * @return true if the condition is met, false otherwise
@@ -123,7 +123,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::setEmail(String, int)
      * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailchecker}.
      * @pre The email address satisfies the condition of {@link SimpleEmailchecker#check(String)}
      * @return true if the condition is met, false otherwise
@@ -135,7 +135,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::addPhoneNumber(String...)
      * This method only acts if it verifies that the argument satisfies the condition of {@link ItalianPhoneChecker}.
      * @pre All the phone numbers satisfy the condition of {@link ItalianPhoneChecker#check(String)}
      * @return true if the condition is met, false otherwise
@@ -147,7 +147,7 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Contact::setPhoneNumber(String, int)
      * This method only acts if it verifies that the argument satisfies the condition of {@link ItalianPhoneChecker}.
      * @pre The phone number satisfies the condition of {@link ItalianPhoneChecker#check(String)}
      * @return true if the condition is met, false otherwise

@@ -107,7 +107,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac871575fae235ec54b5f0c7c375ebc97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the substring to search for in the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a>, which has been passed as argument to the constructor.  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1BaseFilter.html#ac871575fae235ec54b5f0c7c375ebc97">More...</a><br /></td></tr>
 <tr class="separator:ac871575fae235ec54b5f0c7c375ebc97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a730bc3edb2d99ccc3bef8245e18c3028"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1BaseFilter.html#a730bc3edb2d99ccc3bef8245e18c3028">test</a> (<a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html">Contact</a> contact)</td></tr>
-<tr class="memdesc:a730bc3edb2d99ccc3bef8245e18c3028"><td class="mdescLeft">&#160;</td><td class="mdescRight">@inheritDoc  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1BaseFilter.html#a730bc3edb2d99ccc3bef8245e18c3028">More...</a><br /></td></tr>
+<tr class="memdesc:a730bc3edb2d99ccc3bef8245e18c3028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter.  <a href="classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1BaseFilter.html#a730bc3edb2d99ccc3bef8245e18c3028">More...</a><br /></td></tr>
 <tr class="separator:a730bc3edb2d99ccc3bef8245e18c3028"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5528fe6d44dfb474de17505a1ff93da0"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">test</a> (<a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html">Contact</a> t)</td></tr>
 <tr class="memdesc:a5528fe6d44dfb474de17505a1ff93da0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter.  <a href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">More...</a><br /></td></tr>
@@ -191,7 +191,14 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>@inheritDoc </p>
+<p>Returns true if the given <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">t</td><td>the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> on which to apply the filter, verifying if it satisfies the condition. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book.">Contact</a> satisfies the condition of the filter, false otherwise </dd></dl>
 
 <p>Implements <a class="el" href="interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html#a5528fe6d44dfb474de17505a1ff93da0">it.unisa.diem.Model.Interfaces.Filter.Filter</a>.</p>
 

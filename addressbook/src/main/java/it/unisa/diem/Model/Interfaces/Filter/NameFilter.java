@@ -12,14 +12,14 @@ import it.unisa.diem.Model.Contact;
 public class NameFilter extends FilterDecorator {
     
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::FilterDecorator()
      */
     public NameFilter(Filter filter) {
         super(filter);
     }
 
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::test()
      * For this class, the condition is that the Contact's fullName field contains the substring passed to the BaseFilter in the construction chain.
      */
     @Override

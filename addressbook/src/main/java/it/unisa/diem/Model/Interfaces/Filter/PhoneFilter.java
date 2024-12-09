@@ -11,14 +11,14 @@ import it.unisa.diem.Model.Contact;
 public class PhoneFilter extends FilterDecorator {
     
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::FilterDecorator()
      */
     public PhoneFilter(Filter filter) {
         super(filter);
     }
 
     /**
-     * @inheritDoc
+     * @copydoc FilterDecorator::test()
      * For this class, the condition is that the Contact's phoneNumber field contains the substring passed to the BaseFilter in the construction chain.
      */
     @Override

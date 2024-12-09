@@ -31,7 +31,7 @@ public abstract class FilterDecorator implements Filter {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Filter::test()
      */
     @Override
     public abstract boolean test(Contact t);

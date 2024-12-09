@@ -30,7 +30,7 @@ public class BaseFilter implements Filter {
     }
 
     /**
-     * @inheritDoc
+     * @copydoc Filter::test()
      * 
      */
     @Override

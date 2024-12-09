@@ -26,7 +26,7 @@ public class LocalDateProperty extends SimpleObjectProperty<LocalDate> implement
 
 
     /**
-     * @inheritDoc
+     * Sets the wrapped LocalDate to the specified value.
      */
     @Override
     public void set(LocalDate newValue) {
@@ -34,16 +34,14 @@ public class LocalDateProperty extends SimpleObjectProperty<LocalDate> implement
     }
 
     /**
-     * @inheritDoc
+     * Returns the wrapped LocalDate.
+     * @return the wrapped LocalDate
      */
     @Override
     public LocalDate get() {
         return super.get();
     }
     
-    /**
-     * @inheritDoc
-     */
     @Override
     public int compareTo(LocalDateProperty other) {
         return get().compareTo(other.get());
