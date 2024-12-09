@@ -1,0 +1,5 @@
+<map id="it.unisa.diem.Model.RecentlyDeleted" name="it.unisa.diem.Model.RecentlyDeleted">
+<area shape="rect" id="node1" title="Represents a trash can with Contacts deleted less than {@value RETENTION_PERIOD_DAYS} days from a Con..." alt="" coords="367,35,579,77"/>
+<area shape="rect" id="node2" title=" " alt="" coords="81,5,180,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,57,256,127"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="it.unisa.diem.Model.AddressBook" name="it.unisa.diem.Model.AddressBook">
+<area shape="rect" id="node1" title="Main model for the address book view." alt="" coords="792,209,1032,235"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1ContactList.html" title="Interface that grants methods for the management of a list of Contacts mantained in alphanumerical or..." alt="" coords="389,5,613,47"/>
+<area shape="rect" id="node3" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TaggableList.html" title="Interface that grants methods to manage a set of Tags, each associated with a set of Taggable element..." alt="" coords="389,71,613,112"/>
+<area shape="rect" id="node4" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TrashCan.html" title="Interface that grants methods for the management of a list of recently deleted contacts." alt="" coords="389,136,613,177"/>
+<area shape="rect" id="node5" title=" " alt="" coords="399,201,602,243"/>
+<area shape="rect" id="node6" title=" " alt="" coords="367,267,635,323"/>
+<area shape="rect" id="node7" href="$classit_1_1unisa_1_1diem_1_1Model_1_1RecentlyDeleted.html" title="Represents a trash can with Contacts deleted less than {@value RETENTION_PERIOD_DAYS} days from a Con..." alt="" coords="395,348,607,389"/>
+<area shape="rect" id="node8" title=" " alt="" coords="81,282,180,309"/>
+<area shape="rect" id="node9" title=" " alt="" coords="5,333,256,404"/>
+<area shape="rect" id="node10" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html" title="Passed as a Predicate&lt;Contact&gt; that verifies a condition based on the fact that a Contact contains a ..." alt="" coords="389,420,613,461"/>
+<area shape="rect" id="node11" title=" " alt="" coords="45,428,216,469"/>
+</map>
