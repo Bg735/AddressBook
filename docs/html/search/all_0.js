@@ -1,0 +1,16 @@
+var searchData=
+[
+  ['add_0',['add',['../classit_1_1unisa_1_1diem_1_1Model_1_1AddressBook.html#afc5ea444b201f1fbf43011b810fb5b3b',1,'it.unisa.diem.Model.AddressBook.add()'],['../interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1ContactList.html#ae6103e65440c9eaee3d938bca6bb6252',1,'it.unisa.diem.Model.Interfaces.ContactList.add()']]],
+  ['addemail_1',['addEmail',['../classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html#af5884cf6e030d15d7edb7d0bee81bc8d',1,'it.unisa.diem.Model.Contact.addEmail()'],['../classit_1_1unisa_1_1diem_1_1Model_1_1SafeContact.html#a6b2bea4143c2dfffdf3320f33f5e356e',1,'it.unisa.diem.Model.SafeContact.addEmail(String... email)']]],
+  ['addphonenumber_2',['addPhoneNumber',['../classit_1_1unisa_1_1diem_1_1Model_1_1SafeContact.html#a6063c967d0620f2b41e934d7b90f06c5',1,'it.unisa.diem.Model.SafeContact.addPhoneNumber()'],['../classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html#afad8748d1bcd3a0989e3c2661c1d6600',1,'it.unisa.diem.Model.Contact.addPhoneNumber()']]],
+  ['addressbook_3',['AddressBook',['../classit_1_1unisa_1_1diem_1_1Model_1_1AddressBook.html#ad595d16f02e8bdbd6f3064d1d6f8e8fa',1,'it.unisa.diem.Model.AddressBook.AddressBook(String path)'],['../classit_1_1unisa_1_1diem_1_1Model_1_1AddressBook.html#a0b30fc5db96940218460dbd93db7c36d',1,'it.unisa.diem.Model.AddressBook.AddressBook()'],['../classit_1_1unisa_1_1diem_1_1Model_1_1AddressBook.html',1,'it.unisa.diem.Model.AddressBook']]],
+  ['addressbook_2ejava_4',['AddressBook.java',['../AddressBook_8java.html',1,'']]],
+  ['addressbookapplication_5',['AddressBookApplication',['../classit_1_1unisa_1_1diem_1_1AddressBookApplication.html',1,'it::unisa::diem']]],
+  ['addressbookapplication_2ejava_6',['AddressBookApplication.java',['../AddressBookApplication_8java.html',1,'']]],
+  ['addressbookcontroller_7',['AddressBookController',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#a377404570277b604a602779ad98ab03c',1,'it.unisa.diem.Controller.AddressBookController.AddressBookController()'],['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html',1,'it.unisa.diem.Controller.AddressBookController']]],
+  ['addressbookcontroller_2ejava_8',['AddressBookController.java',['../AddressBookController_8java.html',1,'']]],
+  ['addressbookdir_9',['addressBookDir',['../classit_1_1unisa_1_1diem_1_1Utility_1_1FileManager.html#a17e717f1f84bbb8c7c05cb08c18481f2',1,'it::unisa::diem::Utility::FileManager']]],
+  ['addressbookpath_10',['addressBookPath',['../classit_1_1unisa_1_1diem_1_1Model_1_1Profile.html#ab6ad6103311145cd75ffef9918475fe7',1,'it::unisa::diem::Model::Profile']]],
+  ['addtag_11',['addTag',['../classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html#ab96de8cd7c5e633936fe1f5e6a8ecabf',1,'it.unisa.diem.Model.Contact.addTag()'],['../interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Taggable.html#a1a31269dd09596c6aaac8a0db5af261c',1,'it.unisa.diem.Model.Interfaces.Taggable.addTag()']]],
+  ['addtagtocontact_12',['addTagToContact',['../classit_1_1unisa_1_1diem_1_1Model_1_1AddressBook.html#a8cb72957ec675b8a323ab307cb42bb88',1,'it.unisa.diem.Model.AddressBook.addTagToContact()'],['../interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TaggableList.html#a65fdcccf19c3779a9cee8374272c4d45',1,'it.unisa.diem.Model.Interfaces.TaggableList.addTagToContact()']]]
+];

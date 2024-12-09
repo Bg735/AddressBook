@@ -1,0 +1,4 @@
+<map id="it.unisa.diem.Controller.AddressBookController" name="it.unisa.diem.Controller.AddressBookController">
+<area shape="rect" id="node1" title="Controller class for the AddressBook view." alt="" coords="5,95,184,136"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Controller_1_1OnEditable.html" title="Interface for UI controllers that work on a list of items." alt="" coords="5,5,184,47"/>
+</map>

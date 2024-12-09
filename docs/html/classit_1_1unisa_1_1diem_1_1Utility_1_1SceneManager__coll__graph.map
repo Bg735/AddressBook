@@ -1,0 +1,12 @@
+<map id="it.unisa.diem.Utility.SceneManager" name="it.unisa.diem.Utility.SceneManager">
+<area shape="rect" id="node1" title="Utility class to manage the scene of the application." alt="" coords="767,122,959,163"/>
+<area shape="rect" id="node2" href="$classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html" title="Controller class for the ProfileSelection view." alt="" coords="363,55,549,97"/>
+<area shape="rect" id="node3" href="$interfaceit_1_1unisa_1_1diem_1_1Controller_1_1OnEditable.html" title="Interface for UI controllers that work on a list of items." alt="" coords="28,57,207,98"/>
+<area shape="rect" id="node5" href="$classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html" title="Controller class for the AddressBook view." alt="" coords="367,187,545,229"/>
+<area shape="rect" id="node4" title=" " alt="" coords="59,5,175,32"/>
+<area shape="rect" id="node6" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TaggableList.html" title="Interface that grants methods to manage a set of Tags, each associated with a set of Taggable element..." alt="" coords="5,187,229,229"/>
+<area shape="rect" id="node7" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TrashCan.html" title="Interface that grants methods for the management of a list of recently deleted contacts." alt="" coords="5,253,229,294"/>
+<area shape="rect" id="node8" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1ContactList.html" title="Interface that grants methods for the management of a list of Contacts mantained in alphanumerical or..." alt="" coords="5,318,229,359"/>
+<area shape="rect" id="node9" title=" " alt="" coords="18,383,217,425"/>
+<area shape="rect" id="node10" title=" " alt="" coords="27,122,208,163"/>
+</map>

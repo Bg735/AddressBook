@@ -1,0 +1,9 @@
+<map id="it.unisa.diem.Controller.AddressBookController" name="it.unisa.diem.Controller.AddressBookController">
+<area shape="rect" id="node1" title="Controller class for the AddressBook view." alt="" coords="363,169,541,211"/>
+<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Controller_1_1OnEditable.html" title="Interface for UI controllers that work on a list of items." alt="" coords="28,5,207,47"/>
+<area shape="rect" id="node3" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TaggableList.html" title="Interface that grants methods to manage a set of Tags, each associated with a set of Taggable element..." alt="" coords="5,71,229,112"/>
+<area shape="rect" id="node4" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1TrashCan.html" title="Interface that grants methods for the management of a list of recently deleted contacts." alt="" coords="5,136,229,177"/>
+<area shape="rect" id="node5" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1ContactList.html" title="Interface that grants methods for the management of a list of Contacts mantained in alphanumerical or..." alt="" coords="5,201,229,243"/>
+<area shape="rect" id="node6" title=" " alt="" coords="18,267,217,308"/>
+<area shape="rect" id="node7" title=" " alt="" coords="27,332,208,373"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="67,71,168,98"/>
+<area shape="rect" id="node2" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html" title="A class representing a contact in the address book." alt="" coords="281,61,486,87"/>
+<area shape="rect" id="node4" href="$classit_1_1unisa_1_1diem_1_1Model_1_1LocalDateProperty.html" title="Property that wraps a LocalDate object." alt="" coords="289,112,478,153"/>
+<area shape="rect" id="node3" href="$classit_1_1unisa_1_1diem_1_1Model_1_1SafeContact.html" title="A safe version of the Contact class, which uses Checker instances to ensure that no illegal value is ..." alt="" coords="537,53,721,95"/>
+<area shape="rect" id="node5" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Taggable.html" title="Interface for objects that can be marked with a Tags." alt="" coords="5,5,229,47"/>
+<area shape="rect" id="node6" title=" " alt="" coords="68,174,167,201"/>
+<area shape="rect" id="node7" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Profile.html" title="Represents a profile in the application." alt="" coords="285,178,481,205"/>
+<area shape="rect" id="node8" href="$classit_1_1unisa_1_1diem_1_1Model_1_1RecentlyDeleted.html" title="Represents a trash can with Contacts deleted less than {@value RETENTION_PERIOD_DAYS} days from a Con..." alt="" coords="277,229,489,271"/>
+<area shape="rect" id="node9" title=" " alt="" coords="35,122,199,149"/>
+</map>
