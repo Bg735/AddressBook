@@ -5,7 +5,7 @@ import java.io.IOException;
 import it.unisa.diem.Model.Interfaces.Checker.CharacterLimitStringChecker;
 import it.unisa.diem.Model.Interfaces.Checker.Checker;
 import it.unisa.diem.Model.Interfaces.Checker.ItalianPhoneChecker;
-import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailchecker;
+import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailChecker;
 
 /**
  * A safe version of the {@link Contact} class, which uses {@link Checker} instances to ensure that no illegal value is assigned to its fields.
@@ -112,8 +112,8 @@ public class SafeContact extends Contact {
 
     /**
      * @copydoc Contact::addEmail(String...)
-     * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailchecker}. 
-     * @pre All the email addresses satisfy the condition of {@link SimpleEmailchecker#check(String)}
+     * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailChecker}. 
+     * @pre All the email addresses satisfy the condition of {@link SimpleEmailChecker#check(String)}
      * @return true if the condition is met, false otherwise
      */
     @Override
@@ -124,8 +124,8 @@ public class SafeContact extends Contact {
 
     /**
      * @copydoc Contact::setEmail(String, int)
-     * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailchecker}.
-     * @pre The email address satisfies the condition of {@link SimpleEmailchecker#check(String)}
+     * This method only acts if it verifies that the argument satisfies the condition of {@link SimpleEmailChecker}.
+     * @pre The email address satisfies the condition of {@link SimpleEmailChecker#check(String)}
      * @return true if the condition is met, false otherwise
      */
     @Override

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import it.unisa.diem.Model.Interfaces.Taggable;
 import it.unisa.diem.Model.Interfaces.Checker.CharacterLimitStringChecker;
 import it.unisa.diem.Model.Interfaces.Checker.ItalianPhoneChecker;
-import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailchecker;
+import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailChecker;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.StringProperty;
 
