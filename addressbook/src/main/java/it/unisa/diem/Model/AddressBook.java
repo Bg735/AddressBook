@@ -10,7 +10,7 @@ import javafx.beans.property.MapProperty;
 /**
  * Main model for the address book view.
  * Contains fields and methods to enclose the functionalities of a {@link ContactList}, a {@link TaggableList} and a {@link TrashCan}.
- * In particular, it allows for the storage and management of an ordered list of taggable {@link SafeContact}s ammitting omonyms, which can be restored within {@value RecentlyDeleted#RETENTION_PERIOD_DAYS} days of their deletion.
+ * In particular, it allows for the storage and management of an ordered list of taggable {@link SafeContact}s ammitting omonyms, which can be restored within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days of their deletion.
  * It is created to grant full compatibility with a JavaFX UI
  * 
  * @invariant contactsList != null
@@ -20,7 +20,7 @@ import javafx.beans.property.MapProperty;
 public class AddressBook implements ContactList, TaggableList, TrashCan {
     private SetProperty<SafeContact> contactsList; /**< The list of contacts to manage */
     private MapProperty<Tag, SetProperty<SafeContact>> tagMap; /**< The map that stores all the tags and the sets of contacts marked with them */
-    private RecentlyDeleted recentlyDeleted; /** The list of contacts that have been deleted within {@value RecentlyDeleted#RETENTION_PERIOD_DAYS} days */
+    private RecentlyDeleted recentlyDeleted; /** The list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days */
     private static Filter fullFilter = null; /**< The filter that is applied to the contacts list when using the search function*/
     private static Filter tagFilter = null; /**< The filter that is applied to the contacts list when visualizing the contacts marked with a certain {@link Tag}*/
 
@@ -73,10 +73,10 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     }
 
     /**
-     * Returns the list of contacts that have been deleted within {@value RecentlyDeleted#RETENTION_PERIOD_DAYS} days.
+     * Returns the list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days.
      * 
      * @invariant recentlyDeleted != null
-     * @return the list of contacts that have been deleted within {@value RecentlyDeleted#RETENTION_PERIOD_DAYS} days
+     * @return the list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days
      */
     @Override
     public RecentlyDeleted trashCan() {

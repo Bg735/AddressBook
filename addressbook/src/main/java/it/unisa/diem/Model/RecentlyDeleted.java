@@ -15,7 +15,7 @@ import javafx.collections.FXCollections;
 
 
 /**
- * Represents a trash can with {@link Contact}s deleted less than {@value #RETENTION_PERIOD_DAYS} days from a {@link ContactList}.
+ * Represents a trash can with {@link Contact}s deleted less than {@link #RETENTION_PERIOD_DAYS} days from a {@link ContactList}.
  * 
  * The trash can is implemented as a map of {@link LocalDateProperty} keys and {@link SetProperty} values.
  * The map is ordered by the date of deletion of the contacts.
@@ -43,7 +43,7 @@ public class RecentlyDeleted implements Serializable {
     }
 
     /**
-     * Permanently removes all the contacts moved to the trash can more than {@value #RETENTION_PERIOD_DAYS} days ago.
+     * Permanently removes all the contacts moved to the trash can more than {@link #RETENTION_PERIOD_DAYS} days ago.
      * 
      * @invariant trashCan != null
      * @post trashCan.get().size() <= trashCan.get().size()@pre

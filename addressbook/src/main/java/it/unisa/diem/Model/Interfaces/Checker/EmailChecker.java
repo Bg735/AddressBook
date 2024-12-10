@@ -8,7 +8,7 @@ public interface EmailChecker extends Checker {
 
     /**
      * Checks if the String parameter is a valid email.
-     * By default, checks if the string respects the format defined by the regular expression: {@value #regex}.
+     * By default, checks if the string respects the format defined by the regular expression: {@link #regex}.
      * @param[in] string the email string to check
      * @return true if the email is valid, false otherwise
      */

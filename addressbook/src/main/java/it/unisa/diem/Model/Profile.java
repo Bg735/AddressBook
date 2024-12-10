@@ -12,7 +12,7 @@ import javafx.beans.property.StringProperty;
  * Represents a profile in the application.
  * 
  * A profile is characterized by a name, a phone number, a profile picture and an address book. Only the name field is mandatory.
- * The name is subject to a maximum length of {@value #MAX_NAMELEN} characters.
+ * The name is subject to a maximum length of {@link #MAX_NAMELEN} characters.
  * The phone number is subject to the constraints of {@link ItalianPhoneChecker}.
  * It is created to grant full compatibility with a JavaFX UI
  * 
@@ -55,7 +55,7 @@ public class Profile implements Serializable{
     }
 
     /**
-     * Sets the name of the profile, given that it satisfies the satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_NAMELEN}).
+     * Sets the name of the profile, given that it satisfies the satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_NAMELEN}).
      * 
      * @param name the new name of the profile
      * @return true if the name is valid

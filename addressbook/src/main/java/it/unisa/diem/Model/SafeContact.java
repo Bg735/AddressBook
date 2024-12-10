@@ -82,8 +82,8 @@ public class SafeContact extends Contact {
 
     /**
      * @copydoc Contact::setName(String)
-     * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_NAMELEN}).
-     * @pre The name satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@value #MAX_NAMELEN}
+     * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_NAMELEN}).
+     * @pre The name satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@link #MAX_NAMELEN}
      * @return true if the condition is met, false otherwise
      */
     @Override
@@ -93,8 +93,8 @@ public class SafeContact extends Contact {
 
     /**
      * @copydoc Contact::setSurname(String)
-     * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_SURNAMELEN}). 
-     * @pre The surname satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@value #MAX_SURNAMELEN}
+     * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_SURNAMELEN}). 
+     * @pre The surname satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@link #MAX_SURNAMELEN}
      * @return true if the condition is met, false otherwise
      */
     @Override

@@ -36,7 +36,7 @@ public class Tag {
     }
 
     /**
-     * Sets the StringProperty containing the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@value #MAX_TAGLENGTH}).
+     * Sets the StringProperty containing the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
      *
      * @param name the StringProperty containing the name of the tag
      */
@@ -58,7 +58,7 @@ public class Tag {
     }
 
     /**
-     * Sets the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@value #MAX_TAGLENGTH}).
+     * Sets the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
      *
      * @param name the new name of the tag
      */
