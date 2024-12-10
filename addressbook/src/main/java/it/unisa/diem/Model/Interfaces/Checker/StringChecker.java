@@ -11,6 +11,8 @@ public interface StringChecker extends Checker {
      * @return true if the word is valid, false otherwise
      */
     @Override
-    boolean check(String string);
+    default boolean check(String string){
+        return string != null;
+    }
     
 }

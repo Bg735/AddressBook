@@ -21,6 +21,6 @@ public class CharacterLimitStringChecker implements StringChecker {
      */
     @Override
     public boolean check(String string) {
-        return string != null && string.length() <= limit;
+        return StringChecker.super.check(string) && string.length() <= limit;
     }
 }
