@@ -30,7 +30,7 @@ import javafx.beans.property.StringProperty;
 public class Contact implements Comparable<Contact>, Serializable, Taggable {
     public static final int MAX_EMAILS = 3;
     public static final int MAX_PHONENUMBERS = 3;
-
+    
     private transient StringProperty name;
     private transient StringProperty surname;
     private transient StringProperty fullName;
@@ -79,6 +79,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     public boolean setName(String name) {
         // TODO: Implement this method
+        return false;
     }
 
 
@@ -90,7 +91,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     public StringProperty getName() {
         // TODO: Implement this method
-        return null;
+        return name;
     }
 
     /**
