@@ -51,8 +51,7 @@ public class Profile implements Serializable{
      * @return the name of the profile
      */
     public StringProperty getName() {
-        // TODO: Implement this method
-        
+        return name;
     }
 
     /**
