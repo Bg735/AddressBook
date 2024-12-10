@@ -13,11 +13,10 @@ public class ItalianPhoneChecker implements PhoneChecker{
      */
     @Override
     public boolean check(String string) {
-        if (string == null || string.isEmpty()) {return false;}
+        if (string == null) {return false;}
         // Check if the length is either 9 or 10
         int length = string.length();
-        return (length == 9 || length == 10) && PhoneChecker.super.check(string);
-
+        return PhoneChecker.super.check(string) && (length == 9 || length == 10);
     }
 
 }
