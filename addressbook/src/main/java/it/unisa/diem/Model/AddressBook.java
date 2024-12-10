@@ -194,6 +194,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public Contact get(Contact c) {
         // TODO Auto-generated method stub
+        return null; 
     }
 
 }
