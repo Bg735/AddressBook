@@ -35,7 +35,7 @@ public class RecentlyDeleted implements Serializable {
     }
     
     /**
-     * Initializes the trash can as an empty, ordered map.
+     * Initializes the trash can.
      * 
      * @invariant trashCan != null
      */
