@@ -1,11 +1,19 @@
 package it.unisa.diem.Model;
 
+import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
 import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
 import it.unisa.diem.Model.Interfaces.Filter.Filter;
+import it.unisa.diem.Utility.FXCollectionConverter;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleSetProperty;
+import javafx.collections.FXCollections;
 
 /**
  * Main model for the address book view.
@@ -27,12 +35,15 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     
     /**
      * Constructs an empty AddressBook.
-     * @post contactsList != null
-     * @post tagMap != null
-     * @post recentlyDeleted != null
+     * @post contactsList != null ?
+     * @post tagMap != null ?
+     * @post recentlyDeleted != null ?
      */
     public AddressBook() {
         // Constructor implementation
+        this.contactsList = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<SafeContact>()));
+        this.tagMap = new SimpleMapProperty<>(FXCollections.observableMap(new TreeMap<Tag,SetProperty<SafeContact>>()));
+        this.recentlyDeleted = recentlyDeleted;
     }
 
     /**
@@ -91,7 +102,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @invariant c != null
      * @post contactsList.contains(c)
      * @post contactsList.size() == contactsList.size()@pre + 1
-     * @return true, as specified by {@link ContactList#add(Contact)}
+     * @return true, as specified by {@link ContactList#add(Contact)} ?? it's void
      */
     @Override
     public void add(Contact c) {
@@ -105,7 +116,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @invariant c != null
      * @post !contactsList.contains(c)
      * @post contactsList.size() == contactsList.size()@pre - 1
-     * @return true if the contact has been successfully deleted, false otherwise
+     * @return true if the contact has been successfully deleted, false otherwise ?? it's void
      */
     @Override
     public void delete(Contact c) {
@@ -154,7 +165,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @post the contact is not part of the set of contacts marked with such tag. If it was the last contact with that tag, the tag is removed from the tag map
      */
     @Override
-    public void removeTagFromContact(Tag tag, Contact c) {
+    public void removeTagFromContact(Tag t, Contact c) {
         // TODO: Implement this method
     }
 

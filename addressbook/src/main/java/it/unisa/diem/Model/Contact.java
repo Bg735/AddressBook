@@ -103,7 +103,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     public String getNameValue() {
         // TODO: Implement this method
-        return null;
+        return nameValue;
     }
 
     /**
