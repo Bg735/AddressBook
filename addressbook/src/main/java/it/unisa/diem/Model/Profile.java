@@ -45,8 +45,8 @@ public class Profile implements Serializable{
      */
     public Profile(StringProperty name, StringProperty phone, StringProperty profilePicture, StringProperty addressBookPath) throws IOException {
         // Constructor implementation
-        this.name = name; 
-        this.phone = phone; 
+        this.name = new SimpleStringProperty(name.get().trim()); 
+        this.name = new SimpleStringProperty(phone.get().trim()); 
         setProfilePicture(profilePicture.get()); 
         setAddressBookPath(addressBookPath.get()); 
         
@@ -74,7 +74,7 @@ public class Profile implements Serializable{
     public boolean setName(String name) {
         CharacterLimitStringChecker checker = new CharacterLimitStringChecker(MAX_NAMELEN); 
         if(checker.check(name)) {
-            this.name = new SimpleStringProperty(name); 
+            this.name = new SimpleStringProperty(name.trim()); 
             return true; 
         }
         return false; 
@@ -102,7 +102,7 @@ public class Profile implements Serializable{
     public boolean setPhone(String phone) {
         ItalianPhoneChecker checker = new ItalianPhoneChecker(); 
         if(checker.check(phone)) {
-            this.phone = new SimpleStringProperty(phone); 
+            this.phone = new SimpleStringProperty(phone.trim()); 
             return true; 
         }
         return false; 
@@ -146,7 +146,7 @@ public class Profile implements Serializable{
      * @param[in] profilePicture the path of the picture to assign to the contact
      * @throws FileNotFoundException if the picture cannot be copied in the assets folder, or the specified path is not valid
      */
-    public void setProfilePicture(String profilePicture) throws FileNotFoundException {
+    public void setProfilePicture(String profilePicture) throws FileNotFoundException, IOException {
         Path profilePicturePath = Paths.get(profilePicture);
         if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
