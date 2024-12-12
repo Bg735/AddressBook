@@ -24,7 +24,13 @@ public class NameFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        // TODO: Implement this method
-        return contact.containsName(getSubstring().get());
+        /*
+           In this way the user can look up for:
+           1) surname name
+           2) name surname
+        */
+        String[] fullName = {contact.getSurnameValue(), contact.getNameValue()};
+        return (fullName[0] + " " + fullName[1]).contains(getSubstring()) ||
+                (fullName[1] + " " + fullName[0]).contains(getSubstring());
     }
 }
