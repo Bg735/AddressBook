@@ -26,7 +26,7 @@ public abstract class FilterDecorator implements Filter {
      * @return the substring to search for in the Contact
      */
     @Override
-    public StringProperty getSubstring() {
+    public String getSubstring() {
         return f.getSubstring();
     }
 
