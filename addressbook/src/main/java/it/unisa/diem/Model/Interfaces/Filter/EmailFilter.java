@@ -23,6 +23,11 @@ public class EmailFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        return contact.containsEmail(getSubstring().get());
+        String sub = getSubstring();
+        String[] emails = contact.getEmailList();
+        for (String e: emails)
+            if (e.toLowerCase().contains(sub))
+                return true;
+        return false;
     }
 }
