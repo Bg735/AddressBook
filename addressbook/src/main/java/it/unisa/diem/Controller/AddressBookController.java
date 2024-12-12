@@ -8,7 +8,12 @@ import it.unisa.diem.Model.Interfaces.TrashCan;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 /**
  * Controller class for the AddressBook view.
@@ -20,6 +25,8 @@ import javafx.scene.control.ListView;
  * - mantain a "trash can", allowing to view and retrieve recently eliminated contacts.
  */
 public class AddressBookController implements OnEditable {
+    public static final int DAYS = 30; /**< Number of days a contact remains in the recently-deleted-list */
+    
     private TaggableList taggableList; /**< Reference to access the tag-related methods of the address book. */
     private TrashCan trashCan; /**< Reference to access the recently-deleted-related methods of the address book. */
     private ContactList contactList; /**< Reference to access the contact-list-related methods of the address book. */
@@ -27,11 +34,22 @@ public class AddressBookController implements OnEditable {
     @FXML
     private ListView<Contact> shownList; /**< Reference to the list view in the main view. */
 
+    
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField surnameField;
 
+ 
+    
+    
+    
+    
+    
     /**
      * Constructs an AddressBookController with the given profile.
      *
-     * @param pathToAddressboook the path to the internal address book file to load
+     * @param pathToAddressbook the path to the internal address book file to load
      * @see AddressBook#readFromFile(String)
      */
     public AddressBookController(String pathToAddressBook) {
@@ -39,7 +57,7 @@ public class AddressBookController implements OnEditable {
         this.taggableList = addressBook;
         this.trashCan = addressBook;
         this.contactList = addressBook;
-        addressBook.trashCan().removeOlderThan(30); // Example call to removeOlderThan
+        addressBook.trashCan().removeOlderThan(DAYS); // Example call to removeOlderThan
     }
 
 
@@ -65,6 +83,8 @@ public class AddressBookController implements OnEditable {
     @FXML
     public void onAdd(ActionEvent event) {
         // Method implementation
+        nameField.setEditable(true);
+        surnameField.setEditable(true);
     }
 
     /**
