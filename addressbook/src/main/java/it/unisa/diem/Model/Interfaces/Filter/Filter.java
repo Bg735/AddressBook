@@ -12,12 +12,12 @@ public interface Filter extends java.util.function.Predicate<Contact> {
     /**
      * Returns true if the given Contact satisfies the condition of the filter.
      * 
-     * @param[in] t the Contact on which to apply the filter, verifying if it satisfies the condition.
+     * @param[in] contact the Contact on which to apply the filter, verifying if it satisfies the condition.
      * @return true if the Contact satisfies the condition of the filter, false otherwise
 
      */
     @Override
-    boolean test(Contact t);
+    boolean test(Contact contact);
 
     /**
      * Returns the substring to search for in the Contact.
