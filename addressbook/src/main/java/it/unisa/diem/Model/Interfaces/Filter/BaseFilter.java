@@ -25,8 +25,8 @@ public class BaseFilter implements Filter {
      * Returns the substring to search for in the Contact, which has been passed as argument to the constructor.
      */
     @Override
-    public StringProperty getSubstring() {
-        return substring;
+    public String getSubstring() {
+        return substring.get().trim().toLowerCase();
     }
 
     /**
@@ -35,6 +35,6 @@ public class BaseFilter implements Filter {
      */
     @Override
     public boolean test(Contact contact) {
-        return contact != null && getSubstring().get() != null;
+        return contact != null && getSubstring() != null;
     }
 }
