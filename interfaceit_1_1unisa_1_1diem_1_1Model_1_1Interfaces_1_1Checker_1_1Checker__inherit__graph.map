@@ -1,9 +1,0 @@
-<map id="it.unisa.diem.Model.Interfaces.Checker.Checker" name="it.unisa.diem.Model.Interfaces.Checker.Checker">
-<area shape="rect" id="node1" title="Classes implementing this interface will be used to check if a certain string has a valid format." alt="" coords="5,71,229,112"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1EmailChecker.html" title="Classes implementing this interface will be used to check if a certain string is a valid email." alt="" coords="277,5,501,47"/>
-<area shape="rect" id="node4" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1PhoneChecker.html" title="Classes implementing this interface will be used to check if a certain string is a valid phone number..." alt="" coords="277,71,501,112"/>
-<area shape="rect" id="node6" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1StringChecker.html" title="Classes implementing this interface will be used to check if a certain string is a valid word." alt="" coords="277,136,501,177"/>
-<area shape="rect" id="node3" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1SimpleEmailchecker.html" title="EmailChecker base implementation, used to check if a certain string is a valid email." alt="" coords="569,5,793,47"/>
-<area shape="rect" id="node5" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1ItalianPhoneChecker.html" title="PhoneChecker implementation used to check if a certain string is a valid phone number for the italian..." alt="" coords="569,71,793,112"/>
-<area shape="rect" id="node7" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1CharacterLimitStringChecker.html" title="StringChecker implementation used to check if a certain string has at most a limit number of characte..." alt="" coords="549,136,812,177"/>
-</map>

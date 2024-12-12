@@ -1,5 +1,0 @@
-<map id="it.unisa.diem.Model.Interfaces.Checker.StringChecker" name="it.unisa.diem.Model.Interfaces.Checker.StringChecker">
-<area shape="rect" id="node1" title="Classes implementing this interface will be used to check if a certain string is a valid word." alt="" coords="25,95,249,136"/>
-<area shape="rect" id="node3" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1CharacterLimitStringChecker.html" title="StringChecker implementation used to check if a certain string has at most a limit number of characte..." alt="" coords="5,184,268,225"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Checker_1_1Checker.html" title="Classes implementing this interface will be used to check if a certain string has a valid format." alt="" coords="25,5,249,47"/>
-</map>

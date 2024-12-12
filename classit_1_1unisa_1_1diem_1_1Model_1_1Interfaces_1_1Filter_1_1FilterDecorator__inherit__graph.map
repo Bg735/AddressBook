@@ -1,9 +1,0 @@
-<map id="it.unisa.diem.Model.Interfaces.Filter.FilterDecorator" name="it.unisa.diem.Model.Interfaces.Filter.FilterDecorator">
-<area shape="rect" id="node1" title="Abstract decorator of the Filter pattern." alt="" coords="496,104,720,145"/>
-<area shape="rect" id="node4" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1EmailFilter.html" title="Concrete decorator of the Filter pattern that verifies if a Contact contains the substring passed to ..." alt="" coords="768,5,992,47"/>
-<area shape="rect" id="node5" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1NameFilter.html" title="Concrete decorator of the Filter pattern that verifies if a Contact contains the substring passed to ..." alt="" coords="768,71,992,112"/>
-<area shape="rect" id="node6" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1PhoneFilter.html" title="Concrete decorator of the Filter pattern that verifies if a Contact contains the substring passed to ..." alt="" coords="768,136,992,177"/>
-<area shape="rect" id="node7" href="$classit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1TagFilter.html" title="Concrete decorator of the Filter pattern that verifies if a Contact contains the substring passed to ..." alt="" coords="768,201,992,243"/>
-<area shape="rect" id="node2" href="$interfaceit_1_1unisa_1_1diem_1_1Model_1_1Interfaces_1_1Filter_1_1Filter.html" title="Passed as a Predicate&lt;Contact&gt; that verifies a condition based on the fact that a Contact contains a ..." alt="" coords="224,104,448,145"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,104,176,145"/>
-</map>
