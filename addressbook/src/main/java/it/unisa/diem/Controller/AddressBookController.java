@@ -5,15 +5,14 @@ import it.unisa.diem.Model.Contact;
 import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
+import it.unisa.diem.Model.Tag;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 
 /**
  * Controller class for the AddressBook view.
@@ -31,15 +30,22 @@ public class AddressBookController implements OnEditable {
     private TrashCan trashCan; /**< Reference to access the recently-deleted-related methods of the address book. */
     private ContactList contactList; /**< Reference to access the contact-list-related methods of the address book. */
     private FilteredList<Contact> filteredList; /**< Data structure to store the list of contacts of the main view. */
+   
+    
     @FXML
     private ListView<Contact> shownList; /**< Reference to the list view in the main view. */
-
-    
     @FXML
     private TextField nameField;
     @FXML
     private TextField surnameField;
-
+    @FXML 
+    private ListView<String> phoneList; /**< Reference to the list of phone numbers in the contact view. */
+    @FXML 
+    private ListView<String> emailList; /**< Reference to the list of email addresses in the contact view. */
+    @FXML 
+    private ListView<Tag> tagsList; /**< Reference to the list of tags in the contact view. */
+    @FXML
+    private Button addButton; 
  
     
     
@@ -85,6 +91,15 @@ public class AddressBookController implements OnEditable {
         // Method implementation
         nameField.setEditable(true);
         surnameField.setEditable(true);
+        phoneList.setDisable(false);   
+        emailList.setDisable(false);   
+        tagsList.setDisable(false); 
+        
+        nameField.setText(""); 
+        surnameField.setText(""); 
+        phoneList.getItems().clear(); 
+        emailList.getItems().clear(); 
+        tagsList.getItems().clear(); 
     }
 
     /**
@@ -127,6 +142,26 @@ public class AddressBookController implements OnEditable {
      */
     public void onSave() {
         // Method implementation
+        String name = nameField.getText();
+        String surname = surnameField.getText();
+
+        ObservableList<String> phones = phoneList.getItems();
+        ObservableList<String> emails = emailList.getItems();
+        ObservableList<Tag> tags = tagsList.getItems();
+        
+        for(int i=0 ; i<)
+        
+        Contact newContact = new Contact(name, surname, phones, emails, tags);
+
+        // 4. Aggiungi il contatto alla rubrica (assumendo che 'contactList' sia una lista di contatti)
+        contactList.add(newContact); // Aggiungi il contatto alla rubrica
+
+        // 5. (Facoltativo) Pulisci i campi dopo aver aggiunto il contatto
+        nameField.setText("");
+        surnameField.setText("");
+        phoneList.getItems().clear();
+        emailList.getItems().clear();
+        tagsList.getItems().clear();
     }
 
     /**
