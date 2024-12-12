@@ -35,7 +35,6 @@ public class BaseFilter implements Filter {
      */
     @Override
     public boolean test(Contact contact) {
-        // TODO: Implement this method
-        return false;
+        return contact != null && getSubstring().get() != null;
     }
 }
