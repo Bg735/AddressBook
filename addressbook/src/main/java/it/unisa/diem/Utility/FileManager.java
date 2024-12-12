@@ -102,19 +102,23 @@ public class FileManager {
     }
 
     /**
-     * Imports a VCard from a file.
+     * Imports an AddressBook from a file.
      * 
      * @param path The file path of the VCard to be imported.
-     * @return The VCard object.
+     * @return The AddressBook to be imported.
      * @throws StreamCorruptedException If the file stream is corrupted.
      */
-    public static VCard importFromVCard(String path) throws StreamCorruptedException {
-        try (FileInputStream fis = new FileInputStream(path)) {
-            VCardReader reader = new VCardReader(fis);
-            return reader.readNext();  // Reads the VCard from the file
+    public static AddressBook importFromVCard(String path) throws StreamCorruptedException {
+        AddressBook addressBook = new AddressBook();
+        try (FileInputStream fis = new FileInputStream(path); VCardReader reader = new VCardReader(fis)) {
+            VCard vCard;
+            while ((vCard = reader.readNext()) != null) {
+                addressBook.add(Contact.fromVCard(vCard));
+            }
         } catch (IOException e) {
             throw new StreamCorruptedException("Failed to import from VCard: " + e.getMessage());
         }
+        return addressBook;
     }
 
     /**
@@ -131,7 +135,7 @@ public class FileManager {
             // Iterate over AddressBook contacts and write them as VCards
             for (Contact contact : ab.contacts()) {
                 // Write the vCard to the output stream
-                writer.write(contact.toVCard());
+                vCardWriter.write(contact.toVCard());
             }
         // Close the writer automatically due to the try-with-resources
         }
