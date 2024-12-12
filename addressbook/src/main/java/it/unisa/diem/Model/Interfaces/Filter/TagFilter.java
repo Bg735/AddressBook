@@ -23,7 +23,6 @@ public class TagFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        // TODO: Implement this method
-        return false;
+        return contact.containsTag(getSubstring().get());
     }
 }
