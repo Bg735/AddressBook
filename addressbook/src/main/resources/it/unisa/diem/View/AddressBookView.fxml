@@ -4,7 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -95,72 +94,38 @@
                            <children>
                               <VBox alignment="CENTER" layoutX="14.0" layoutY="73.0" prefHeight="396.0" prefWidth="163.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <ButtonBar onMouseEntered="#handleMouseEntered" onMouseExited="#handleMouseExited" prefHeight="27.0" prefWidth="315.0" style="-fx-background-radius: 20; -fx-border-radius: 20;" VBox.vgrow="ALWAYS">
-                                       <buttons>
-                                          <Button alignment="CENTER" minWidth="8.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="200.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="Add">
-                                             <font>
-                                                <Font name="Helvetica Bold" size="13.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                          <Button alignment="CENTER" minWidth="14.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="200.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="Add">
-                                             <font>
-                                                <Font name="Helvetica Bold" size="13.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                          <Button alignment="CENTER" mnemonicParsing="false" prefWidth="200.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="Add">
-                                             <font>
-                                                <Font name="Helvetica Bold" size="13.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                       </buttons>
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </ButtonBar>
                                     <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../../../../../../../../../Pictures/foto_gorilla.jpeg" />
-                                       </image>
                                        <VBox.margin>
                                           <Insets top="40.0" />
                                        </VBox.margin>
                                     </ImageView>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nome" />
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cognome" />
+                                          <TextField fx:id="surnameField" editable="false" />
+                                          <TextField fx:id="nameField" editable="false" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="La togliamo ?" />
-                                          <ListView prefHeight="200.0" prefWidth="200.0" />
+                                          <ListView fx:id="phoneList" prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="278.0" prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
-                                          <ListView prefHeight="200.0" prefWidth="200.0" />
+                                          <ListView fx:id="emailList" prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="324.0" prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags:" />
-                                          <ListView prefHeight="200.0" prefWidth="200.0" />
+                                          <ListView fx:id="tagList" prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                        <children>
-                                          <Button alignment="CENTER" mnemonicParsing="false" prefWidth="200.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="Add">
+                                          <Button fx:id="addButton" alignment="CENTER" mnemonicParsing="false" onAction="#onAdd" onMouseClicked="#onAdd" prefWidth="200.0" style="-fx-border-radius: 15; -fx-background-radius: 15;" text="Add">
                                              <font>
                                                 <Font name="Helvetica Bold" size="13.0" />
                                              </font>
