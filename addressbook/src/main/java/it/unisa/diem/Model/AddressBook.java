@@ -35,9 +35,9 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     
     /**
      * Constructs an empty AddressBook.
-     * @post contactsList != null ?
-     * @post tagMap != null ?
-     * @post recentlyDeleted != null ?
+     * @post contactsList != null 
+     * @post tagMap != null 
+     * @post recentlyDeleted != null 
      */
     public AddressBook() {
         // Constructor implementation
@@ -57,6 +57,13 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     public AddressBook(String path) {
         // Constructor implementation
+        this();
+        AddressBook loadedBook = readFromFile(path);
+        if (loadedBook != null) {
+            this.contactsList = loadedBook.contactsList;
+            this.tagMap = loadedBook.tagMap;
+            this.recentlyDeleted = loadedBook.recentlyDeleted;
+        }
     }
 
     /**
@@ -69,7 +76,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public SetProperty<Contact> contacts() {
         // TODO: Implement this method (returns contactsList)
-        return null;
+        return contactsList;
     }
     
     /**
@@ -80,7 +87,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public MapProperty<Tag, SetProperty<Contact>> getTagMap() {
         // TODO: Implement this method (returns tagMap)
-        return null;
+        return tagMap;
     }
 
     /**
@@ -92,7 +99,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public RecentlyDeleted trashCan() {
         // TODO: Implement this method (returns recentlyDeleted)
-        return null;
+        return recentlyDeleted;
     }
 
     /**
@@ -102,11 +109,15 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @invariant c != null
      * @post contactsList.contains(c)
      * @post contactsList.size() == contactsList.size()@pre + 1
-     * @return true, as specified by {@link ContactList#add(Contact)} ?? it's void
      */
     @Override
     public void add(Contact c) {
         // TODO: Implement this method
+        if (c == null) {
+            throw new IllegalArgumentException("Contact cannot be null");
+        }
+        
+        contactsList.add(c);
     }
 
     /**
@@ -116,11 +127,21 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @invariant c != null
      * @post !contactsList.contains(c)
      * @post contactsList.size() == contactsList.size()@pre - 1
-     * @return true if the contact has been successfully deleted, false otherwise ?? it's void
      */
     @Override
     public void delete(Contact c) {
         // TODO: Implement this method, returns false if not found
+        if (c == null) {
+            throw new IllegalArgumentException("Contact cannot be null");
+        }
+        
+        if (contactsList.remove(c)) {
+            for (Tag tag : tagMap.keySet()) {
+                tagMap.get(tag).remove(c);
+            }
+            
+            recentlyDeleted.add(c);
+        }
     }
 
     
@@ -137,6 +158,14 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public void restore(Contact c) {
         // TODO: Implement this method
+        if (c == null) {
+            throw new IllegalArgumentException("Contact cannot be null");
+        }
+        
+        if (recentlyDeleted.contains(c)) {
+            recentlyDeleted.remove(c);
+            contactsList.add(c);
+        }
     }
 
     
@@ -152,7 +181,15 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public void addTagToContact(Tag t, Contact c) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTagToContact'");
+        if (t == null || c == null) {
+            throw new IllegalArgumentException("Tag and contact cannot be null");
+        }
+        
+        if (!tagMap.containsKey(t)) {
+            tagMap.put(t, new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>())));
+        }
+  
+        tagMap.get(t).add(c);
     }
 
     /**
@@ -167,6 +204,17 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public void removeTagFromContact(Tag t, Contact c) {
         // TODO: Implement this method
+        if (t == null || c == null) {
+            throw new IllegalArgumentException("Tag and contact cannot be null");
+        }
+        
+        if (tagMap.containsKey(t)) {
+            tagMap.get(t).remove(c);
+   
+            if (tagMap.get(t).isEmpty()) {
+                tagMap.remove(t);
+            }
+        }
     }
 
     /**
@@ -179,7 +227,16 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     
     public static AddressBook readFromFile(String path) {
         // TODO: Implement this method
-        return null;
+        if (path == null) {
+            throw new IllegalArgumentException("Path cannot be null");
+        }
+        
+        try {
+            return FileManager.importFromFile(path);
+        } catch (Exception e) {
+            System.err.println("Error reading AddressBook from file: " + e.getMessage());
+            return null;
+        }
     }
 
 
@@ -191,6 +248,15 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     public void writeToFile(String path) {
         // TODO: Implement this method
+        if (path == null) {
+            throw new IllegalArgumentException("Path cannot be null");
+        }
+        
+        try {
+            FileManager.exportToFile(this, path);
+        } catch (Exception e) {
+            System.err.println("Error writing AddressBook to file: " + e.getMessage());
+        }
     }
 
 
@@ -205,6 +271,16 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
     @Override
     public Contact get(Contact c) {
         // TODO Auto-generated method stub
+        if (c == null) {
+            throw new IllegalArgumentException("Contact cannot be null");
+        }
+  
+        for (Contact contact : contactsList) {
+            if (contact.equals(c)) {
+                return contact;
+            }
+        }
+        
         return null; 
     }
 
