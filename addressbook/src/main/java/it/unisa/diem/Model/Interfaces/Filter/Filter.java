@@ -24,5 +24,5 @@ public interface Filter extends java.util.function.Predicate<Contact> {
      * 
      * @return the substring to search for in the Contact
      */
-    StringProperty getSubstring();
+    String getSubstring();
 }
