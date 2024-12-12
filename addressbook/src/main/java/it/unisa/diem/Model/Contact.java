@@ -12,7 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.TreeSet;
 
 import ezvcard.VCard;
 import ezvcard.parameter.ImageType;
@@ -78,7 +81,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         for (int i = 0; i < MAX_PHONENUMBERS; i++) {
             phoneNumber[i] = "";
         }
-        tags = new SimpleSetProperty<Tag>(FXCollections.observableSet(new LinkedHashSet<Tag>()));
+        tags = new SimpleSetProperty<Tag>(FXCollections.observableSet(new TreeSet<Tag>()));
     }
 
     /**
@@ -91,20 +94,6 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         this();
         setName(name);
         setSurname(surname);
-    }
-
-    /**
-     * Creates a new Contact with the given name, surname, phone numbers and email addresses.
-     * 
-     * @param[in] name the name of the new Contact
-     * @param[in] surname the surname of the new Contact
-     * @param[in] phoneNumber the phone numbers of the new Contact
-     * @param[in] email the email addresses of the new Contact
-     */
-    public Contact(String name, String surname, String[] phoneNumber, String[] email) {
-        this(name,surname);
-        addPhoneNumber(phoneNumber);
-        addEmail(email);
     }
 
     private int size(String[] s){
@@ -202,12 +191,12 @@ public void setPicture(String picture) throws IOException {
         
         String fileName = profilePicturePath.getFileName().toString();
         String extension= fileName.substring(fileName.lastIndexOf('.')+1);
-        if(extension.isEmpty()){
+        if(!FileManager.isSupportedImageExtension(extension)){
             throw new IOException("Invalid file extension");
-            return;
         }
-        Path destinationPath = Paths.get(FileManager.generateProfilePicturePath(extension)); 
-        this.picture = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
+        Path destinationPath = Paths.get(FileManager.generateContactPicturePath(extension)); 
+        this.picture = Files
+        .copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
     }
     /**
      * Returns the internal path of the picture of the Contact.
@@ -401,9 +390,9 @@ public void setPicture(String picture) throws IOException {
      * @param[in] tag the {@link Tag} to add
      * @return true if the tag has been added (hence there was no Tag with the same name), false otherwise
      */
-    public boolean addTag(String tag) {
+    public boolean addTag(String string) {
         Tag t=new Tag();
-        if(!t.setName(tag)){return false;}
+        if(!t.setName(string)){return false;}
         return this.tags.add(t);
     }
 
@@ -417,8 +406,8 @@ public void setPicture(String picture) throws IOException {
      * @param[in] tag the {@link Tag} to remove
      * @return true if the tag has been removed (hence it was present), false otherwise
      */
-    public boolean removeTag(Tag tag) {
-        return this.tags.remove(tag);
+    public boolean removeTag(String string) {
+        return this.tags.remove(string);
     }
 
     /**
@@ -480,32 +469,6 @@ public void setPicture(String picture) throws IOException {
     }
 
     /**
-     * Checks wether the Contact contains the substring passed as argument in at least one of its email addresses.
-     * @param str
-     * @return true if the Contact contains the substring passed as argument in at least one of its email addresses
-     *         false otherwise
-     */
-    public boolean containsEmail(String str){
-        for (String e : email)
-            if (e.contains(str)) 
-                return true;
-        return false;
-    }
-
-    /**
-     * Checks wether the Contact contains the substring passed as argument in at least one of its phone numbers.
-     * @param str
-     * @return true if the Contact contains the substring passed as argument in at least one of its phone numbers
-     *         false otherwise
-     */
-    public boolean containsPhone(String str) {
-        for (String p : phoneNumber)
-            if (p.contains(str)) 
-                return true;
-        return false;
-    }
-
-    /**
      * Checks wether the Contact contains the substring passed as argument in at least one of the tags with which it is marked.
      * @param str
      * @return true if the Contact contains the substring passed as argument in at least one of the tags with which it is marked
@@ -559,7 +522,7 @@ public void setPicture(String picture) throws IOException {
         surname = new SimpleStringProperty(in.readUTF());
         fullName = new SimpleStringProperty(in.readUTF());
         fullName.bind(Bindings.concat(surname, " ", name));
-        tags = new SimpleSetProperty<>(FXCollections.observableSet(new LinkedHashSet<>()));
+        tags = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
         Tag t;
         while (in.available() > 0) {
             t=new Tag();
@@ -623,63 +586,63 @@ public void setPicture(String picture) throws IOException {
         return vCard;
     }
 
-    public void fromVCard(VCard vCard) throws StreamCorruptedException{
-        try {
-            StructuredName sn = vCard.getStructuredName();
-            if (sn != null) {
-                if (sn.getFamily() != null)
-                    surname.set(sn.getFamily());
-                if (sn.getGiven() != null)
-                    name.set(sn.getGiven());
-            }
+    public static Contact fromVCard(VCard vCard) throws StreamCorruptedException{
+        Contact result=new Contact();
+        StructuredName sn = vCard.getStructuredName();
+        String vName=sn.getGiven();
+        String vSurname=sn.getFamily();
+        if (vName.isEmpty()&&vSurname.isEmpty()) {throw new StreamCorruptedException("Invalid VCard format: name and surname are both empty");}
+        if (!vName.isEmpty())
+            result.name.set(sn.getGiven());
+        if (!vSurname.isEmpty())
+            result.surname.set(sn.getFamily());
 
-            // Add email addresses
-            int i = 0;
-            for (Email email : vCard.getEmails()) {
-                if (i < MAX_EMAILS)
-                    this.email[i++] = email.getValue();
-            }
-
-            // Add phone numbers
-            i = 0;
-            for (Telephone phone : vCard.getTelephoneNumbers()) {
-                if (i < MAX_PHONENUMBERS)
-                    phoneNumber[i++] = phone.getText();
-            }
-
-            // Add tags
-            Categories categories = vCard.getCategories();
-            if (categories != null) {
-                for (String tag : categories.getValues()) {
-                    Tag t = new Tag();
-                    t.setName(tag);
-                    tags.add(t);
-                }
-            }
-
-            // Add picture
-            Photo photo = vCard.getPhotos().get(0);
-            String path;
-            if (photo != null) {
-                ImageType type=photo.getContentType();
-                if (type == ImageType.JPEG) {
-                    path = FileManager.generateProfilePicturePath("jpg");
-                } else if (type == ImageType.PNG) {
-                    path = FileManager.generateProfilePicturePath("png");
-                } else if (type == ImageType.GIF) {
-                    path = FileManager.generateProfilePicturePath("gif");
-                } else {
-                    path = FileManager.generateProfilePicturePath("jpg");
-                }
-                try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(path))) {
-                    dos.write(photo.getData());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                picture = path;
-            }   
-        } catch (StreamCorruptedException e) {
-            throw e;
+        // Add email addresses
+        int i = 0;
+        for (Email email : vCard.getEmails()) {
+            if (i < MAX_EMAILS)
+                result.email[i++] = email.getValue();
         }
+
+        // Add phone numbers
+        i = 0;
+        for (Telephone phone : vCard.getTelephoneNumbers()) {
+            if (i < MAX_PHONENUMBERS)
+                result.phoneNumber[i++] = phone.getText();
+        }
+
+        // Add tags
+        Categories categories = vCard.getCategories();
+        if (categories != null) {
+            for (String tag : categories.getValues()) {
+                Tag t = new Tag();
+                t.setName(tag);
+                result.tags.add(t);
+            }
+        }
+
+        // Add picture
+        List<Photo> photos = vCard.getPhotos();
+        if (photos != null && !photos.isEmpty()) {
+            String path;
+            Photo photo = photos.get(0);
+            ImageType type=photo.getContentType();
+            if (type == ImageType.JPEG) {
+                path = FileManager.generateProfilePicturePath("jpg");
+            } else if (type == ImageType.PNG) {
+                path = FileManager.generateProfilePicturePath("png");
+            } else if (type == ImageType.GIF) {
+                path = FileManager.generateProfilePicturePath("gif");
+            } else {
+                path = FileManager.generateProfilePicturePath("jpg");
+            }
+            try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(path))) {
+                dos.write(photo.getData());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            result.picture = path;
+        }   
+        return result;
     }
 }
