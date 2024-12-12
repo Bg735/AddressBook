@@ -23,6 +23,11 @@ public class PhoneFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        return contact.containsPhone(getSubstring().get());
+        String sub = getSubstring();
+        String[] phones = contact.getPhoneNumberList();
+        for (String p: phones)
+            if (p.toLowerCase().contains(sub))
+                return true;
+        return false;
     }
 }
