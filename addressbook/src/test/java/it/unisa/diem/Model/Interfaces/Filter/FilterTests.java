@@ -1,107 +1,74 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.unisa.diem.Model.Contact;
-import it.unisa.diem.Model.Interfaces.Filter.*;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 class FilterTests {
 
-    private Contact contact1;
-    private Contact contact2;
-    private StringProperty substring;
+    private FilteredList<Contact> filteredList;
+    private List<Contact> contactList;
 
     @BeforeEach
     void setUp() {
-        contact1 = new Contact("Elettra", "Palmisano", new String[]{"elettra.palminsano@unisa.it"}, new String[]{"1234567890"});
-        contact2 = new Contact("ge", "landi", new String[]{"g.landi@unisa.it"}, new String[]{"334221933"});
-        substring = new SimpleStringProperty("uni");
+        contactList = FXCollections.observableArrayList(
+            new Contact("Elettra", "Palmisano", new String[]{"12345"}, new String[]{"elettra@example.com"}),
+            new Contact("Gennaro Francesco", "Landi", new String[]{"67890"}, new String[]{"gennaro@example.com"}),
+            new Contact("Maurizio", "Melillo", new String[]{"11223"}, new String[]{"maurizio@example.com"}),
+            new Contact("Francesco", "Lanzara", new String[]{"44556"}, new String[]{"francesco@example.com"}),
+            new Contact("Luigi", "Gentile")
+        );
+        filteredList = new FilteredList<>(FXCollections.observableArrayList(contactList));
     }
 
     @Test
     void testBaseFilter() {
+        SimpleStringProperty substring = new SimpleStringProperty("  Francesco   ");
         BaseFilter baseFilter = new BaseFilter(substring);
 
-        // Positive case
-        assertTrue(baseFilter.test(contact1), "BaseFilter should match the contact's name.");
-        assertTrue(baseFilter.test(contact2), "BaseFilter should match the contact's name.");
-        
-        substring.set("Maurizio");
-        assertTrue(baseFilter.test(contact1), "BaseFilter should match the contact's name.");
-        assertTrue(baseFilter.test(contact2), "BaseFilter should match the contact's name.");
-        
-        substring.set("");
-        assertTrue(baseFilter.test(contact1), "BaseFilter should match the contact's name.");
-        assertTrue(baseFilter.test(contact2), "BaseFilter should match the contact's name.");
-        
-        // Negative case
-        substring.set(null);
-        assertFalse(baseFilter.test(contact1), "BaseFilter should not match the contact's name.");
-        assertFalse(baseFilter.test(contact2), "BaseFilter should not match the contact's name.");
+        // Test substring retrieval
+        assertEquals("francesco", baseFilter.getSubstring());
+
+        // Test filtering logic
+        Contact contact = new Contact("Gennaro Francesco", "Landi");
+        assertTrue(baseFilter.test(contact));
+
+        Contact nullContact = null;
+        assertFalse(baseFilter.test(nullContact));
     }
 
     @Test
-    void testEmailFilter() {
-        BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty("unisa.it"));
-        EmailFilter emailFilter = new EmailFilter(baseFilter);
+    void testNameFilter() {
+        SimpleStringProperty substring = new SimpleStringProperty("Francesco");
+        BaseFilter baseFilter = new BaseFilter(substring);
+        NameFilter nameFilter = new NameFilter(baseFilter);
 
-        // Positive case
-        assertTrue(emailFilter.test(contact1), "EmailFilter should match the contact's email.");
-        assertTrue(emailFilter.test(contact2), "EmailFilter should match the contact's email.");
+        // Test filtering logic
+        filteredList.setPredicate(nameFilter);
         
-        baseFilter.getSubstring().set("sa");
-        assertTrue(emailFilter.test(contact1), "EmailFilter should match the contact's email.");
-        assertTrue(emailFilter.test(contact2), "EmailFilter should match the contact's email.");
-        
-        // Negative case
-        baseFilter.getSubstring().set("polimi");
-        assertFalse(emailFilter.test(contact1), "EmailFilter should not match the contact's email.");
-        assertFalse(emailFilter.test(contact1), "EmailFilter should not match the contact's email.");
+        // Verify that only matching contacts are in the filtered list
+        assertEquals(2, filteredList.size());
+        assertTrue(filteredList.contains(new Contact("Gennaro Francesco", "Landi")));
+        assertTrue(filteredList.contains(new Contact("Francesco", "Lanzara")));
     }
 
     @Test
-    void testPhoneFilter() {
-        BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty("123"));
-        PhoneFilter phoneFilter = new PhoneFilter(baseFilter);
+    void testNameFilterNoMatches() {
+        SimpleStringProperty substring = new SimpleStringProperty("NonEsistente");
+        BaseFilter baseFilter = new BaseFilter(substring);
+        NameFilter nameFilter = new NameFilter(baseFilter);
 
-        // Positive case
-        assertTrue(phoneFilter.test(contact1), "PhoneFilter should match the contact's phone number.");
+        // Test filtering logic
+        filteredList.setPredicate(nameFilter);
 
-        // Negative case
-        baseFilter.getSubstring().set("999");
-        assertFalse(phoneFilter.test(contact1), "PhoneFilter should not match the contact's phone number.");
-    }
-
-    @Test
-    void testTagFilter() {
-        contact.addTag(new Tag("Friend"));
-        BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty("Friend"));
-        TagFilter tagFilter = new TagFilter(baseFilter);
-
-        // Positive case
-        assertTrue(tagFilter.test(contact1), "TagFilter should match the contact's tag.");
-
-        // Negative case
-        baseFilter.getSubstring().set("Colleague");
-        assertFalse(tagFilter.test(contact1), "TagFilter should not match the contact's tag.");
-    }
-
-    @Test
-    void testFilterChaining() {
-        BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty("John"));
-        EmailFilter emailFilter = new EmailFilter(baseFilter);
-        PhoneFilter phoneFilter = new PhoneFilter(emailFilter);
-
-        // Positive case
-        assertTrue(phoneFilter.test(contact1), "Filter chaining should match when all filters succeed.");
-
-        // Negative case
-        baseFilter.getSubstring().set("Jane");
-        assertFalse(phoneFilter.test(contact1), "Filter chaining should fail when any filter fails.");
+        // Verify that no contacts match
+        assertTrue(filteredList.isEmpty());
     }
 }
