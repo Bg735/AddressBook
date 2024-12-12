@@ -129,8 +129,9 @@ public class FileManager {
      * @throws StreamCorruptedException If the file stream is corrupted.
      */
     public static void exportAsVCard(String path, AddressBook ab) throws StreamCorruptedException, IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            VCardWriter vCardWriter = new VCardWriter(writer, VCardVersion.V3_0);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+            VCardWriter vCardWriter = new VCardWriter(writer, VCardVersion.V3_0)) {
+            
             
             // Iterate over AddressBook contacts and write them as VCards
             for (Contact contact : ab.contacts()) {
