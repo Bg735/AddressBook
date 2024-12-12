@@ -51,7 +51,7 @@
                               <Font name="Helvetica Bold" size="13.0" />
                            </font>
                            <cursor>
-                              <Cursor fx:constant="HAND" />
+                              <Cursor fx:constant="HAND" /> 
                            </cursor>
                         </Button>
                      </children>
@@ -98,7 +98,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tel:" />
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="La togliamo ?" />
                                           <ListView prefHeight="200.0" prefWidth="200.0" />
                                        </children>
                                     </HBox>
