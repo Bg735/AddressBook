@@ -33,7 +33,7 @@ public class FileManager {
     
     /**
      * Generates the file path for an address book, based on the profile index.
-     * The path will be in the format: "address_books/address_book[profileIndex].obj".
+     * The path will be in the format: "address_books/address_book_[timestamp].obj".
      * 
      * @param profileIndex The index of the profile.
      * @return The generated file path for the address book.
