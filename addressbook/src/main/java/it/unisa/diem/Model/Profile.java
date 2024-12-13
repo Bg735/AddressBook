@@ -134,9 +134,6 @@ public class Profile implements Serializable{
      */
     public void setAddressBookPath(String addressBookPath) throws IOException {
         Path path = Paths.get(addressBookPath);
-        if(!Files.exists(path)) {
-            throw new IOException("File: " + addressBookPath + " does not exist.");
-        }
         this.addressBookPath = addressBookPath;
     }
 
@@ -148,9 +145,6 @@ public class Profile implements Serializable{
      */
     public void setProfilePicture(String profilePicture) throws FileNotFoundException, IOException {
         Path profilePicturePath = Paths.get(profilePicture);
-        if(!Files.exists(profilePicturePath)) {
-            throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
-        }
         
         String fileName = profilePicturePath.getFileName().toString();
         String extension = fileName.substring(fileName.lastIndexOf('.')+1); 
