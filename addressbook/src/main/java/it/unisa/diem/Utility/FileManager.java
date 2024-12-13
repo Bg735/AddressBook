@@ -152,6 +152,7 @@ public class FileManager {
      * @throws StreamCorruptedException If the file stream is corrupted.
      */
     public static void exportAsVCard(String path, AddressBook ab) throws StreamCorruptedException, IOException {
+        if (!path.endsWith(".vcf")) throw new IllegalArgumentException("Destination file must be ad .vcf");
         try (VCardWriter vCardWriter = new VCardWriter(new BufferedWriter(new FileWriter(path)), VCardVersion.V3_0)) {
                      
             // Iterate over AddressBook contacts and write them as VCards
