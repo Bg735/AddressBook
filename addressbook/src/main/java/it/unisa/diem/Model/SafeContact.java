@@ -1,7 +1,5 @@
 package it.unisa.diem.Model;
 
-import java.io.IOException;
-
 import it.unisa.diem.Model.Interfaces.Checker.CharacterLimitStringChecker;
 import it.unisa.diem.Model.Interfaces.Checker.Checker;
 import it.unisa.diem.Model.Interfaces.Checker.ItalianPhoneChecker;
@@ -101,21 +99,6 @@ public class SafeContact extends Contact {
         CharacterLimitStringChecker surnameStringChecker = new CharacterLimitStringChecker(MAX_SURNAME_LEN); 
         if(surnameStringChecker.check(surname)) {
             super.setSurname(surname);
-            return true; 
-        } else return false; 
-    }
-
-    /**
-     * @copydoc Contact::setPicture(String)
-     * This method only acts if it verifies that the argument satisfies the condition of {@link PictureChecker}
-     * @return true if the condition is met, false otherwise
-     */
-    @Override
-    public boolean setPicture(String picture) throws IOException {
-        // TODO: Implement this method
-        ImagePathChecker pictureChecker = new ImagePathChecker(); 
-        if(pictureChecker.check(picture)) {
-            super.setPicture(picture);
             return true; 
         } else return false; 
     }
