@@ -13,8 +13,6 @@ import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailChecker;
 public class SafeContact extends Contact {
     public static final int MAX_NAME_LEN = 50;
     public static final int MAX_SURNAME_LEN = 50;
-    public static final int MAX_EMAILS = 3;
-    public static final int MAX_PHONENUMBERS = 3;
     
     /**
      * Creates a new SafeContact with default values. It is called by the {@link #safeContact()} for readability purpouses.
@@ -173,9 +171,10 @@ public class SafeContact extends Contact {
     public boolean addEmail(String... email) {
         // TODO: Implement this method
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
-        for(String e : email)
-            if(e != null && !emailChecker.check(e)) return false; 
-        
+        for(int i=0 ; i<email.length ; i++) {
+            if(email[i] != null && !emailChecker.check(email[i])) return false; 
+            email[i] = email[i].trim(); 
+        }
         super.addEmail(email); 
         return true; 
     }
@@ -191,7 +190,7 @@ public class SafeContact extends Contact {
         // TODO: Implement this method
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
         if(emailChecker.check(email)) {
-            super.setEmail(email, index);
+            super.setEmail(email.trim(), index);
             return true; 
         } else return false; 
     }
@@ -206,9 +205,10 @@ public class SafeContact extends Contact {
     public boolean addPhoneNumber(String... phoneNumber) {
         // TODO: Implement this method
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
-        for(String p : phoneNumber)
-            if(p != null && !phoneChecker.check(p)) return false; 
-        
+        for(int i=0 ; i<phoneNumber.length ; i++) {
+            if(phoneNumber[i] != null && !phoneChecker.check(phoneNumber[i])) return false; 
+            phoneNumber[i] = phoneNumber[i].trim(); 
+        }
         super.addPhoneNumber(phoneNumber); 
         return true; 
     }
@@ -224,7 +224,7 @@ public class SafeContact extends Contact {
         // TODO: Implement this method
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
         if(phoneChecker.check(phoneNumber)) {
-            super.setPhoneNumber(phoneNumber, index);
+            super.setPhoneNumber(phoneNumber.trim(), index);
             return true; 
         } else return false; 
     }
