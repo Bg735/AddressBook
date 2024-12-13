@@ -130,16 +130,18 @@ public class FileManagerTest {
     
     @Test
     void testExportAndImportAsVCard() {
-        /*
+        
         String validPath = "testExport.vcf";
+        Set contactsPre = addressBook.contacts();
 
-        assertNotThrowsException.class, () -> {
-            FileManager.exportAsVCard(validPath, addressBook);
-        });
-        AddressBook copy = new AddressBook();
-        assertNotThrowsException.class, () -> {
-            FileManager.exportAsVCard(validPath, addressBook);
-        });
-        */
+        assertDoesNotThrow(() -> FileManager.exportAsVCard(validPath, addressBook));
+        AddressBook imported = null;
+        try{
+            imported = FileManager.importFromVCard(validPath);
+        } catch (StreamCorruptedException fail) {
+            fail();
+        }
+        Set contactsPost = imported.contacts();
+        assertEquals(contactsPre, contactsPost);
     }
 }
