@@ -143,8 +143,8 @@ public class SafeContactTest {
     
     @Test
     void setPictureTestValid() throws Exception {
-        assertTrue(contact.setPicture("/path/to/valid/picture.jpg"));
-        assertEquals("/path/to/valid/picture.jpg", contact.getPicture());
+        assertTrue(contact.setPicture("test/resources/profile_pictures.briciola.JPEG"));
+        assertEquals("test/resources/profile_pictures.briciola.JPEG", contact.getPicture());
     }
 
     @Test
