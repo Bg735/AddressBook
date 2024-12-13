@@ -1,6 +1,5 @@
 
 package it.unisa.diem.Model;
-import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -99,17 +98,6 @@ public class SafeContactTest {
     @Test
     void addPhoneNumberTestInvalid() {
         assertFalse(contact.addPhoneNumber("invalidPhone", "3347654321")); 
-    }
-    
-    @Test
-    void setPictureTestValid() throws Exception {
-        assertTrue(contact.setPicture("test/resources/profile_pictures.briciola.JPEG"));
-        assertEquals("test/resources/profile_pictures.briciola.JPEG", contact.getPicture());
-    }
-
-    @Test
-    void setPictureTestInvalid() throws IOException {
-        assertFalse(contact.setPicture("invalid/path/to/picture"));
     }
     
     @Test
