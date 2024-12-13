@@ -18,16 +18,17 @@ public class TagTest {
     @Test 
     public void setNameValidTest() {
         assertTrue(tag.setName("ValidName"), "Tag name is valid."); 
+        assertTrue(tag.setName("1244"), "Tag name is valid."); 
+        assertTrue(tag.setName(" Work"), "Tag name is valid."); 
+        assertTrue(tag.setName("Family "), "Tag name is valid.");
+        assertTrue(tag.setName("        Univeristà       "), "Tag name is invalid.");
     }
     
     @Test 
-    public void setNameInvalid1Test() {
-        assertTrue(!tag.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"), "Tag name is invalid."); 
-    }
-    
-    @Test 
-    public void setNameInvalid2Test() {
-        assertTrue(!tag.setName("  "), "Tag name is invalid."); 
+    public void setNameInvalidTest() {
+        assertFalse(tag.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"), "Tag name is invalid.");
+        assertFalse(tag.setName("                                                    "), "Tag name is invalid.");
+        assertFalse(tag.setName("    abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz       "), "Tag name is invalid."); 
     }
     
 }
