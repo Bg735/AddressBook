@@ -17,10 +17,10 @@ import java.io.ObjectOutputStream;
 
 public class FileManager {
 
-    public static final String profileListPath = "addressbook/src/main/resources/it/unisa/diem/profile_list.obj";
-    public static final String profilePictureDir = "addressbook/src/main/resources/it/unisa/diem/profile_pictures";
-    public static final String addressBookDir = "addressbook/src/main/resources/it/unisa/diem/address_books";
-    public static final String contactPictureDir = "addressbook/src/main/resources/it/unisa/diem/contact_pictures";
+    public static final String profileListPath   = "src/main/resources/it/unisa/diem/assets/profile_list.obj";
+    public static final String profilePictureDir = "src/main/resources/it/unisa/diem/assets/profile_pictures";
+    public static final String addressBookDir    = "src/main/resources/it/unisa/diem/assets/address_books";
+    public static final String contactPictureDir = "src/main/resources/it/unisa/diem/assets/contact_pictures";
 
     /**
      * Returns the path to the profile list file.
