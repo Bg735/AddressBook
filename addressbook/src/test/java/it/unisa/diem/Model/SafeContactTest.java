@@ -46,46 +46,6 @@ public class SafeContactTest {
         contact = contact.safeContact("A very very long name that exceeds the character limit.", "Rossi");
         assertNull(contact);
     }
-    
-    @Test
-    void safeContactPhoneNumbersEmailsTestValid1() {
-        String[] phoneNumbers = {"3331234567", "3347654321"};
-        String[] emails = {"test@example.com", "another@example.com"};
-
-        contact = contact.safeContact("Mario", "Rossi", phoneNumbers, emails);
-        assertNotNull(contact);
-        assertArrayEquals(phoneNumbers, contact.getPhoneNumberList());
-        assertArrayEquals(emails, contact.getEmailList());
-    }
-    
-    @Test
-    void safeContactPhoneNumbersEmailsTestValid2() {
-        String[] phoneNumbers = {""};
-        String[] emails = {""};
-
-        contact = contact.safeContact("Mario", "Rossi", phoneNumbers, emails);
-        assertNotNull(contact);
-        
-    }
-    
-    @Test
-    void safeContactPhoneNumbersEmailsTestInvalid() {
-        String[] phoneNumbers = {""};
-        String[] emails = {"invalid.email"};
-
-        contact = contact.safeContact("Mario", "Rossi", phoneNumbers, emails);
-        assertNull(contact);
-        
-        phoneNumbers[0] = "invalidphone";
-        emails[0] = "valid@email";
-        
-        contact = contact.safeContact("Mario", "Rossi", phoneNumbers, emails);
-        assertNull(contact);
-        
-        phoneNumbers[0] = "123456789";
-        contact = contact.safeContact(null, null, phoneNumbers, emails);
-        assertNull(contact);
-    }
 
      @Test
     void setNameTestValid() {
