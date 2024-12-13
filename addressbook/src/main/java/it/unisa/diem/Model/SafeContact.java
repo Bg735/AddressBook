@@ -67,47 +67,6 @@ public class SafeContact extends Contact {
     }
 
     /**
-     * Creates a new SafeContact with the given name, surname and phone numbers. It is called by the {@link #safeContact(String, String, String[], String[])} method if the argument fields are valid, according to the {@link Checker} implementations.
-     * 
-     * @param[in] name the name of the new SafeContact
-     * @param[in] surname the surname of the new SafeContact
-     * @param[in] phoneNumber the phone numbers of the new SafeContact
-     * @param[in] email the email addresses of the new SafeContact
-     * @see SafeContact#safeContact(String, String, String[], String[])
-     */
-    public SafeContact(String name, String surname, String[] phoneNumbers, String[] emailAddresses) {
-        // TODO: Implement this method
-        super(name, surname, phoneNumbers, emailAddresses); 
-    }
-
-    /**
-     * Creates a new SafeContact with the given name, surname, phone numbers and email addresses, but only if they're valid, according to the {@link Checker} implementations.
-     * 
-     * @param[in] name the name of the new SafeContact
-     * @param[in] surname the surname of the new SafeContact
-     * @param[in] phoneNumber the phone numbers of the new SafeContact
-     * @param[in] email the email addresses of the new SafeContact
-     * @see SafeContact#SafeContact(String, String, String[], String[])
-     * @return SafeContact if name, surname, phone numbers and email addresses are valid, null otherwise
-     */
-    public SafeContact safeContact(String name, String surname, String[] phoneNumbers, String[] emailAddresses){
-        //TODO: Implement this method
-        
-        if(safeContact(name, surname) != null) { 
-        ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
-        SimpleEmailChecker emailChecker = new SimpleEmailChecker();  
-        
-        for(String phone : phoneNumbers) 
-            if(phone!=null && !phoneChecker.check(phone)) return null;  
-        for(String email : emailAddresses)
-            if(email!=null && !emailChecker.check(email)) return null;  
-        
-        
-        return new SafeContact(name, surname, phoneNumbers, emailAddresses); 
-        } else return null; 
-    }
-
-    /**
      * @copydoc Contact::setName(String)
      * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_NAMELEN}).
      * @pre The name satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@link #MAX_NAMELEN}
