@@ -74,8 +74,7 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @return the list of contacts
      */
     @Override
-    public SetProperty<Contact> contacts() {
-        // TODO: Implement this method (returns contactsList)
+    public SetProperty<Contact> contacts() {    
         return contactsList;
     }
     
@@ -86,7 +85,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public MapProperty<Tag, SetProperty<Contact>> getTagMap() {
-        // TODO: Implement this method (returns tagMap)
         return tagMap;
     }
 
@@ -98,7 +96,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public RecentlyDeleted trashCan() {
-        // TODO: Implement this method (returns recentlyDeleted)
         return recentlyDeleted;
     }
 
@@ -112,7 +109,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public void add(Contact c) {
-        // TODO: Implement this method
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
@@ -130,7 +126,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public void delete(Contact c) {
-        // TODO: Implement this method, returns false if not found
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
@@ -157,7 +152,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public void restore(Contact c) {
-        // TODO: Implement this method
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
@@ -180,7 +174,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public void addTagToContact(Tag t, Contact c) {
-        // TODO Auto-generated method stub
         if (t == null || c == null) {
             throw new IllegalArgumentException("Tag and contact cannot be null");
         }
@@ -203,7 +196,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public void removeTagFromContact(Tag t, Contact c) {
-        // TODO: Implement this method
         if (t == null || c == null) {
             throw new IllegalArgumentException("Tag and contact cannot be null");
         }
@@ -226,7 +218,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     
     public static AddressBook readFromFile(String path) {
-        // TODO: Implement this method
         if (path == null) {
             throw new IllegalArgumentException("Path cannot be null");
         }
@@ -247,7 +238,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      * @see FileManager#exportToFile(String)
      */
     public void writeToFile(String path) {
-        // TODO: Implement this method
         if (path == null) {
             throw new IllegalArgumentException("Path cannot be null");
         }
@@ -270,7 +260,6 @@ public class AddressBook implements ContactList, TaggableList, TrashCan {
      */
     @Override
     public Contact get(Contact c) {
-        // TODO Auto-generated method stub
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
