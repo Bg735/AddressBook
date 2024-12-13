@@ -42,18 +42,16 @@ public class AddressBookController implements OnEditable {
     private ListView<String> phoneList; /**< Reference to the list of phone numbers in the contact view. */
     @FXML 
     private ListView<String> emailList; /**< Reference to the list of email addresses in the contact view. */
-    @FXML 
-    private ListView<Tag> tagsList; /**< Reference to the list of tags in the contact view. */
     @FXML
-    private Button addButton; 
+    private Button addButton; /**< Reference to the add button used to add a contact to the address book. */ 
     @FXML
-    private Button editButton; 
+    private Button editButton; /**< Reference to the edit button used to edit an existing contact in the address book. */ 
     @FXML
-    private Button cancelButton; 
+    private Button cancelButton; /**< Reference to the cancel button, visible in the edit view. */ 
     @FXML
-    private Button saveButton; 
+    private Button saveButton; /**< Reference to the save button, visible in the edit view. */ 
     @FXML
-    private Button deleteButton; 
+    private Button deleteButton; /**< Reference to the delete button, visible in the edit view. */ 
  
     
     
@@ -143,6 +141,14 @@ public class AddressBookController implements OnEditable {
         deleteButton.setVisible(true); 
         cancelButton.setVisible(true); 
         saveButton.setVisible(true); 
+        deleteButton.setDisable(false); 
+        cancelButton.setDisable(false); 
+        saveButton.setDisable(false); 
+        
+        editButton.setDisable(true); 
+        addButton.setDisable(true); 
+        editButton.setVisible(false); 
+        addButton.setVisible(false); 
     }
 
     /**
@@ -158,21 +164,13 @@ public class AddressBookController implements OnEditable {
 
         ObservableList<String> phones = phoneList.getItems();
         ObservableList<String> emails = emailList.getItems();
-        ObservableList<Tag> tags = tagsList.getItems();
         
-        for(int i=0 ; i<)
-        
-        Contact newContact = new Contact(name, surname, phones, emails, tags);
+        String[] phoneArray = phones.toArray(new String[0]);
+        String[] emailArray = emails.toArray(new String[0]);
+      
+        Contact newContact = new Contact(name, surname, phoneArray, emailArray);
 
-        // 4. Aggiungi il contatto alla rubrica (assumendo che 'contactList' sia una lista di contatti)
-        contactList.add(newContact); // Aggiungi il contatto alla rubrica
-
-        // 5. (Facoltativo) Pulisci i campi dopo aver aggiunto il contatto
-        nameField.setText("");
-        surnameField.setText("");
-        phoneList.getItems().clear();
-        emailList.getItems().clear();
-        tagsList.getItems().clear();
+        contactList.add(newContact);
     }
 
     /**
