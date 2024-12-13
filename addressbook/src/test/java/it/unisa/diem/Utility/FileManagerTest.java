@@ -26,7 +26,7 @@ public class FileManagerTest {
         Contact contact1 = new Contact("Elli", "Palmi");
         contact1.addEmail("elli.palm@gmail.com");
         contact1.addPhoneNumber("1234567");
-        
+
         Contact contact2 = new Contact("Debbi", "Villanio");
         contact2.addEmail("debbi.debbi@gmail.com");
         contact2.addPhoneNumber("99881262");
@@ -71,7 +71,7 @@ public class FileManagerTest {
         assertTrue(path.contains("profilePicture_"));
         assertTrue(path.endsWith(".png"));
     }
-    
+
     @Test
     void testGenerateProfilePicturePath_InvalidExtension() {
         assertThrows(IllegalArgumentException.class, () -> {
@@ -86,18 +86,60 @@ public class FileManagerTest {
     }
 
     @Test
-    void testImportFromFile_Success() {
+    void testImportFromFile_Success() throws IOException {
+        Path tempFile = Files.createTempFile("testImport", ".obj");
+        List<String> data = Arrays.asList("Test1", "Test2", "Test3");
+        FileManager.exportToFile(tempFile.toString(), data);
+
+        List<String> importedData = FileManager.importFromFile(tempFile.toString());
+        assertNotNull(importedData);
+        assertEquals(data, importedData);
+
+        Files.delete(tempFile);
+    }
+
+    @Test
+    void testImportFromFile_FileNotFound() {
+        assertThrows(IOException.class, () -> {
+            FileManager.importFromFile("nonexistent.obj");
+        });
+    }
+
+    @Test
+    void testExportToFile_NullData() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            FileManager.exportToFile("test.obj", null);
+        });
+    }
+
+    @Test
+    void testExportAsVCard_InvalidPath() {
+        assertThrows(IOException.class, () -> {
+            FileManager.exportAsVCard("/invalid/path.vcf", addressBook);
+        });
         
+        assertThrows(IllegalArgumentException.class, () -> {
+            FileManager.exportAsVCard("/invalid/path", addressBook);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () -> {
+            FileManager.exportAsVCard("/invalid/path.txt", addressBook);
+        });
     }
     
+    
     @Test
-    void testImportAddressBookFromObjFile() {
-        
-    }
+    void testExportAndImportAsVCard() {
+        /*
+        String validPath = "testExport.vcf";
 
-    @Test
-    void testExportAndImportProfileList() {
-        
+        assertNotThrowsException.class, () -> {
+            FileManager.exportAsVCard(validPath, addressBook);
+        });
+        AddressBook copy = new AddressBook();
+        assertNotThrowsException.class, () -> {
+            FileManager.exportAsVCard(validPath, addressBook);
+        });
+        */
     }
-
 }
