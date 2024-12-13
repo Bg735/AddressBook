@@ -13,8 +13,6 @@ import it.unisa.diem.Model.Interfaces.Checker.SimpleEmailChecker;
 public class SafeContact extends Contact {
     public static final int MAX_NAME_LEN = 50;
     public static final int MAX_SURNAME_LEN = 50;
-    public static final int MAX_EMAILS = 3;
-    public static final int MAX_PHONENUMBERS = 3;
     
     /**
      * Creates a new SafeContact with default values. It is called by the {@link #safeContact()} for readability purpouses.
@@ -60,7 +58,7 @@ public class SafeContact extends Contact {
         CharacterLimitStringChecker nameStringChecker = new CharacterLimitStringChecker(MAX_NAME_LEN); 
         CharacterLimitStringChecker surnameStringChecker = new CharacterLimitStringChecker(MAX_SURNAME_LEN); 
         if(nameStringChecker.check(name) && surnameStringChecker.check(surname)) 
-            return new SafeContact(name, surname); 
+            return new SafeContact(name.trim(), surname.trim()); 
         else return null; 
     }
 
@@ -75,7 +73,7 @@ public class SafeContact extends Contact {
      */
     public SafeContact(String name, String surname, String[] phoneNumbers, String[] emailAddresses) {
         // TODO: Implement this method
-        super(name, surname, phoneNumber, email); 
+        super(name, surname, phoneNumbers, emailAddresses); 
     }
 
     /**
@@ -90,8 +88,6 @@ public class SafeContact extends Contact {
      */
     public SafeContact safeContact(String name, String surname, String[] phoneNumbers, String[] emailAddresses){
         //TODO: Implement this method
-        int i=0; 
-        boolean flag=true; 
         
         if(safeContact(name, surname) != null) { 
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
@@ -99,12 +95,16 @@ public class SafeContact extends Contact {
         
         if(phoneNumbers.length > MAX_PHONENUMBERS || emailAddresses.length > MAX_EMAILS) return null; 
         
-        for(String phone : phoneNumbers)
-            if(phone!=null && !phoneChecker.check(phone)) return null;  
-        for(String email : emailAddresses)
-            if(email!=null && !emailChecker.check(email)) return null;  
+        for(int i=0 ; i<phoneNumbers.length ; i++) {
+            if(phoneNumbers[i]!=null && !phoneChecker.check(phoneNumbers[i])) return null;  
+            phoneNumbers[i] = phoneNumbers[i].trim(); 
+        }
         
-        return new SafeContact(name, surname, phoneNumbers, emailAddresses); 
+        for(int i=0 ; i<emailAddresses.length ; i++) {
+            if(emailAddresses[i]!=null && !emailChecker.check(emailAddresses[i])) return null;  
+            emailAddresses[i] = emailAddresses[i].trim(); 
+        }
+        return new SafeContact(name.trim(), surname.trim(), phoneNumbers, emailAddresses); 
         } else return null; 
     }
 
@@ -165,11 +165,11 @@ public class SafeContact extends Contact {
     @Override
     public boolean addEmail(String... email) {
         // TODO: Implement this method
-        if(email.length > MAX_EMAILS) return false; 
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
-        for(String e : email)
-            if(e != null && !emailChecker.check(e)) return false; 
-        
+        for(int i=0 ; i<email.length ; i++) {
+            if(email[i] != null && !emailChecker.check(email[i])) return false; 
+            email[i] = email[i].trim(); 
+        }
         super.addEmail(email); 
         return true; 
     }
@@ -183,10 +183,9 @@ public class SafeContact extends Contact {
     @Override
     public boolean setEmail(String email, int index) {
         // TODO: Implement this method
-        if(index > MAX_EMAILS || index < 0) return false; 
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
         if(emailChecker.check(email)) {
-            super.setEmail(email, index);
+            super.setEmail(email.trim(), index);
             return true; 
         } else return false; 
     }
@@ -198,14 +197,14 @@ public class SafeContact extends Contact {
      * @return true if the condition is met, false otherwise
      */
     @Override
-    public boolean addPhoneNumber(String... phoneNumber) {
+    public boolean addPhoneNumber(String... phoneNumbers) {
         // TODO: Implement this method
-        if(phoneNumber.length > MAX_PHONENUMBERS) return false; 
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
-        for(String p : phoneNumber)
-            if(p != null && !phoneChecker.check(p)) return false; 
-        
-        super.addPhoneNumber(phoneNumber); 
+        for(int i=0 ; i<phoneNumbers.length ; i++) {
+            if(phoneNumbers[i] != null && !phoneChecker.check(phoneNumbers[i])) return false; 
+            phoneNumbers[i] = phoneNumbers[i].trim(); 
+        }
+        super.addPhoneNumber(phoneNumbers); 
         return true; 
     }
 
@@ -218,10 +217,9 @@ public class SafeContact extends Contact {
     @Override
     public boolean setPhoneNumber(String phoneNumber, int index) {
         // TODO: Implement this method
-        if(index > MAX_PHONENUMBERS || index < 0) return false; 
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
         if(phoneChecker.check(phoneNumber)) {
-            super.setPhoneNumber(phoneNumber, index);
+            super.setPhoneNumber(phoneNumber.trim(), index);
             return true; 
         } else return false; 
     }
