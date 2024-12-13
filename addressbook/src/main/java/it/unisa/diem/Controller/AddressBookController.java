@@ -46,6 +46,14 @@ public class AddressBookController implements OnEditable {
     private ListView<Tag> tagsList; /**< Reference to the list of tags in the contact view. */
     @FXML
     private Button addButton; 
+    @FXML
+    private Button editButton; 
+    @FXML
+    private Button cancelButton; 
+    @FXML
+    private Button saveButton; 
+    @FXML
+    private Button deleteButton; 
  
     
     
@@ -132,6 +140,9 @@ public class AddressBookController implements OnEditable {
     @FXML
     public void onEdit(ActionEvent event) {
         // Method implementation
+        deleteButton.setVisible(true); 
+        cancelButton.setVisible(true); 
+        saveButton.setVisible(true); 
     }
 
     /**
