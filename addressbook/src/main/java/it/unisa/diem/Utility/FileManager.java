@@ -51,7 +51,7 @@ public class FileManager {
     * @return true if the extension is supported; false otherwise.
     */
    public static boolean isSupportedImageExtension(String extension) {
-       return extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("gif");
+       return extension != null && (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("gif"));
    }
 
    /**
@@ -116,6 +116,7 @@ public class FileManager {
      * @throws ClassCastException If the object type is incorrect.
      */
     public static <T> void exportToFile(String path, T data) throws StreamCorruptedException, ClassCastException {
+        if (data == null) throw new IllegalArgumentException("Data to export cannot be null");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
             oos.writeObject(data);  // Serialize the object
         } catch (IOException e) {
