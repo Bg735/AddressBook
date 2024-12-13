@@ -52,7 +52,8 @@ public class Tag {
      * @return true if the name is valid, false otherwise
      */
     public boolean setName(String name) {
-        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
+        name = name.trim();
+        if(!name.isEmpty() && new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
             this.name.set(name);
             return true;
         }
