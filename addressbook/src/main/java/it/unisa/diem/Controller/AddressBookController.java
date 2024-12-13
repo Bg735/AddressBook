@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 /**
  * Controller class for the AddressBook view.
@@ -35,6 +36,8 @@ public class AddressBookController implements OnEditable {
     @FXML
     private ListView<Contact> shownList; /**< Reference to the list view in the main view. */
     @FXML
+    private ListView<Button> tagList; /**< Reference to the list view in the tag section. */
+    @FXML
     private TextField nameField;
     @FXML
     private TextField surnameField;
@@ -52,8 +55,12 @@ public class AddressBookController implements OnEditable {
     private Button saveButton; /**< Reference to the save button, visible in the edit view. */ 
     @FXML
     private Button deleteButton; /**< Reference to the delete button, visible in the edit view. */ 
- 
-    
+    @FXML
+    private HBox stackPaneHBox1; 
+    @FXML
+    private HBox stackPaneHBox2; 
+    @FXML 
+    private HBox menuBar; 
     
     
     
@@ -99,13 +106,11 @@ public class AddressBookController implements OnEditable {
         surnameField.setEditable(true);
         phoneList.setDisable(false);   
         emailList.setDisable(false);   
-        tagsList.setDisable(false); 
         
         nameField.setText(""); 
         surnameField.setText(""); 
         phoneList.getItems().clear(); 
         emailList.getItems().clear(); 
-        tagsList.getItems().clear(); 
     }
 
     /**
@@ -138,17 +143,24 @@ public class AddressBookController implements OnEditable {
     @FXML
     public void onEdit(ActionEvent event) {
         // Method implementation
+        
+        // cancel, delete and save buttons are enabled and visible 
         deleteButton.setVisible(true); 
         cancelButton.setVisible(true); 
         saveButton.setVisible(true); 
         deleteButton.setDisable(false); 
         cancelButton.setDisable(false); 
         saveButton.setDisable(false); 
+        stackPaneHBox2.setMouseTransparent(false); 
         
+        // edit and add buttons are disabled and not visible
         editButton.setDisable(true); 
         addButton.setDisable(true); 
         editButton.setVisible(false); 
         addButton.setVisible(false); 
+        editButton.setMouseTransparent(true); 
+        addButton.setMouseTransparent(true); 
+        stackPaneHBox1.setMouseTransparent(true); 
     }
 
     /**
@@ -294,4 +306,31 @@ public class AddressBookController implements OnEditable {
     public void onExportToVCardFile(ActionEvent event) {
         // Method implementation
     }
+    
+    @FXML
+    public void onSelectContact(ActionEvent event) {
+        // Method implementation
+        /*ObservableList<Contact> observableContacts = contactList.contacts(); 
+        shownList.setItems(observableContacts); 
+        */ 
+        
+    }
+    
+    @FXML
+    public void onMouseEntered(ActionEvent event) {
+        // Method implementation
+        menuBar.setVisible(true); 
+        menuBar.setDisable(false); 
+        
+    }
+    
+    @FXML
+    public void onMouseExited(ActionEvent event) {
+        // Method implementation
+        menuBar.setVisible(false); 
+        menuBar.setDisable(true); 
+        
+    }
+    
+    
 }
