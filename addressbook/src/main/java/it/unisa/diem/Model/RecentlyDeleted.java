@@ -89,7 +89,7 @@ public class RecentlyDeleted implements Serializable {
     }
     
     /**
-     * Permanently removes all the contacts moved to the trash can more than {@value #RETENTION_PERIOD_DAYS} days ago.
+     * Permanently removes all the contacts moved to the trash can more than {@link #RETENTION_PERIOD_DAYS} days ago.
      * 
      * This method leverages the ordered structure of the trash can (TreeMap) to stop
      * iterating as soon as a non-expired entry is encountered.
