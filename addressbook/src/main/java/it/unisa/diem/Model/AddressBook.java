@@ -8,6 +8,7 @@ import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
 import it.unisa.diem.Utility.FileManager;
+import java.util.HashMap;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -54,6 +55,8 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
     public AddressBook(String path) {
         // Constructor implementation
         this();
+        if(path == null)
+            throw new IllegalArgumentException("Path cannot be null");
         AddressBook loadedBook = readFromFile(path);
         if (loadedBook != null) {
             this.contactsList = loadedBook.contactsList;
@@ -141,7 +144,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
      * @post recentlyDeleted.size() == recentlyDeleted.size()@pre + 1
      */
     public void addToTagMap(Contact c) {
-        for (Tag tag : c.getTags()) {
+        for (Tag tag : c.getTags().get()) {
             if (!tagMap.containsKey(tag))
                 tagMap.put(tag, new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>())));
             tagMap.get(tag).add(c);
@@ -156,7 +159,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
      * @post the contact is not part of any set of contacts marked with a tag
      */
     public void removeFromTagMap(Contact c) {
-        for (Tag tag : c.getTags()) {
+        for (Tag tag : c.getTags().get()) {
             if (tagMap.containsKey(tag)) {
                 tagMap.get(tag).remove(c);
                 if (tagMap.get(tag).isEmpty()) {
@@ -180,15 +183,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
-        for(Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : recentlyDeleted.get().entrySet()){
-            if(entry.getValue().contains(c)){
-                entry.getValue().remove(c);
-                if(entry.getValue().isEmpty()){
-                    recentlyDeleted.get().remove(entry.getKey());
-                }
-                break;
-            }
-        }
+        trashCan().remove(c);
         contactsList.add(c);
     }
 
@@ -206,7 +201,8 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
     public void addTagToContact(Tag t, Contact c) {
         if (t == null || c == null) {
             throw new IllegalArgumentException("Tag and contact cannot be null");
-        }
+        } 
+        c.addTag(t.getNameValue());
         addToTagMap(c);
     }
 
@@ -225,12 +221,13 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
             throw new IllegalArgumentException("Tag and contact cannot be null");
         }
         if (tagMap.containsKey(t)) {
-            tagMap.get(t).remove(c);
+            tagMap.get(t).get().remove(c);
    
-            if (tagMap.get(t).isEmpty()) {
+            if (tagMap.get(t).get().isEmpty()) {
                 tagMap.remove(t);
             }
         }
+        c.removeTag(t.getNameValue());
     }
 
     /**
