@@ -29,8 +29,13 @@ public class NameFilter extends FilterDecorator {
            1) surname name
            2) name surname
         */
-        String[] fullName = {contact.getSurnameValue(), contact.getNameValue()};
-        return (fullName[0] + " " + fullName[1]).contains(getSubstring()) ||
-                (fullName[1] + " " + fullName[0]).contains(getSubstring());
+        if (contact == null || getSubstring().isEmpty()) {
+            return false;
+        }
+        String surname = contact.getSurnameValue() == null ? "" : contact.getSurnameValue().toLowerCase();
+        String name = contact.getNameValue() == null ? "" : contact.getNameValue().toLowerCase();
+        
+        return (surname + " " + name).contains(getSubstring()) ||
+               (name + " " + surname).contains(getSubstring());
     }
 }
