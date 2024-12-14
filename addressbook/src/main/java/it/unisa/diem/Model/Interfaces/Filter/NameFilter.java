@@ -24,7 +24,18 @@ public class NameFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        // TODO: Implement this method
-        return false;
+        /*
+           In this way the user can look up for:
+           1) surname name
+           2) name surname
+        */
+        if (contact == null || getSubstring().isEmpty()) {
+            return false;
+        }
+        String surname = contact.getSurnameValue() == null ? "" : contact.getSurnameValue().toLowerCase();
+        String name = contact.getNameValue() == null ? "" : contact.getNameValue().toLowerCase();
+        
+        return (surname + " " + name).contains(getSubstring()) ||
+               (name + " " + surname).contains(getSubstring());
     }
 }

@@ -22,8 +22,12 @@ public class PhoneFilter extends FilterDecorator {
      * For this class, the condition is that the Contact's phoneNumber field contains the substring passed to the BaseFilter in the construction chain.
      */
     @Override
-    public boolean test(Contact t) {
-        // TODO: Implement this method
+    public boolean test(Contact contact) {
+        String sub = getSubstring();
+        String[] phones = contact.getPhoneNumberList();
+        for (String p: phones)
+            if (p.toLowerCase().contains(sub))
+                return true;
         return false;
     }
 }

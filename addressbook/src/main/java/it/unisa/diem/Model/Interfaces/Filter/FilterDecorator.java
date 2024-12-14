@@ -26,7 +26,7 @@ public abstract class FilterDecorator implements Filter {
      * @return the substring to search for in the Contact
      */
     @Override
-    public StringProperty getSubstring() {
+    public String getSubstring() {
         return f.getSubstring();
     }
 
@@ -34,5 +34,5 @@ public abstract class FilterDecorator implements Filter {
      * @copydoc Filter::test()
      */
     @Override
-    public abstract boolean test(Contact t);
+    public abstract boolean test(Contact contact);
 }

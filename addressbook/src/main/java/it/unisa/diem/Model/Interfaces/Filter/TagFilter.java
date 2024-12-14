@@ -1,6 +1,8 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
 import it.unisa.diem.Model.Contact;
+import it.unisa.diem.Model.Tag;
+import java.util.Set;
 
 /**
  * Concrete decorator of the Filter pattern that verifies if a Contact contains the substring passed to the BaseFilter in the construction chain, in its tags field.
@@ -23,7 +25,11 @@ public class TagFilter extends FilterDecorator {
      */
     @Override
     public boolean test(Contact contact) {
-        // TODO: Implement this method
+        String sub = getSubstring();
+        Set<Tag> tags = contact.getTags().get();
+        for (Tag tag: tags)
+            if (tag.getNameValue().contains(sub))
+                return true;
         return false;
     }
 }
