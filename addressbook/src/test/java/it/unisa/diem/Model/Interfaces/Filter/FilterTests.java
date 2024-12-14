@@ -191,5 +191,25 @@ class FilterTests {
         assertTrue(emailFilter.test(contact));
     }
     
+    @Test
+    void testTagFilter(){
+        StringProperty substring = new SimpleStringProperty("f");
+        BaseFilter baseFilter = new BaseFilter(substring);
+        NameFilter nameFilter = new NameFilter(baseFilter);
+        EmailFilter emailFilter = new EmailFilter(nameFilter);
+        TagFilter tagFilter = new TagFilter(emailFilter);
+        
+        Contact contact = new Contact("Gennaro", "landi");
+        contact.addEmail("g.landi@studenti.unisa.it", "landigf.eng@gmail.com");
+        contact.addPhoneNumber("3345647741");
+        contact.addTag("f");
+        contact.addTag("Work");
+        assertFalse(nameFilter.test(contact));
+        assertTrue(emailFilter.test(contact));
+        substring.set("wo");
+        assertFalse(emailFilter.test(contact));
+        assertTrue(tagFilter.test(contact));
+    }
+    
 
 }
