@@ -45,8 +45,8 @@ public class Profile implements Serializable{
      */
     public Profile(StringProperty name, StringProperty phone, StringProperty profilePicture, StringProperty addressBookPath) throws IOException {
         // Constructor implementation
-        this.name = new SimpleStringProperty(name.get().trim()); 
-        this.name = new SimpleStringProperty(phone.get().trim()); 
+        this.name = name; 
+        this.phone = phone; 
         setProfilePicture(profilePicture.get()); 
         setAddressBookPath(addressBookPath.get()); 
         
@@ -74,7 +74,7 @@ public class Profile implements Serializable{
     public boolean setName(String name) {
         CharacterLimitStringChecker checker = new CharacterLimitStringChecker(MAX_NAMELEN); 
         if(checker.check(name)) {
-            this.name = new SimpleStringProperty(name.trim()); 
+            this.name = new SimpleStringProperty(name); 
             return true; 
         }
         return false; 
@@ -102,7 +102,7 @@ public class Profile implements Serializable{
     public boolean setPhone(String phone) {
         ItalianPhoneChecker checker = new ItalianPhoneChecker(); 
         if(checker.check(phone)) {
-            this.phone = new SimpleStringProperty(phone.trim()); 
+            this.phone = new SimpleStringProperty(phone); 
             return true; 
         }
         return false; 
@@ -133,7 +133,12 @@ public class Profile implements Serializable{
      * @throws IOException if the specified path is not valid
      */
     public void setAddressBookPath(String addressBookPath) throws IOException {
-        Path path = Paths.get(addressBookPath);
+        if (! (addressBookPath == null || addressBookPath.trim().isEmpty())) {
+            Path path = Paths.get(addressBookPath);
+            if(!Files.exists(path)) {
+                throw new IOException("File: " + addressBookPath + " does not exist.");
+            }
+        }
         this.addressBookPath = addressBookPath;
     }
 
@@ -144,7 +149,14 @@ public class Profile implements Serializable{
      * @throws FileNotFoundException if the picture cannot be copied in the assets folder, or the specified path is not valid
      */
     public void setProfilePicture(String profilePicture) throws FileNotFoundException, IOException {
+        if (profilePicture == null || profilePicture.trim().isEmpty()){
+            this.profilePicture = profilePicture;
+            return;
+        }
         Path profilePicturePath = Paths.get(profilePicture);
+        if(!Files.exists(profilePicturePath)) {
+            throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
+        }
         
         String fileName = profilePicturePath.getFileName().toString();
         String extension = fileName.substring(fileName.lastIndexOf('.')+1); 
