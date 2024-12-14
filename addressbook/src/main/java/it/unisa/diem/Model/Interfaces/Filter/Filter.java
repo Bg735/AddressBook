@@ -3,6 +3,7 @@ package it.unisa.diem.Model.Interfaces.Filter;
 import it.unisa.diem.Model.Contact;
 import javafx.beans.property.StringProperty;
 
+
 /**
  * Passed as a Predicate<Contact> that verifies a condition based on the fact that a {@link Contact} contains a string.
  * Abstract component of the Decorator pattern.
