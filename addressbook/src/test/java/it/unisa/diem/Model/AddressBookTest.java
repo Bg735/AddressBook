@@ -102,7 +102,7 @@ public class AddressBookTest {
         assertNotNull(c);
         addressbook.addTagToContact(t,c);
         assertTrue(addressbook.getTagMap().containsKey(t));
-        SetProperty<SafeContact> verifySet = addressbook.getTagMap().get(t);
+        SetProperty<Contact> verifySet = addressbook.getTagMap().get(t);
         assertTrue(verifySet.contains(c)); 
     }
     
@@ -111,7 +111,7 @@ public class AddressBookTest {
         assertNotNull(t);
         assertNotNull(c);
         addressbook.removeTagFromContact(t,c);
-        SetProperty<SafeContact> verifySet = addressbook.getTagMap().get(t);
+        SetProperty<Contact> verifySet = addressbook.getTagMap().get(t);
         assertFalse(verifySet.contains(c)); 
         if(verifySet == null){
             assertFalse(addressbook.getTagMap().containsKey(t));
