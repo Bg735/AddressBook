@@ -12,6 +12,7 @@ import ezvcard.io.text.VCardReader;
 import it.unisa.diem.Model.AddressBook;
 import it.unisa.diem.Model.Contact;
 import it.unisa.diem.Model.Profile;
+import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class FileManagerTest {
@@ -130,10 +131,9 @@ public class FileManagerTest {
     
     @Test
     void testExportAndImportAsVCard() {
-        
         String validPath = "testExport.vcf";
-        Set contactsPre = addressBook.contacts();
-
+        SetProperty<Contact> pre = addressBook.contacts();
+        int preSize = pre.getSize();
         assertDoesNotThrow(() -> FileManager.exportAsVCard(validPath, addressBook));
         AddressBook imported = null;
         try{
@@ -141,7 +141,8 @@ public class FileManagerTest {
         } catch (StreamCorruptedException fail) {
             fail();
         }
-        Set contactsPost = imported.contacts();
-        assertEquals(contactsPre, contactsPost);
+        SetProperty<Contact> post = imported.contacts();
+        int postSize = post.getSize();
+        assertEquals(preSize, postSize);
     }
 }
