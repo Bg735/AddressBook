@@ -1,4 +1,4 @@
-package test.java.it.unisa.diem.Model;
+package it.unisa.diem.Model;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,23 +6,32 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleSetProperty;
+import javafx.collections.FXCollections;
+import org.junit.jupiter.api.function.Executable;
 
 public class AddressBookTest {
     private AddressBook addressbook;
-    private Addressbook readAddressBook;
+    private AddressBook readAddressBook;
     private AddressBook a;
     private String path1 = "/Users/mauriziomelillo/UNISA - FILE/PROGETTI IDS/AddressBook/addressbook/src/test/java/it/unisa/diem/TestAddressBook/ReadTry.txt";
     private String path2 = null;
     private SetProperty<SafeContact> contactsListTest;
     private MapProperty<Tag, SetProperty<SafeContact>> tagMapTest;
     private RecentlyDeleted recentlyDeletedTest;
-    private SafeContact c;
+    private Contact c;
     private Tag t;
 
     @BeforeEach
     public void setUp(){
-        c = new SafeContact("Mario","Rossi","Mario Rossi","mariorossi@gmail.com","347584383","lavoro");
-        t = new Tag("UNISA");
+        c = new Contact("Mario","Rossi");
+        t = new Tag();
+        t.setName("Unisa");
         readAddressBook = new AddressBook();
         addressbook = new AddressBook(path1);
         a = new AddressBook(path2);
@@ -30,9 +39,9 @@ public class AddressBookTest {
 
     @Test
     public void TestConstructor(){
-        assertNotNull(addressbook.contactsList);
-        assertNotNull(addressbook.tagMap);
-        assertNotNull(addressbook.recentlyDeleted);
+        assertNotNull(addressbook.contacts());
+        assertNotNull(addressbook.getTagMap());
+        assertNotNull(addressbook.trashCan());
     }
 
     @Test
@@ -45,54 +54,46 @@ public class AddressBookTest {
 
     @Test
     public void testContacts(){
-        contactsListTest = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<SafeContact>()));
-        assertNotNull(addressbook.contactsList);
-        contactsListTest = addressbook.contacts;
-        assertEquals(contactsListTest,addressbook.contactsList);
+        assertNotNull(addressbook.contacts());
     }
 
     @Test
     public void testGetTagMap(){
-        tagMapTest =  new SimpleMapProperty<>(FXCollections.observableMap(new TreeMap<Tag,SetProperty<SafeContact>>()));
-        assertNotNull(addressbook.tagMap);
-        tagMapTest = addressbook.getTagMap;
-        assertEquals(tagMapTest,addressbook.tagMap);
+        assertNotNull(addressbook.getTagMap());
     }
 
     @Test
     public void testTrashCan(){
-        assertNotNull(addressbook.recentlyDeleted);
-        recentlyDeletedTest = addressbook.trashCan;
-        assertEquals(recentlyDeletedTest,addressbook.recentlyDeleted);
+        assertNotNull(addressbook.trashCan());
     }
 
     @Test
     public void testAdd(){
         assertNotNull(c);
-        int preSize = addressbook.contactsList.size;
+        int preSize = addressbook.contacts().size();
         addressbook.add(c);
-        assertEquals(addressbook.contactsList.size,preSize+1);
-        assertTrue(addressbook.contactsList.contains(c));
+        assertEquals(addressbook.contacts().size(),preSize+1);
+        assertTrue(addressbook.contacts().contains(c));
     }
 
     @Test
     public void testDelete(){
         assertNotNull(c);
-        int preSize = addressbook.contactsList.size;
+        int preSize = addressbook.contacts().size();
         addressbook.delete(c);
-        assertEquals(addressbook.contactsList.size,preSize-1);
-        assertFalse(addressbook.contactsList.contains(c));
+        assertEquals(addressbook.contacts().size(),preSize-1);
+        assertFalse(addressbook.contacts().contains(c));
     }
 
     @Test
     public void testRestore(){
         assertNotNull(c);
-        assertTrue(addressbook.recentlyDeleted.contains(c));
-        int preSize = addressbook.contactsList.size;
+        assertTrue(addressbook.trashCan().get().values().contains(c));
+        int preSize = addressbook.contacts().size();
         addressbook.restore(c);
-        assertTrue(addressbook.contactsList.contains(c));
-        assertFalse(addressbook.recentlyDeleted.contains(c));
-        assertEquals(addressbook.contactsList.size,preSize+1);
+        assertTrue(addressbook.contacts().contains(c));
+        assertFalse(addressbook.trashCan().get().values().contains(c));
+        assertEquals(addressbook.contacts().size(),preSize+1);
     }
 
     @Test
@@ -100,8 +101,8 @@ public class AddressBookTest {
         assertNotNull(t);
         assertNotNull(c);
         addressbook.addTagToContact(t,c);
-        assertTrue(addressbook.tagMap.contains(t));
-        SetProperty<SafeContact> verifySet = addressbook.tagMap.get(t);
+        assertTrue(addressbook.getTagMap().containsKey(t));
+        SetProperty<SafeContact> verifySet = addressbook.getTagMap().get(t);
         assertTrue(verifySet.contains(c)); 
     }
     
@@ -110,10 +111,10 @@ public class AddressBookTest {
         assertNotNull(t);
         assertNotNull(c);
         addressbook.removeTagFromContact(t,c);
-        SetProperty<SafeContact> verifySet = addressbook.tagMap.get(t);
+        SetProperty<SafeContact> verifySet = addressbook.getTagMap().get(t);
         assertFalse(verifySet.contains(c)); 
         if(verifySet == null){
-            assertFalse(addressbook.tagMap.contains(t));
+            assertFalse(addressbook.getTagMap().containsKey(t));
         }
     }
 
@@ -131,7 +132,7 @@ public class AddressBookTest {
     @Test
     public void testwriteToFile(){
         addressbook.add(c);
-        assertDoesNotThrow(() -> addressBook.writeToFile(path1));
+        assertDoesNotThrow((Executable) () -> addressbook.writeToFile(path1));
         
         File file = new File(path1);
         assertTrue(file.exists(), "Creation of file failed.");
@@ -147,7 +148,7 @@ public class AddressBookTest {
         }
     }
 
-    @test
+    @Test
     public void testGet(){
         addressbook.add(c);
         assertEquals(addressbook.get(c),c);
