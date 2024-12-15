@@ -9,10 +9,16 @@ import java.util.TreeMap;
 
 import it.unisa.diem.Model.Interfaces.ContactList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 
 
@@ -35,7 +41,7 @@ public class RecentlyDeleted implements Serializable {
     }
     
     /**
-     * Initializes the trash can.
+     * Initializes the trash can as an empty, ordered map.
      * 
      * @invariant trashCan != null
      */
@@ -52,7 +58,36 @@ public class RecentlyDeleted implements Serializable {
     public MapProperty<LocalDateProperty, SetProperty<Contact>> get() {
         return trashCan;
     }
+    
+    /**
+     * Returns the list of contacts.
+     * @important The returned collection is intended to be read-only.
+     * 
+     * @invariant contactsList != null
+     * @return the list of contacts
+     */
+    public ListProperty<Contact> contacts() {
+        List<Contact> allContacts = new ArrayList<>();
 
+        trashCan.get().forEach((deletionDate, contactsSet) -> allContacts.addAll(contactsSet));
+        
+        ListProperty<Contact> contactsProperty = new SimpleListProperty<>(FXCollections.observableArrayList(allContacts));
+        return contactsProperty;
+    }
+    
+    public void put(Contact c) {
+        LocalDateProperty today = new LocalDateProperty(LocalDate.now());
+        if (trashCan.get().containsKey(today)){
+            SetProperty<Contact> contacts = trashCan.get().get(today);
+            contacts.add(c);
+            trashCan.get().put(today,contacts);
+        } else {
+            SetProperty<Contact> contacts = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+            contacts.add(c);
+            trashCan.get().put(today, contacts);
+        }
+    }
+    
     /**
      * Permanently removes all the contacts moved to the trash can more than {@link #RETENTION_PERIOD_DAYS} days ago.
      * 

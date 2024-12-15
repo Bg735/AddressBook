@@ -36,19 +36,6 @@ public class Tag {
     }
 
     /**
-     * Sets the StringProperty containing the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
-     *
-     * @param name the StringProperty containing the name of the tag
-     */
-    public boolean setName(StringProperty name) {
-        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name.get())){
-            this.name = name;
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns the name of the tag.
      *
      * @return the name of the tag.
@@ -60,10 +47,13 @@ public class Tag {
     /**
      * Sets the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
      *
+     * @pre !name.isEmpty()
      * @param name the new name of the tag
+     * @return true if the name is valid, false otherwise
      */
-    public boolean setNameValue(String name) {
-        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
+    public boolean setName(String name) {
+        name = name.trim();
+        if(!name.isEmpty() && new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
             this.name.set(name);
             return true;
         }
