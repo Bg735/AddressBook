@@ -88,6 +88,20 @@ public class RecentlyDeleted implements Serializable {
         }
     }
     
+    
+    
+     public void remove(Contact c){
+        for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
+            if (entry.getValue().contains(c)) {
+                entry.getValue().remove(c);
+                if (entry.getValue().isEmpty()) {
+                    trashCan.remove(entry.getKey());
+                }
+                return;
+            }
+        }
+    }
+
     /**
      * Permanently removes all the contacts moved to the trash can more than {@link #RETENTION_PERIOD_DAYS} days ago.
      * 
