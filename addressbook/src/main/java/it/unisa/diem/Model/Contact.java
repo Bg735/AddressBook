@@ -117,7 +117,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     public boolean setName(String name) {
         this.name.set(name);
-        return true;
+        return true; 
     }
 
 
