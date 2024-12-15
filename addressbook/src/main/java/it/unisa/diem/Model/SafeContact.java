@@ -1,7 +1,5 @@
 package it.unisa.diem.Model;
 
-import java.io.IOException;
-
 import it.unisa.diem.Model.Interfaces.Checker.CharacterLimitStringChecker;
 import it.unisa.diem.Model.Interfaces.Checker.Checker;
 import it.unisa.diem.Model.Interfaces.Checker.ItalianPhoneChecker;
@@ -20,6 +18,7 @@ public class SafeContact extends Contact {
      */
     private SafeContact() {
         // TODO: Implement this method
+        super(); 
     }
 
 
@@ -41,7 +40,11 @@ public class SafeContact extends Contact {
      */
     private SafeContact(String name, String surname) {
         // TODO: Implement this method
+        super(name ,surname);  
     }
+
+
+    //!
 
     /**
      * Creates a new SafeContact with the given name and surname, but only if they're valid, according to the {@link Checker} implementations.
@@ -49,68 +52,61 @@ public class SafeContact extends Contact {
      * @param[in] name the name of the new SafeContact
      * @param[in] surname the surname of the new SafeContact
      * @see SafeContact#SafeContact(String, String)
+     * @return SafeContact if name and surname are valid, null otherwise
      */
     public SafeContact safeContact(String name, String surname){
         //TODO: Implement this method
-    }
-
-    /**
-     * Creates a new SafeContact with the given name, surname and phone numbers. It is called by the {@link #safeContact(String, String, String[], String[])} method if the argument fields are valid, according to the {@link Checker} implementations.
-     * 
-     * @param[in] name the name of the new SafeContact
-     * @param[in] surname the surname of the new SafeContact
-     * @param[in] phoneNumber the phone numbers of the new SafeContact
-     * @param[in] email the email addresses of the new SafeContact
-     * @see SafeContact#safeContact(String, String, String[], String[])
-     */
-    public SafeContact(String name, String surname, String[] phoneNumber, String[] email) {
-        // TODO: Implement this method
-    }
-
-    /**
-     * Creates a new SafeContact with the given name, surname, phone numbers and email addresses, but only if they're valid, according to the {@link Checker} implementations.
-     * 
-     * @param[in] name the name of the new SafeContact
-     * @param[in] surname the surname of the new SafeContact
-     * @param[in] phoneNumber the phone numbers of the new SafeContact
-     * @param[in] email the email addresses of the new SafeContact
-     * @see SafeContact#SafeContact(String, String, String[], String[])
-     */
-    public SafeContact safeContact(String name, String surname, String[] phoneNumber, String[] email){
-        //TODO: Implement this method
+        if ((name == null || name.isEmpty()) && (surname == null || surname.isEmpty())) {
+            return null; 
+        }
+        if (name == null) name = " "; 
+        if (surname == null) surname = " "; 
+        CharacterLimitStringChecker nameStringChecker = new CharacterLimitStringChecker(MAX_NAME_LEN); 
+        CharacterLimitStringChecker surnameStringChecker = new CharacterLimitStringChecker(MAX_SURNAME_LEN); 
+        if(nameStringChecker.check(name) && surnameStringChecker.check(surname)) 
+            return new SafeContact(name, surname); 
+        else return null; 
     }
 
     /**
      * @copydoc Contact::setName(String)
      * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_NAMELEN}).
-     * If the name is set to an empty string, the change will not occur if the surname is also empty.
      * @pre The name satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@link #MAX_NAMELEN}
      * @return true if the condition is met, false otherwise
      */
     @Override
     public boolean setName(String name) {
         // TODO: Implement this method
+        if(name == null) return false;  
+        if(name.trim().isEmpty() && super.getSurnameValue().isEmpty()) return false; 
+        
+        CharacterLimitStringChecker nameStringChecker = new CharacterLimitStringChecker(MAX_NAME_LEN); 
+        if(nameStringChecker.check(name)) {
+            super.setName(name);
+            return true; 
+        } else return false; 
+        
     }
 
     /**
      * @copydoc Contact::setSurname(String)
      * This method only acts if it verifies that the argument satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_SURNAMELEN}). 
-     * If the surname is set to an empty string, the change will not occur if the name is also empty.
      * @pre The surname satisfies the condition of {@link CharacterLimitStringChecker#check(String)} for {@link #MAX_SURNAMELEN}
      * @return true if the condition is met, false otherwise
      */
     @Override
     public boolean setSurname(String surname) {
         // TODO: Implement this method
+        if(surname == null) return false;  
+        if(surname.trim().isEmpty() && super.getNameValue().isEmpty()) return false; 
+        
+        CharacterLimitStringChecker surnameStringChecker = new CharacterLimitStringChecker(MAX_SURNAME_LEN); 
+        if(surnameStringChecker.check(surname)) {
+            super.setSurname(surname);
+            return true; 
+        } else return false; 
     }
 
-    /**
-     * @copydoc Contact::setPicture(String)
-     */
-    @Override
-    public void setPicture(String picture) throws IOException {
-        // TODO: Implement this method
-    }
 
     /**
      * @copydoc Contact::addEmail(String...)
@@ -121,7 +117,13 @@ public class SafeContact extends Contact {
     @Override
     public boolean addEmail(String... email) {
         // TODO: Implement this method
-        return false;
+        SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
+        for(int i=0 ; i<email.length ; i++) {
+            if(email[i] != null && !emailChecker.check(email[i])) return false; 
+            email[i] = email[i].trim(); 
+        }
+        super.addEmail(email); 
+        return true; 
     }
 
     /**
@@ -133,7 +135,11 @@ public class SafeContact extends Contact {
     @Override
     public boolean setEmail(String email, int index) {
         // TODO: Implement this method
-        return false;
+        SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
+        if(emailChecker.check(email)) {
+            super.setEmail(email.trim(), index);
+            return true; 
+        } else return false; 
     }
 
     /**
@@ -145,7 +151,13 @@ public class SafeContact extends Contact {
     @Override
     public boolean addPhoneNumber(String... phoneNumber) {
         // TODO: Implement this method
-        return false;
+        ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
+        for(int i=0 ; i<phoneNumber.length ; i++) {
+            if(phoneNumber[i] != null && !phoneChecker.check(phoneNumber[i])) return false; 
+            phoneNumber[i] = phoneNumber[i].trim(); 
+        }
+        super.addPhoneNumber(phoneNumber); 
+        return true; 
     }
 
     /**
@@ -157,6 +169,10 @@ public class SafeContact extends Contact {
     @Override
     public boolean setPhoneNumber(String phoneNumber, int index) {
         // TODO: Implement this method
-        return false;
+        ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
+        if(phoneChecker.check(phoneNumber)) {
+            super.setPhoneNumber(phoneNumber.trim(), index);
+            return true; 
+        } else return false; 
     }
 }
