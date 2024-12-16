@@ -90,14 +90,19 @@ public class RecentlyDeleted implements Serializable {
     
     
     
-     public void remove(Contact contact){
-        for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
-            if (entry.getValue().contains(contact)) {
-                entry.getValue().remove(contact);
-                if (entry.getValue().isEmpty()) {
-                    trashCan.remove(entry.getKey());
+    public void remove(Contact contact) {
+        Iterator<Map.Entry<LocalDateProperty, SetProperty<Contact>>> iterator = trashCan.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<LocalDateProperty, SetProperty<Contact>> entry = iterator.next();
+            SetProperty<Contact> contacts = entry.getValue();
+
+            if (contacts.contains(contact)) {
+                contacts.remove(contact); // Rimuove il contatto dal set
+                if (contacts.get().isEmpty()) { // Controlla se il set è vuoto
+                    iterator.remove(); // Rimuove l'intera entry dalla mappa
                 }
-                return;
+                return; // Contatto trovato e rimosso, uscire
             }
         }
     }

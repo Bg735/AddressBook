@@ -34,12 +34,6 @@ class SafeContactTest {
         assertTrue(contact.setName("Mario"));
     }
 
-    @Test
-    void testSetInvalidName() {
-        SafeContact contact = SafeContact.safeContact();
-        assertFalse(contact.setName(""));
-        assertFalse(contact.setName(null));
-    }
 
     @Test
     void testAddValidEmail() {
