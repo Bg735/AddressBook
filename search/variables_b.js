@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['pane_0',['pane',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController_1_1ProfileMaker.html#a4e8068c7110b82999a2893d35b6875f0',1,'it::unisa::diem::Controller::ProfileSelectionController::ProfileMaker']]],
+  ['pathtoaddressbook_1',['pathToAddressBook',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#aea7158fda4cc8b3d3d78601f14779ae8',1,'it.unisa.diem.Controller.AddressBookController.pathToAddressBook'],['../classit_1_1unisa_1_1diem_1_1Utility_1_1SceneManager.html#afc0240852490abf7a9efa7c0716b7b2a',1,'it.unisa.diem.Utility.SceneManager.pathToAddressBook']]],
+  ['phone_2',['phone',['../classit_1_1unisa_1_1diem_1_1Model_1_1Profile.html#a23a67253f111fa6cd2dfa2d6861819f5',1,'it::unisa::diem::Model::Profile']]],
+  ['phone1field_3',['phone1Field',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#a61a0150ee82eb880691808bb8d7204fe',1,'it::unisa::diem::Controller::AddressBookController']]],
+  ['phone2field_4',['phone2Field',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#ac6ebddd45e1ee9f33a977ae9b6805449',1,'it::unisa::diem::Controller::AddressBookController']]],
+  ['phone3field_5',['phone3Field',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#aa861a5f927c700a34e7af43cf05e793b',1,'it::unisa::diem::Controller::AddressBookController']]],
+  ['phonelist_6',['phoneList',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#afc858dfc036e89e260865f235d980aae',1,'it::unisa::diem::Controller::AddressBookController']]],
+  ['phonenumber_7',['phoneNumber',['../classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html#ae3e06f66ad760240d9d76a25d23591e8',1,'it::unisa::diem::Model::Contact']]],
+  ['picture_8',['picture',['../classit_1_1unisa_1_1diem_1_1Model_1_1Contact.html#a4b1541493f26cdda7db6148d933a677b',1,'it::unisa::diem::Model::Contact']]],
+  ['pm_9',['pm',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html#a7c7b9ddf044a5665324844dc8fae1104',1,'it::unisa::diem::Controller::ProfileSelectionController']]],
+  ['profile_10',['profile',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController_1_1ProfileMaker.html#a20ee676f075b8b1adb1b1a820038f31b',1,'it::unisa::diem::Controller::ProfileSelectionController::ProfileMaker']]],
+  ['profileeditpane_11',['profileEditPane',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html#aa1d573b78371371abbb80f37dbcdd168',1,'it::unisa::diem::Controller::ProfileSelectionController']]],
+  ['profilelist_12',['profileList',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html#a9e22e0d5352964156bb0df028b8213fc',1,'it.unisa.diem.Controller.ProfileSelectionController.profileList'],['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController_1_1ProfileList.html#ad606aafb25477c859dc367d1aa7d1d72',1,'it.unisa.diem.Controller.ProfileSelectionController.ProfileList.profileList']]],
+  ['profilelistpath_13',['profileListPath',['../classit_1_1unisa_1_1diem_1_1Utility_1_1FileManager.html#a149331c74ca56adb15fe26475ed66b93',1,'it::unisa::diem::Utility::FileManager']]],
+  ['profilepicture_14',['profilePicture',['../classit_1_1unisa_1_1diem_1_1Controller_1_1AddressBookController.html#a4e3419d74d1e17f19605066ef0e7ddff',1,'it.unisa.diem.Controller.AddressBookController.profilePicture'],['../classit_1_1unisa_1_1diem_1_1Model_1_1Profile.html#adca8cba06208a2a5b910da5656860ce2',1,'it.unisa.diem.Model.Profile.profilePicture']]],
+  ['profilepicturedir_15',['profilePictureDir',['../classit_1_1unisa_1_1diem_1_1Utility_1_1FileManager.html#a8b42fda9064bde9e811e961bfa5ba412',1,'it::unisa::diem::Utility::FileManager']]],
+  ['profileselectionbox_16',['profileSelectionBox',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html#ae91099f26d49141e1650d3abe5258d67',1,'it::unisa::diem::Controller::ProfileSelectionController']]],
+  ['profileselectionpane_17',['profileSelectionPane',['../classit_1_1unisa_1_1diem_1_1Controller_1_1ProfileSelectionController.html#ae82281881d14e95e03ca00cee8001d3d',1,'it::unisa::diem::Controller::ProfileSelectionController']]]
+];
