@@ -2,18 +2,73 @@ package it.unisa.diem.Controller;
 
 import it.unisa.diem.Model.AddressBook;
 import it.unisa.diem.Model.Contact;
+import it.unisa.diem.Model.Interfaces.Checker.ImagePathChecker;
 import it.unisa.diem.Model.Interfaces.ContactList;
+import it.unisa.diem.Model.Interfaces.Filter.BaseFilter;
+import it.unisa.diem.Model.Interfaces.Filter.EmailFilter;
+import it.unisa.diem.Model.Interfaces.Filter.NameFilter;
+import it.unisa.diem.Model.Interfaces.Filter.TagFilter;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
+import it.unisa.diem.Model.LocalDateProperty;
+import it.unisa.diem.Model.RecentlyDeleted;
+import it.unisa.diem.Model.SafeContact;
 import it.unisa.diem.Model.Tag;
+import it.unisa.diem.Utility.FileManager;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.function.Predicate;
+import javafx.application.Platform;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 
 /**
  * Controller class for the AddressBook view.
@@ -31,10 +86,26 @@ public class AddressBookController implements OnEditable {
     private TrashCan trashCan; /**< Reference to access the recently-deleted-related methods of the address book. */
     private ContactList contactList; /**< Reference to access the contact-list-related methods of the address book. */
     private FilteredList<Contact> filteredList; /**< Data structure to store the list of contacts of the main view. */
-   
+    private Tag currentTag = null; // Tracks the currently selected tag
+    private boolean isNew; 
+    private Contact selected;
+    private boolean showingDeletedContacts = false; // Flag to toggle views
+    private FilteredList<Contact> deletedFilteredList;
+    private List<Tag> temporaryTag = new ArrayList<>(); 
+
     
     @FXML
-    private ListView<Contact> shownList; /**< Reference to the list view in the main view. */
+    private TableView<Contact> contactTableView; /**< Reference to the contact view. */
+    @FXML
+    private TableColumn<Contact, String> nameColumn; /**< Reference to the nameColumns view. */
+    @FXML
+    private TableColumn<Contact, String> surnameColumn; /**< Reference to the surnameColumns view. */
+    // New column for deletion date
+    @FXML
+    private TableColumn<Contact, String> deletionDateColumn;
+    
+    @FXML
+    private ListView<String> shownList; /**< Reference to the list view in the main view. */
     @FXML
     private ListView<Button> tagList; /**< Reference to the list view in the tag section. */
     @FXML
@@ -56,12 +127,37 @@ public class AddressBookController implements OnEditable {
     @FXML
     private Button deleteButton; /**< Reference to the delete button, visible in the edit view. */ 
     @FXML
-    private HBox stackPaneHBox1; 
+    private HBox hBoxEditable; 
     @FXML
-    private HBox stackPaneHBox2; 
+    private HBox hBoxNotEditable; 
     @FXML 
-    private HBox menuBar; 
-    
+    private ButtonBar menuBar; 
+    @FXML
+    private StackPane stackPaneButtons; 
+    @FXML
+    private TextField searchBar;
+    @FXML
+    private ImageView profilePicture;
+    @FXML
+    private StackPane stackPanePhones; 
+    @FXML
+    private TextField phone1Field; 
+    @FXML
+    private TextField phone2Field;  
+    @FXML
+    private TextField phone3Field;
+    @FXML
+    private TextField email1Field;
+    @FXML
+    private TextField email2Field;
+    @FXML
+    private TextField email3Field;
+    @FXML
+    private Button binButton;
+    @FXML
+    private StackPane firstStackPane;
+    @FXML
+    private Button tagButton;
     
     
     
@@ -71,15 +167,202 @@ public class AddressBookController implements OnEditable {
      * @param pathToAddressbook the path to the internal address book file to load
      * @see AddressBook#readFromFile(String)
      */
-    public AddressBookController(String pathToAddressBook) {
-        AddressBook addressBook = AddressBook.readFromFile(pathToAddressBook);
+    public AddressBookController(/*String path*/) {
+        //String pathToAddressBook = "addressbook\\assets\\address_books\\address_book_1.obj";
+        //AddressBook addressBook = AddressBook.readFromFile(pathToAddressBook);
+        AddressBook addressBook = new AddressBook();
         this.taggableList = addressBook;
         this.trashCan = addressBook;
-        this.contactList = addressBook;
-        addressBook.trashCan().removeOlderThan(DAYS); // Example call to removeOlderThan
+        this.contactList = addressBook; 
+    }
+    
+    public void initialize(){
+        // Configurazione delle colonne
+        contactList.add(new Contact("Elli","pata"));
+        contactList.add(new Contact("Gennaro","bello"));
+        contactList.add(new Contact("Francesco","papa"));
+        contactList.add(new Contact("Maurizio","fro"));
+        Contact c = new Contact("La","Bri");
+        c.addEmail("labriciola@gmail.com", "labri@hot.com");
+        c.addTag("micio");
+        c.addTag("Uni");
+        contactList.add(c);
+        Contact c1 = new Contact("Omar","Il bello");
+        c1.addTag("micio");
+        c1.addTag("sesso");
+        contactList.add(c1);
+        contactList.add(new Contact("abcdefghijklmnopqrts","jhbfhgebhgberhberhjbg"));
+        Contact c2 = new Contact("Oh","No");
+        c1.addTag("eliminato");
+        c1.addTag("prefe");
+        contactList.add(c2);
+        contactList.delete(c2);
+        
+        initializeContactTableView();
+        initializeContactsFilteredList();
+        initializeTagListView();
+        initializeRecentlyDeleted();
+        
+        Platform.runLater(() -> {
+            if (!filteredList.isEmpty()) {
+                contactTableView.getSelectionModel().selectFirst();
+            }
+            Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+            if(selectedContact != null) {
+                editButton.setDisable(false);
+                displayContact(selectedContact); 
+            }
+        });
+        
+    }
+    
+    private void initializeContactTableView() {
+    // Imposta le colonne della TableView
+    nameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
+    surnameColumn.setCellValueFactory(cellData -> cellData.getValue().getSurname());
+
+    // Crea una lista filtrata dai contatti dell'indirizzario (convertendo il SetProperty in ObservableList)
+    filteredList = new FilteredList<>(FXCollections.observableArrayList(contactList.contacts()));
+
+    // Collega la lista filtrata alla TableView
+    contactTableView.setItems(filteredList);
+
+    // Aggiungi un SetChangeListener alla SetProperty dei contatti per aggiornamenti automatici
+    contactList.contacts().addListener((SetChangeListener<Contact>) change -> {
+        if (change.wasAdded()) {
+            // Se un contatto è stato aggiunto, aggiungilo alla FilteredList
+            filteredList.add(change.getElementAdded());
+        } else if (change.wasRemoved()) {
+            // Se un contatto è stato rimosso, rimuovilo dalla FilteredList
+            filteredList.remove(change.getElementRemoved());
+        }
+    });
+}
+    
+    private <T> void initializeFilteredList(FilteredList<T> listToFilter, TextField searchBar, Predicate<T> filterPredicate) {
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            listToFilter.setPredicate(item -> {
+                // If the search bar is empty, show all items
+                if (newValue == null || newValue.trim().isEmpty()) {
+                    return true;
+                }
+                // Apply the custom filter predicate
+                return filterPredicate.test(item);
+            });
+        });
     }
 
+    private void initializeContactsFilteredList(){
+        initializeFilteredList(filteredList, searchBar, contact -> {
+            String searchString = searchBar.getText().trim().toLowerCase();
+            TagFilter tagFilterBase = null;
+            if (currentTag != null) {
+                tagFilterBase = new TagFilter(new BaseFilter(new SimpleStringProperty(currentTag.getNameValue())));
+            }
+            BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty(searchString));
+            TagFilter tagFilter = new TagFilter(baseFilter);
+            NameFilter nameFilter = new NameFilter(baseFilter);
+            EmailFilter emailFilter = new EmailFilter(baseFilter);
 
+            boolean matchSearch = tagFilter.test(contact) || nameFilter.test(contact) || emailFilter.test(contact);
+            if (currentTag != null) {
+                return tagFilterBase.test(contact) && matchSearch;
+            } else {
+                return matchSearch;
+            }
+        });
+    }
+    
+    private void initializeDeletedFilteredList(){
+        initializeFilteredList(deletedFilteredList, searchBar, contact -> {
+            String lowerCaseFilter = searchBar.getText().trim().toLowerCase();
+            BaseFilter baseFilter = new BaseFilter(new SimpleStringProperty(lowerCaseFilter));
+            TagFilter tagFilter = new TagFilter(baseFilter);
+            NameFilter nameFilter = new NameFilter(baseFilter);
+            EmailFilter emailFilter = new EmailFilter(baseFilter);
+            return tagFilter.test(contact) || nameFilter.test(contact) || emailFilter.test(contact);
+        });
+
+    }
+    
+    private void initializeTagListView() {
+        // Creare una ObservableList<Button> per contenere i pulsanti dei tag
+        ObservableList<Button> tagButtons = FXCollections.observableArrayList();
+
+        // Mappare i tag a pulsanti
+        for (Object tagObj : taggableList.getTagMap().keySet()) {
+            Tag tag = (Tag) tagObj; // Cast esplicito a Tag
+            Button tagButton = createTagButton(tag);
+            tagButtons.add(tagButton);
+        }
+
+        // Collegare i pulsanti alla ListView
+        tagList.setItems(tagButtons);
+
+        // Aggiungere un listener per aggiornare la ListView quando cambia la tagMap
+        taggableList.getTagMap().addListener((MapChangeListener<Tag, SetProperty<Contact>>) change -> {
+            if (change.wasAdded()) {
+                Button newButton = createTagButton(change.getKey());
+                tagButtons.add(newButton);
+            }
+            if (change.wasRemoved()) {
+                tagButtons.removeIf(button -> button.getText().equals(change.getKey().toString()));
+            }
+        });
+    }
+
+    // Metodo per creare un pulsante per un tag
+    private Button createTagButton(Tag tag) {
+        Button tagButton = new Button(tag.getNameValue());
+        tagButton.setPrefWidth(80);
+        tagButton.setContentDisplay(ContentDisplay.LEFT);
+        tagButton.setOnAction(event -> {
+            if(showingDeletedContacts){
+                backToContacts();
+            }
+            displayContactsForTag(tag);
+        });
+        return tagButton;
+    }
+
+    private void displayContactsForTag(Tag tag) {
+        currentTag = tag; // Store the currently selected tag
+        searchBar.clear();
+        filteredList.setPredicate(contact -> contact.getTags().contains(tag));
+    }
+    
+    private void initializeRecentlyDeleted() {
+        RecentlyDeleted rd = trashCan.trashCan();
+        rd.removeExpired();
+        // Initialize the FilteredList for deleted contacts
+
+        // Create the FilteredList for deleted contacts
+        deletedFilteredList = new FilteredList<>(FXCollections.observableArrayList(rd.contacts()), p -> true);
+
+        // Add a new column for deletion date
+        deletionDateColumn = new TableColumn<>("Deletion Date");
+        deletionDateColumn.setCellValueFactory(cellData -> {
+            // Find the deletion date for the contact
+            for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : rd.get().entrySet()) {
+                if (entry.getValue().contains(cellData.getValue())) {
+                    LocalDate deletionDate = entry.getKey().get();
+                    // Format the date for display
+                    String formattedDate = deletionDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    return new SimpleStringProperty(formattedDate);
+                }
+            }
+            return new SimpleStringProperty("Unknown");
+        });
+
+        // Initially hide the deletion date column in the main view
+        deletionDateColumn.setVisible(false);
+        deletionDateColumn.setMinWidth(75);
+        deletionDateColumn.setPrefWidth(75);
+        contactTableView.getColumns().add(deletionDateColumn);
+
+        
+    }
+        
     /**
      * Exits the application.
      * Called when the user clicks on the exit button on the window from the address book view.
@@ -91,6 +374,7 @@ public class AddressBookController implements OnEditable {
     public void exit() {
         // Method implementation
     }
+    
 
     /**
      * Opens the edit mode for an empty contact.
@@ -101,29 +385,26 @@ public class AddressBookController implements OnEditable {
      */
     @FXML
     public void onAdd(ActionEvent event) {
-        // Method implementation
-        nameField.setEditable(true);
-        surnameField.setEditable(true);
-        phoneList.setDisable(false);   
-        emailList.setDisable(false);   
-        
-        nameField.setText(""); 
-        surnameField.setText(""); 
-        phoneList.getItems().clear(); 
-        emailList.getItems().clear(); 
-    }
+        clearTextFields();
+        if(showingDeletedContacts) {
+            onDeleteFromBin();
+        }else {
+            editable();
 
-    /**
-     * Delete a contact from the address book.
-     * Called when the user clicks on the contact deletion button in the contact's edit view.
-     *
-     * @pre The contact to be deleted must exist in the address book.
-     * @post The contact is removed from the address book.
-     * @see ContactList#delete(Contact)
-     */
-    @FXML
-    public void onDelete(ActionEvent event) {
-        // Method implementation
+            nameField.setPromptText("Name"); 
+            surnameField.setPromptText("Surname"); 
+            phoneList.getItems().clear(); 
+            emailList.getItems().clear(); 
+
+            isNew = true;
+            
+            
+        }
+    }
+    
+    private void onDeleteFromBin(){
+        selected = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+        if(selected != null) trashCan.trashCan().remove(selected);
     }
 
     /**
@@ -143,24 +424,127 @@ public class AddressBookController implements OnEditable {
     @FXML
     public void onEdit(ActionEvent event) {
         // Method implementation
+        selected = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+        if(showingDeletedContacts) {
+            if (selected != null)
+                onRestore();
+        } else {
+            editable(); 
+            isNew = false; 
+        }
+    }
+
+    private void editable() {
+        nameField.setEditable(true);
+        surnameField.setEditable(true);
         
-        // cancel, delete and save buttons are enabled and visible 
+        phone1Field.setVisible(true); 
+        phone2Field.setVisible(true);
+        phone3Field.setVisible(true); 
+        tagButton.setVisible(true); 
+        tagButton.setDisable(false); 
+        
+        // buttons enabled and visible 
         deleteButton.setVisible(true); 
-        cancelButton.setVisible(true); 
-        saveButton.setVisible(true); 
         deleteButton.setDisable(false); 
-        cancelButton.setDisable(false); 
-        saveButton.setDisable(false); 
-        stackPaneHBox2.setMouseTransparent(false); 
         
-        // edit and add buttons are disabled and not visible
-        editButton.setDisable(true); 
-        addButton.setDisable(true); 
-        editButton.setVisible(false); 
+        saveButton.setVisible(true); 
+        saveButton.setDisable(false); 
+        
+        cancelButton.setVisible(true); 
+        cancelButton.setDisable(false); 
+        
+        // buttons disabled and invisible
         addButton.setVisible(false); 
-        editButton.setMouseTransparent(true); 
-        addButton.setMouseTransparent(true); 
-        stackPaneHBox1.setMouseTransparent(true); 
+        addButton.setDisable(true); 
+        
+        editButton.setVisible(false); 
+        editButton.setDisable(true); 
+
+        phoneList.setVisible(false); 
+    
+        stackPanePhones.getChildren().add(stackPanePhones.getChildren().remove(0));
+        stackPaneButtons.getChildren().add(stackPaneButtons.getChildren().remove(0));
+    }
+    
+    private void notEditable() {
+        
+        nameField.setEditable(false);
+        surnameField.setEditable(false);
+        phone1Field.setVisible(false); 
+        phone2Field.setVisible(false);
+        phone3Field.setVisible(false); 
+        tagButton.setVisible(false); 
+        tagButton.setDisable(true); 
+      
+        // buttons disabled and invisible
+        deleteButton.setVisible(false); 
+        deleteButton.setDisable(true); 
+        
+        saveButton.setVisible(false); 
+        saveButton.setDisable(true); 
+        
+        cancelButton.setVisible(false); 
+        cancelButton.setDisable(true); 
+        
+        // buttons enabled and visible 
+        addButton.setVisible(true); 
+        addButton.setDisable(false); 
+        
+        editButton.setVisible(true); 
+        
+        phoneList.setVisible(true); 
+        
+        stackPanePhones.getChildren().add(stackPanePhones.getChildren().remove(0));
+        stackPaneButtons.getChildren().add(stackPaneButtons.getChildren().remove(0));
+    }
+    
+    /**
+     * Delete a contact from the address book.
+     * Called when the user clicks on the contact deletion button in the contact's edit view.
+     *
+     * @pre The contact to be deleted must exist in the address book.
+     * @post The contact is removed from the address book.
+     * @see ContactList#delete(Contact)
+     */
+    @FXML
+    public void onDelete(ActionEvent event) {
+        // Method implementation
+        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm deletion");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to delete this contact?");
+
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                notEditable();
+                Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+                if(selectedContact != null) 
+                    contactList.delete(selectedContact);
+                if (!filteredList.isEmpty()) {
+                    contactTableView.getSelectionModel().selectFirst();
+                }
+                Contact firstContact = (Contact)contactTableView.getItems().get(0);
+                if(firstContact != null) {
+                    editButton.setDisable(false);
+                    displayContact(firstContact); 
+                }
+            } else {
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setTitle("An error occurred");
+                    errorAlert.setHeaderText(null);
+                    errorAlert.setContentText("The selected contact was not deleted due to an error. ");
+
+                    errorAlert.showAndWait();
+            }
+        });
+      
+    }
+    
+    @FXML
+    public void onCancel(ActionEvent event) {
+        // Method implementation
+        notEditable(); 
     }
 
     /**
@@ -170,21 +554,80 @@ public class AddressBookController implements OnEditable {
      * @see AddressBook#writeToFile(String)
      */
     public void onSave() {
-        // Method implementation
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-
-        ObservableList<String> phones = phoneList.getItems();
-        ObservableList<String> emails = emailList.getItems();
+        // Recupera i dati immessi dall'utente
+        String name = nameField.getText().trim();
+        String surname = surnameField.getText().trim();
+        String phone1 = phone1Field.getText().trim();
+        String phone2 = phone2Field.getText().trim();
+        String phone3 = phone3Field.getText().trim();
+        String email1 = email1Field.getText().trim();
+        String email2 = email2Field.getText().trim();
+        String email3 = email3Field.getText().trim();
         
-        String[] phoneArray = phones.toArray(new String[0]);
-        String[] emailArray = emails.toArray(new String[0]);
-      
-        Contact newContact = new Contact(name, surname, phoneArray, emailArray);
+        /*
+        // Verifica che nome e cognome siano validi
+        SafeContact newContact = SafeContact.safeContact(name, surname);
+        if (newContact != null) {
+            // Aggiungi i numeri di telefono se validi
+            if (!phone1.isEmpty()) newContact.addPhoneNumber(phone1);
+            if (!phone2.isEmpty()) newContact.addPhoneNumber(phone2);
+            if (!phone3.isEmpty()) newContact.addPhoneNumber(phone3);
 
-        contactList.add(newContact);
+            // Aggiungi le email se valide
+            if (!email1.isEmpty()) newContact.addEmail(email1);
+            if (!email2.isEmpty()) newContact.addEmail(email2);
+            if (!email3.isEmpty()) newContact.addEmail(email3);
+        
+            // Aggiungi il contatto a una lista o esegui altre operazioni di salvataggio
+            Contact c = newContact;
+            if (c != null)
+                contactList.add(c);
+
+            // Rendi i campi non modificabili dopo il salvataggio
+            notEditable();
+            //updateFilteredList(); // Assicurati che la FilteredList venga aggiornata
+            //clearTextFields();
+            // Update filtered list to show the newly added contact
+            searchBar.clear();
+            contactTableView.refresh(); // Refresh the TableView
+        } else showError("Error on Saving");
+        
+        */
+            System.out.println("CAZZO\n\n");
+            Contact c = new Contact("DIO", "CANE");
+            contactList.add(c);
+            for (Contact ci: contactList.contacts().get())
+                System.out.print(ci.getFullNameValue() + "\n");
+            contactTableView.setItems(filteredList);
     }
 
+    // Metodo per mostrare messaggi d'errore
+    private void showError(String message) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Errore");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Aggiorna la FilteredList per riflettere le modifiche
+    private void updateFilteredList() {
+        filteredList.setPredicate(filteredList.getPredicate()); // Triggera l'aggiornamento
+    }
+
+    // Metodo per resettare i campi di testo
+    private void clearTextFields() {
+        nameField.clear();
+        surnameField.clear();
+        phone1Field.clear();
+        phone2Field.clear();
+        phone3Field.clear();
+        email1Field.clear();
+        email2Field.clear();
+        email3Field.clear();
+        // -> METTERE SCEGLI IMMAGINE
+    }
+        
     /**
      * Opens the visualization pane for a contact selected from the address book.
      * Called when the user clicks on the contact's name in the contact's visualization pane.
@@ -194,8 +637,31 @@ public class AddressBookController implements OnEditable {
      * @see ContactList#get(Contact)
      */
     @FXML
-    public void onSelect(ActionEvent event) {
+    public void onSelect(MouseEvent event) {
         // Method implementation
+        Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+        if(selectedContact != null) {
+            editButton.setDisable(false);
+            displayContact(selectedContact);
+            notEditable();
+        }
+    }
+    
+    private void displayContact(Contact c) {
+        nameField.setText(c.getNameValue()); 
+        surnameField.setText(c.getSurnameValue()); 
+        phoneList.getItems().clear(); 
+        emailList.getItems().clear(); 
+        profilePicture.setImage(new Image(getClass().getResource(c.getPicture()).toExternalForm()));
+
+                
+        for(int i=0 ; i<c.getEmailList().length ; i++) {
+            emailList.getItems().add(c.getEmailAtIndex(i)); 
+        }
+        
+        for(int i=0 ; i<c.getPhoneNumberList().length ; i++) {
+            phoneList.getItems().add(c.getPhoneNumberAtIndex(i)); 
+        }
     }
 
     /**
@@ -206,7 +672,27 @@ public class AddressBookController implements OnEditable {
      */
     @FXML
     public void onTrashCanSelected(ActionEvent event) {
-        // Method implementation
+        editButton.setText("Restore");
+        addButton.setText("Delete");
+
+        
+        // Bind the FilteredList to the TableView and show the deletion date column
+        searchBar.clear();
+        showingDeletedContacts = true;
+        contactTableView.setItems(deletedFilteredList);
+        deletionDateColumn.setVisible(true);
+        
+        if (!deletedFilteredList.isEmpty()) {
+            contactTableView.getSelectionModel().selectFirst();
+        }
+        Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+        if(selectedContact != null) {
+            displayContact(selectedContact); 
+        }
+        
+        
+        // Update the SearchBar to filter the recently deleted contacts
+        initializeDeletedFilteredList();
     }
 
     /**
@@ -218,9 +704,8 @@ public class AddressBookController implements OnEditable {
      * @post The contact is removed from the trash can and added back to the address book.
      * @see TrashCan#restore(Contact)
      */
-    @FXML
-    public void onRestore(ActionEvent event) {
-        // Method implementation
+    public void onRestore() {
+        trashCan.restore(selected);
     }
 
     /**
@@ -259,9 +744,25 @@ public class AddressBookController implements OnEditable {
      * @see ContactList#contacts()
      */
     public void onResetTagFilter(ActionEvent event) {
-        // Method implementation
+        searchBar.clear();
+        if (!showingDeletedContacts){
+            currentTag = null; // Clear the selected tag
+            filteredList.setPredicate(contact -> true); // Show all contacts
+        } else {
+            backToContacts();
+        }
     }
+    
+    private void backToContacts() {
+        // Restore the original contact list and hide the deletion date column
+        showingDeletedContacts = false;
+        contactTableView.setItems(filteredList);
+        deletionDateColumn.setVisible(false);
 
+        // Remove the listener from the search bar
+        initializeContactsFilteredList();
+    }
+    
     /**
      * Goes back to the profile selection view.
      * Called when the user clicks on the back button in the main view.
@@ -308,29 +809,156 @@ public class AddressBookController implements OnEditable {
     }
     
     @FXML
-    public void onSelectContact(ActionEvent event) {
+    public void onMouseEntered(MouseEvent event) {
         // Method implementation
-        /*ObservableList<Contact> observableContacts = contactList.contacts(); 
-        shownList.setItems(observableContacts); 
-        */ 
-        
+        menuBar.setVisible(true);
     }
     
     @FXML
-    public void onMouseEntered(ActionEvent event) {
+    public void onMouseExited(MouseEvent event) {
         // Method implementation
         menuBar.setVisible(true); 
-        menuBar.setDisable(false); 
-        
+    }
+
+    @FXML
+    public void onTag(ActionEvent event) {
+        temporaryTag.clear(); // Pulisce la lista temporaryTag prima di aggiungere nuovi tag
+
+        Pane pane = new Pane();
+        pane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);"); 
+        pane.setPrefSize(tagButton.getScene().getWidth(), tagButton.getScene().getHeight()); // Imposta le dimensioni dell'overlay
+
+        HBox popHBox = new HBox();
+        popHBox.setStyle("-fx-padding: 10px 20px 15px 5px;");
+
+        Parent root = tagButton.getScene().getRoot();
+        ((Pane) root).getChildren().add(pane); 
+
+        Popup popup = new Popup();
+        int tagNumber = taggableList.getTagMap().keySet().size();
+
+        VBox popupContent = new VBox(tagNumber); 
+        List<CheckBox> checkBoxes = new ArrayList<>(); // Lista per memorizzare le checkbox
+
+        VBox next = new VBox(); 
+
+        int i = 0;
+        for (Object tagObj : taggableList.getTagMap().keySet()) {
+            Tag tag = (Tag) tagObj;
+            CheckBox c = new CheckBox(tag.getNameValue()); 
+            checkBoxes.add(c);
+            popupContent.getChildren().add(c);
+            i++;
+        }
+
+        TextField customTagField = new TextField();
+        customTagField.setPromptText("Add a new Tag");
+        next.getChildren().add(customTagField);
+
+        Button addTagButton = new Button("Add");
+        next.getChildren().add(addTagButton);
+
+        Button closeButton = new Button("Done");
+        next.getChildren().add(closeButton);
+
+        popupContent.setStyle("-fx-background-color: white;");
+        next.setStyle("-fx-background-color: white;");
+        popHBox.getChildren().addAll(popupContent, next);
+        popup.getContent().add(popHBox);
+
+        // Aggiungi l'azione per il bottone di aggiungere tag
+        addTagButton.setOnAction(e -> {
+            String customTag = customTagField.getText();
+            if (!customTag.isEmpty()) {
+                // Aggiungi il tag personalizzato alla lista
+                Tag newTag = new Tag();
+                newTag.setNameValue(customTag);
+
+                // Controlla se il tag esiste già in temporaryTag o taggableList
+                boolean tagExists = temporaryTag.stream().anyMatch(t -> t.getNameValue().equals(newTag.getNameValue())) 
+                                    || taggableList.getTagMap().containsKey(newTag);
+
+                if (!tagExists) {
+                    temporaryTag.add(newTag);  
+                    CheckBox newTagCheckBox = new CheckBox(newTag.getNameValue());
+                    popupContent.getChildren().add(newTagCheckBox);  // Aggiungi la checkbox per il nuovo tag
+                    checkBoxes.add(newTagCheckBox); // Aggiungi la nuova checkbox alla lista
+                    customTagField.clear();  // Pulisci il campo di input
+                }
+            }
+        });
+
+        // Imposta azione per chiudere il popup
+        closeButton.setOnAction(e -> {
+            // Aggiungi solo i tag associati alle checkbox selezionate in temporaryTag
+            for (CheckBox c : checkBoxes) {
+                if (c.isSelected()) {
+                    Tag t = new Tag();
+                    t.setNameValue(c.getText());
+
+                    // Verifica se il tag è già presente in temporaryTag (escludendo i nuovi tag)
+                    boolean tagExists = temporaryTag.stream().anyMatch(existingTag -> existingTag.getNameValue().equals(t.getNameValue())) 
+                                        || taggableList.getTagMap().containsKey(t);
+                    if (!tagExists) {
+                        temporaryTag.add(t);  // Aggiungi solo se non esiste
+                    }
+                }
+            }
+            popup.hide();
+            pane.setVisible(false); // Nascondi l'overlay quando il popup è chiuso
+        });
+
+        // Mostra il popup sopra la finestra
+        popup.show(tagButton.getScene().getWindow());
+
+        // Mostra l'overlay
+        pane.setVisible(true);
     }
     
     @FXML
-    public void onMouseExited(ActionEvent event) {
-        // Method implementation
-        menuBar.setVisible(false); 
-        menuBar.setDisable(true); 
+    public void onSelectProfileImage(MouseEvent event) {
+
+        ImagePathChecker pathChecker = new ImagePathChecker(); 
         
+        FileChooser fileChooser = new FileChooser();
+        
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif");
+        fileChooser.getExtensionFilters().add(imageFilter);
+        
+        File selectedFile = fileChooser.showOpenDialog(null); 
+        
+        if (selectedFile != null) {
+            String filePath = selectedFile.getAbsolutePath();
+            if (pathChecker.check(filePath)) {
+              
+                Image image = new Image(selectedFile.toURI().toString());
+                profilePicture.setImage(image); 
+                saveProfileImage(filePath);
+                
+            } else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("An error occurred.");
+                alert.setHeaderText(null);
+                alert.setContentText("The selected image is not valid.\nPath Selected: "+filePath);
+
+                alert.showAndWait(); 
+            }
+        }
     }
-    
+
+    private void saveProfileImage(String imagePath) {
+   
+        String destinationPath = FileManager.generateProfilePicturePath(imagePath.substring(imagePath.lastIndexOf('.')+1).toLowerCase()); 
+        try {
+            Files.copy(Paths.get(imagePath), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("An error occurred.");
+            alert.setHeaderText(null);
+            alert.setContentText("The image was not saved correctly. ");
+
+            alert.showAndWait(); 
+        }
+    }
     
 }
