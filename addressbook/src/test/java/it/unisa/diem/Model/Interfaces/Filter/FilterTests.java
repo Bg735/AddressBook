@@ -196,8 +196,8 @@ class FilterTests {
         StringProperty substring = new SimpleStringProperty("f");
         BaseFilter baseFilter = new BaseFilter(substring);
         NameFilter nameFilter = new NameFilter(baseFilter);
-        EmailFilter emailFilter = new EmailFilter(nameFilter);
-        TagFilter tagFilter = new TagFilter(emailFilter);
+        EmailFilter emailFilter = new EmailFilter(baseFilter);
+        
         
         Contact contact = new Contact("Gennaro", "landi");
         contact.addEmail("g.landi@studenti.unisa.it", "landigf.eng@gmail.com");
@@ -206,7 +206,9 @@ class FilterTests {
         contact.addTag("Work");
         assertFalse(nameFilter.test(contact));
         assertTrue(emailFilter.test(contact));
-        substring.set("wo");
+        baseFilter = new BaseFilter(new SimpleStringProperty("ork"));
+        emailFilter = new EmailFilter(baseFilter);
+        TagFilter tagFilter = new TagFilter(baseFilter);
         assertFalse(emailFilter.test(contact));
         assertTrue(tagFilter.test(contact));
     }

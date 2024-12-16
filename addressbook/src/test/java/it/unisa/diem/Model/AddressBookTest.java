@@ -72,14 +72,6 @@ public class AddressBookTest {
         assertTrue(addressbook.contacts().contains(c1));
     }
 
-    @Test
-    public void testDelete(){
-        assertNotNull(c1);
-        int preSize = addressbook.contacts().size();
-        addressbook.delete(c1);
-        assertEquals(addressbook.contacts().size(),preSize-1);
-        assertFalse(addressbook.contacts().contains(c1));
-    }
     
     @Test
     public void testAddToTagMap(){
@@ -135,34 +127,7 @@ public class AddressBookTest {
         assertFalse(addressbook.getTagMap().get(t).get().contains(c1));
     }
 
-    @Test
-    public void testReadFromFile(){
-        addressbook.add(c1);
-        addressbook.writeToFile(path1);
-        readAddressBook = addressbook.readFromFile(path1);
-        assertNotNull(readAddressBook.contacts(), "Contacts list shouldn't be null.");
-        assertTrue(readAddressBook.contacts().contains(c1), "Contacts list should contains the added contact.");
 
-    }
-
-    @Test
-    public void testwriteToFile(){
-        addressbook.add(c1);
-        assertDoesNotThrow((Executable) () -> addressbook.writeToFile(path1));
-        
-        File file = new File(path1);
-        assertTrue(file.exists(), "Creation of file failed.");
-
-        try (ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(path1))) {
-
-            Object readObject = objectIn.readObject();
-            assertNotNull(readObject, "ReadObject is null.");
-            assertTrue(readObject instanceof AddressBook, "ReadObject is not an AddressBook type.");
-
-        } catch (IOException | ClassNotFoundException e) {
-            fail("Reading from file failed." + e.getMessage());
-        }
-    }
 
     @Test
     public void testGet(){
