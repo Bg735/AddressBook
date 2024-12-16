@@ -1,0 +1,150 @@
+<?fxml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unisa.diem.Controller.ProfileSelectionController">
+   <center>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="804.0" prefWidth="1558.0" BorderPane.alignment="CENTER">
+         <children>
+            <StackPane fx:id="stack" layoutX="-4.0" layoutY="-8.0" prefHeight="811.0" prefWidth="1563.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-8.0">
+               <children>
+                  <AnchorPane fx:id="emptyListPromptPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="RIGHT" layoutX="315.0" layoutY="396.0" prefHeight="52.0" prefWidth="945.0" text="Non hai ancora creato nessun profilo. Inizia qui il tuo viaggio." textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="firstProfileButton" layoutX="501.0" layoutY="456.0" mnemonicParsing="false" onAction="#onAdd" prefHeight="135.0" prefWidth="550.0" text="Crea un nuovo profilo">
+                           <font>
+                              <Font size="50.0" />
+                           </font>
+                        </Button>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="489.0" layoutY="168.0" prefHeight="100.0" prefWidth="586.0" text="Seleziona un profilo" textAlignment="CENTER">
+                           <font>
+                              <Font name="Corbel" size="57.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="493.0" layoutY="65.0" prefHeight="113.0" prefWidth="596.0" text="Welcome back" textAlignment="CENTER">
+                           <font>
+                              <Font name="Corbel" size="96.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="profileEditPane" prefHeight="1041.0" prefWidth="1715.0" visible="false">
+                     <children>
+                        <TextField id="phoneField1" fx:id="editPhoneField" layoutX="917.0" layoutY="407.0" prefHeight="85.0" prefWidth="422.0" promptText="Phone">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                        </TextField>
+                        <TextField id="nameField1" fx:id="editNameField" layoutX="915.0" layoutY="279.0" prefHeight="85.0" prefWidth="422.0" promptText="e.g. John Smith">
+                           <font>
+                              <Font size="43.0" />
+                           </font>
+                           <tooltip>
+                              <Tooltip text="max 50 characters" textAlignment="CENTER" />
+                           </tooltip>
+                        </TextField>
+                        <ImageView id="profilePicture1" fx:id="editProfilePicture" fitHeight="363.0" fitWidth="325.0" layoutX="213.0" layoutY="250.0" onMouseClicked="#chooseImage" onMouseEntered="#startHover" onMouseExited="#endHover" pickOnBounds="true">
+                           <image>
+                              <Image url="@../../../../../../assets/view_resources/default_picture.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="createEditProfileLabel" alignment="CENTER" layoutX="473.0" layoutY="65.0" prefHeight="96.0" prefWidth="595.0" text="Create new profile">
+                           <font>
+                              <Font size="65.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="saveProfileButton" disable="true" layoutX="752.0" layoutY="531.0" mnemonicParsing="false" onAction="#onSave" prefHeight="75.0" prefWidth="146.0" text="Save">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                        </Button>
+                        <Label alignment="CENTER" layoutX="194.0" layoutY="178.0" prefHeight="71.0" prefWidth="364.0" text="Profile picture">
+                           <font>
+                              <Font size="50.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="597.0" layoutY="289.0" prefHeight="59.0" prefWidth="266.0" text="Profile name">
+                           <font>
+                              <Font size="40.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="507.0" layoutY="413.0" prefHeight="77.0" prefWidth="432.0" text=" Number (optional)&#10;">
+                           <font>
+                              <Font size="40.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="cancelProfileButton" layoutX="997.0" layoutY="532.0" mnemonicParsing="false" onAction="#onCancelEdit" prefHeight="75.0" prefWidth="153.0" text="Cancel">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                        </Button>
+                        <Pane fx:id="noImagePane" layoutX="231.0" layoutY="251.0" onMouseClicked="#chooseImage" onMouseEntered="#startHover" onMouseExited="#endHover" prefHeight="328.0" prefWidth="292.0" style="-fx-background-color: #fbb304;">
+                           <children>
+                              <Label layoutX="45.0" layoutY="127.0" prefHeight="109.0" prefWidth="215.0" text="Click here to&#10;add an image" textAlignment="CENTER" textFill="#000000bd">
+                                 <font>
+                                    <Font size="34.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="profileSelectionPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1568.0" StackPane.alignment="CENTER">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="483.0" layoutY="159.0" prefHeight="100.0" prefWidth="586.0" text="Seleziona un profilo" textAlignment="CENTER" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0">
+                           <font>
+                              <Font name="Corbel" size="57.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="472.0" layoutY="53.0" prefHeight="113.0" prefWidth="619.0" text="Welcome back" textAlignment="CENTER" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="472.0">
+                           <font>
+                              <Font name="Corbel" size="96.0" />
+                           </font>
+                        </Label>
+                        <HBox fx:id="profileSelectionBox" alignment="CENTER" fillHeight="false" layoutX="352.0" layoutY="275.0" prefHeight="330.0" prefWidth="859.0" spacing="2.0" AnchorPane.leftAnchor="352.0" AnchorPane.rightAnchor="352.0" />
+                        <HBox fx:id="addButtonPane" fillHeight="false" layoutX="1229.0" layoutY="89.0" onMouseClicked="#onAdd" prefHeight="58.0" prefWidth="250.0" style="-fx-background-color: #dce5f2;">
+                           <children>
+                              <ImageView fitHeight="58.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../assets/view_resources/plus_button.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="58.0" prefWidth="179.0" text="Add profile">
+                                 <font>
+                                    <Font size="34.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="78.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="exitButton" cache="true" fitHeight="72.0" fitWidth="70.0" layoutX="1842.0" layoutY="5.0" onMouseClicked="#exit" onMouseEntered="#startHover" onMouseExited="#endHover" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <image>
+                  <Image url="@../../../../../../assets/view_resources/exit_button.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

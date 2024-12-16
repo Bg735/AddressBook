@@ -15,8 +15,11 @@ import it.unisa.diem.Model.RecentlyDeleted;
 import it.unisa.diem.Model.SafeContact;
 import it.unisa.diem.Model.Tag;
 import it.unisa.diem.Utility.FileManager;
+import it.unisa.diem.Utility.SceneManager;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.beans.Observable;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -37,6 +41,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -79,53 +84,52 @@ import javafx.stage.Popup;
  * - filter the list based the tags assigned to them
  * - mantain a "trash can", allowing to view and retrieve recently eliminated contacts.
  */
-public class AddressBookController implements OnEditable {
-    public static final int DAYS = 30; /**< Number of days a contact remains in the recently-deleted-list */
+public class AddressBookController implements Initializable {
+    public static final int DAYS = 30; //< Number of days a contact remains in the recently-deleted-list
     
-    private TaggableList taggableList; /**< Reference to access the tag-related methods of the address book. */
-    private TrashCan trashCan; /**< Reference to access the recently-deleted-related methods of the address book. */
-    private ContactList contactList; /**< Reference to access the contact-list-related methods of the address book. */
-    private FilteredList<Contact> filteredList; /**< Data structure to store the list of contacts of the main view. */
-    private Tag currentTag = null; // Tracks the currently selected tag
+    private TaggableList<Contact> taggableList; //< Reference to access the tag-related methods of the address book.
+    private TrashCan trashCan; //< Reference to access the recently-deleted-related methods of the address book.
+    private ContactList contactList; //< Reference to access the contact-list-related methods of the address book.
+    private FilteredList<Contact> filteredList; //< Data structure to store the list of contacts of the main view.
+    private Tag currentTag = null; //< Tracks the currently selected tag
     private boolean isNew; 
     private Contact selected;
     private boolean showingDeletedContacts = false; // Flag to toggle views
     private FilteredList<Contact> deletedFilteredList;
-    private List<Tag> temporaryTag = new ArrayList<>(); 
+    private List<Tag> selectedTags = new ArrayList<>();
+    private static String pathToAddressBook;
 
     
     @FXML
-    private TableView<Contact> contactTableView; /**< Reference to the contact view. */
+    private TableView<Contact> contactTableView; //< Reference to the contact view. */
     @FXML
-    private TableColumn<Contact, String> nameColumn; /**< Reference to the nameColumns view. */
+    private TableColumn<Contact, String> nameColumn; //< Reference to the nameColumns view. */
     @FXML
-    private TableColumn<Contact, String> surnameColumn; /**< Reference to the surnameColumns view. */
+    private TableColumn<Contact, String> surnameColumn; //< Reference to the surnameColumns view. */
     // New column for deletion date
     @FXML
     private TableColumn<Contact, String> deletionDateColumn;
     
     @FXML
-    private ListView<String> shownList; /**< Reference to the list view in the main view. */
-    @FXML
-    private ListView<Button> tagList; /**< Reference to the list view in the tag section. */
+    private ListView<Button> tagList; //< Reference to the list view in the tag section. */
     @FXML
     private TextField nameField;
     @FXML
     private TextField surnameField;
     @FXML 
-    private ListView<String> phoneList; /**< Reference to the list of phone numbers in the contact view. */
+    private ListView<String> phoneList; //< Reference to the list of phone numbers in the contact view. */
     @FXML 
-    private ListView<String> emailList; /**< Reference to the list of email addresses in the contact view. */
+    private ListView<String> emailList; //< Reference to the list of email addresses in the contact view. */
     @FXML
-    private Button addButton; /**< Reference to the add button used to add a contact to the address book. */ 
+    private Button addButton; //< Reference to the add button used to add a contact to the address book. */ 
     @FXML
-    private Button editButton; /**< Reference to the edit button used to edit an existing contact in the address book. */ 
+    private Button editButton; //< Reference to the edit button used to edit an existing contact in the address book. */ 
     @FXML
-    private Button cancelButton; /**< Reference to the cancel button, visible in the edit view. */ 
+    private Button cancelButton; //< Reference to the cancel button, visible in the edit view. */ 
     @FXML
-    private Button saveButton; /**< Reference to the save button, visible in the edit view. */ 
+    private Button saveButton; //< Reference to the save button, visible in the edit view. */ 
     @FXML
-    private Button deleteButton; /**< Reference to the delete button, visible in the edit view. */ 
+    private Button deleteButton; //< Reference to the delete button, visible in the edit view. */ 
     @FXML
     private HBox hBoxEditable; 
     @FXML
@@ -158,8 +162,10 @@ public class AddressBookController implements OnEditable {
     private StackPane firstStackPane;
     @FXML
     private Button tagButton;
-    
-    
+    @FXML
+    private ImageView exitButton;
+
+    private ObservableList<Contact> contacts;
     
     /**
      * Constructs an AddressBookController with the given profile.
@@ -167,16 +173,28 @@ public class AddressBookController implements OnEditable {
      * @param pathToAddressbook the path to the internal address book file to load
      * @see AddressBook#readFromFile(String)
      */
-    public AddressBookController(/*String path*/) {
-        //String pathToAddressBook = "addressbook\\assets\\address_books\\address_book_1.obj";
-        //AddressBook addressBook = AddressBook.readFromFile(pathToAddressBook);
-        AddressBook addressBook = new AddressBook();
-        this.taggableList = addressBook;
-        this.trashCan = addressBook;
-        this.contactList = addressBook; 
+    public AddressBookController() {
+        pathToAddressBook = SceneManager.getAddressBook();
+        try{
+            File addressBookFile = new File(pathToAddressBook);
+            AddressBook imported;
+            if(!addressBookFile.exists())
+                FileManager.exportToFile(pathToAddressBook, new AddressBook());
+            if(addressBookFile.length()==0)
+                imported = new AddressBook();
+            else
+                imported = AddressBook.readFromFile(pathToAddressBook);
+            this.taggableList = imported;
+            this.contactList = imported;
+            this.trashCan = imported;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
-    public void initialize(){
+    public void initialize(URL location, ResourceBundle resources){
         // Configurazione delle colonne
         contactList.add(new Contact("Elli","pata"));
         contactList.add(new Contact("Gennaro","bello"));
@@ -193,11 +211,12 @@ public class AddressBookController implements OnEditable {
         contactList.add(c1);
         contactList.add(new Contact("abcdefghijklmnopqrts","jhbfhgebhgberhberhjbg"));
         Contact c2 = new Contact("Oh","No");
-        c1.addTag("eliminato");
-        c1.addTag("prefe");
+        c2.addTag("eliminato");
+        c2.addTag("prefe");
         contactList.add(c2);
         contactList.delete(c2);
-        
+
+
         initializeContactTableView();
         initializeContactsFilteredList();
         initializeTagListView();
@@ -214,30 +233,59 @@ public class AddressBookController implements OnEditable {
             }
         });
         
+        contacts.remove(c1);
+        //contacts.add(new Contact("Elli","Bella"));
     }
     
+    /**
+     * Exits the application.
+     * Called when the user clicks on the exit button on the window from the address book view.
+     * 
+     * @post The AddressBook is loaded to internal file, then the application is closed.
+     * @see #export()
+     */
+    @FXML
+    public void exit() {
+        export();
+        Platform.exit();
+    }
+
+    private void export(){
+        try {
+            ObservableSet<Contact> set = FXCollections.observableSet();
+            for(Contact c : contacts){
+                set.add(c);
+            }
+            contactList.contacts().set(set);
+            FileManager.exportToFile(pathToAddressBook, (AddressBook)contactList);
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }  
+    }
+
     private void initializeContactTableView() {
-    // Imposta le colonne della TableView
-    nameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
-    surnameColumn.setCellValueFactory(cellData -> cellData.getValue().getSurname());
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
+        surnameColumn.setCellValueFactory(cellData -> cellData.getValue().getSurname());
 
-    // Crea una lista filtrata dai contatti dell'indirizzario (convertendo il SetProperty in ObservableList)
-    filteredList = new FilteredList<>(FXCollections.observableArrayList(contactList.contacts()));
-
-    // Collega la lista filtrata alla TableView
-    contactTableView.setItems(filteredList);
-
-    // Aggiungi un SetChangeListener alla SetProperty dei contatti per aggiornamenti automatici
-    contactList.contacts().addListener((SetChangeListener<Contact>) change -> {
-        if (change.wasAdded()) {
-            // Se un contatto è stato aggiunto, aggiungilo alla FilteredList
-            filteredList.add(change.getElementAdded());
-        } else if (change.wasRemoved()) {
-            // Se un contatto è stato rimosso, rimuovilo dalla FilteredList
-            filteredList.remove(change.getElementRemoved());
+        contacts = FXCollections.observableArrayList();
+        
+        for(Contact c : contactList.contacts()){
+            contacts.add(c);
         }
-    });
-}
+        
+        filteredList = new FilteredList<Contact>(contacts);
+        contactTableView.setItems(filteredList);
+
+        // contactList.contacts().addListener((SetChangeListener<Contact>) change -> {
+        //     if (change.wasAdded()) {
+        //         filteredList.add(change.getElementAdded());
+        //     } else if (change.wasRemoved()) {
+        //         filteredList.remove(change.getElementRemoved());
+        //     }
+        // });
+    }
     
     private <T> void initializeFilteredList(FilteredList<T> listToFilter, TextField searchBar, Predicate<T> filterPredicate) {
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -286,20 +334,16 @@ public class AddressBookController implements OnEditable {
     }
     
     private void initializeTagListView() {
-        // Creare una ObservableList<Button> per contenere i pulsanti dei tag
         ObservableList<Button> tagButtons = FXCollections.observableArrayList();
 
-        // Mappare i tag a pulsanti
         for (Object tagObj : taggableList.getTagMap().keySet()) {
             Tag tag = (Tag) tagObj; // Cast esplicito a Tag
             Button tagButton = createTagButton(tag);
             tagButtons.add(tagButton);
         }
 
-        // Collegare i pulsanti alla ListView
         tagList.setItems(tagButtons);
 
-        // Aggiungere un listener per aggiornare la ListView quando cambia la tagMap
         taggableList.getTagMap().addListener((MapChangeListener<Tag, SetProperty<Contact>>) change -> {
             if (change.wasAdded()) {
                 Button newButton = createTagButton(change.getKey());
@@ -311,7 +355,6 @@ public class AddressBookController implements OnEditable {
         });
     }
 
-    // Metodo per creare un pulsante per un tag
     private Button createTagButton(Tag tag) {
         Button tagButton = new Button(tag.getNameValue());
         tagButton.setPrefWidth(80);
@@ -362,19 +405,7 @@ public class AddressBookController implements OnEditable {
 
         
     }
-        
-    /**
-     * Exits the application.
-     * Called when the user clicks on the exit button on the window from the address book view.
-     * 
-     * @post The Addressbook is loaded to internal file, then the application is closed.
-     * @see #onSave()
-     */
-    @FXML
-    public void exit() {
-        // Method implementation
-    }
-    
+
 
     /**
      * Opens the edit mode for an empty contact.
@@ -520,7 +551,8 @@ public class AddressBookController implements OnEditable {
                 notEditable();
                 Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
                 if(selectedContact != null) 
-                    contactList.delete(selectedContact);
+                    contacts.remove(selectedContact);
+                    //contactList.delete(selectedContact);
                 if (!filteredList.isEmpty()) {
                     contactTableView.getSelectionModel().selectFirst();
                 }
@@ -564,41 +596,51 @@ public class AddressBookController implements OnEditable {
         String email2 = email2Field.getText().trim();
         String email3 = email3Field.getText().trim();
         
-        /*
-        // Verifica che nome e cognome siano validi
-        SafeContact newContact = SafeContact.safeContact(name, surname);
-        if (newContact != null) {
-            // Aggiungi i numeri di telefono se validi
-            if (!phone1.isEmpty()) newContact.addPhoneNumber(phone1);
-            if (!phone2.isEmpty()) newContact.addPhoneNumber(phone2);
-            if (!phone3.isEmpty()) newContact.addPhoneNumber(phone3);
+        Contact selectedContact = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+        if(selectedContact != null) {
+            if (name.isEmpty() && surname.isEmpty()) showError("Must write Surname or Name");
+            if (!name.isEmpty() && !selectedContact.setName(name))
+                //showError("Write a valid Name");
+            if (!surname.isEmpty() && !selectedContact.setSurname(surname))
+                //showError("Write a valid Surname");
+            
+            if (!phone1.isEmpty()) selectedContact.setPhoneNumber(phone1, 1);
+            if (!phone2.isEmpty()) selectedContact.setPhoneNumber(phone2, 2);
+            if (!phone3.isEmpty()) selectedContact.setPhoneNumber(phone3, 3);
 
-            // Aggiungi le email se valide
-            if (!email1.isEmpty()) newContact.addEmail(email1);
-            if (!email2.isEmpty()) newContact.addEmail(email2);
-            if (!email3.isEmpty()) newContact.addEmail(email3);
-        
-            // Aggiungi il contatto a una lista o esegui altre operazioni di salvataggio
-            Contact c = newContact;
-            if (c != null)
-                contactList.add(c);
+            if (!email1.isEmpty()) selectedContact.setEmail(email1, 1);
+            if (!email2.isEmpty()) selectedContact.setEmail(email2, 2);
+            if (!email3.isEmpty()) selectedContact.setEmail(email3, 3);
+            
+            // MODIFICA I TAGS
+        } else {
+            SafeContact newContact = SafeContact.safeContact(name, surname);
+            if (newContact != null) {
+                // Aggiungi i numeri di telefono se validi
+                if (!phone1.isEmpty()) newContact.addPhoneNumber(phone1);
+                if (!phone2.isEmpty()) newContact.addPhoneNumber(phone2);
+                if (!phone3.isEmpty()) newContact.addPhoneNumber(phone3);
 
-            // Rendi i campi non modificabili dopo il salvataggio
-            notEditable();
-            //updateFilteredList(); // Assicurati che la FilteredList venga aggiornata
-            //clearTextFields();
-            // Update filtered list to show the newly added contact
-            searchBar.clear();
-            contactTableView.refresh(); // Refresh the TableView
-        } else showError("Error on Saving");
+                // Aggiungi le email se valide
+                if (!email1.isEmpty()) newContact.addEmail(email1);
+                if (!email2.isEmpty()) newContact.addEmail(email2);
+                if (!email3.isEmpty()) newContact.addEmail(email3);
+
+                // leggi i TAG
+
+                // Aggiungi il contatto a una lista o esegui altre operazioni di salvataggio
+                Contact c = newContact;
+                if (c != null)
+                    contacts.add(newContact);
+                    //contactList.add(c);
+
+                
+            } else showError("Error on Saving");
+        }
+        notEditable();
+        // Update filtered list to show the newly added contact
+        searchBar.clear();
         
-        */
-            System.out.println("CAZZO\n\n");
-            Contact c = new Contact("DIO", "CANE");
-            contactList.add(c);
-            for (Contact ci: contactList.contacts().get())
-                System.out.print(ci.getFullNameValue() + "\n");
-            contactTableView.setItems(filteredList);
     }
 
     // Metodo per mostrare messaggi d'errore
@@ -662,6 +704,9 @@ public class AddressBookController implements OnEditable {
         for(int i=0 ; i<c.getPhoneNumberList().length ; i++) {
             phoneList.getItems().add(c.getPhoneNumberAtIndex(i)); 
         }
+        
+        
+        // I TAG VISIBILI ??
     }
 
     /**
@@ -822,8 +867,8 @@ public class AddressBookController implements OnEditable {
 
     @FXML
     public void onTag(ActionEvent event) {
-        temporaryTag.clear(); // Pulisce la lista temporaryTag prima di aggiungere nuovi tag
-
+        
+        List<Tag> temporaryTags = new ArrayList<>(); 
         Pane pane = new Pane();
         pane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);"); 
         pane.setPrefSize(tagButton.getScene().getWidth(), tagButton.getScene().getHeight()); // Imposta le dimensioni dell'overlay
@@ -838,15 +883,23 @@ public class AddressBookController implements OnEditable {
         int tagNumber = taggableList.getTagMap().keySet().size();
 
         VBox popupContent = new VBox(tagNumber); 
-        List<CheckBox> checkBoxes = new ArrayList<>(); // Lista per memorizzare le checkbox
-
+        List<CheckBox> checkBoxes = new ArrayList<>(); 
+        
         VBox next = new VBox(); 
 
         int i = 0;
         for (Object tagObj : taggableList.getTagMap().keySet()) {
             Tag tag = (Tag) tagObj;
             CheckBox c = new CheckBox(tag.getNameValue()); 
-            checkBoxes.add(c);
+            if(!isNew) {
+                selected = (Contact)contactTableView.getSelectionModel().getSelectedItem();
+                SetProperty<Tag> temp = selected.getTags(); 
+                for(Tag t : temp) {
+                    if(c.getText().equals(t.getNameValue()))
+                        c.setSelected(true); 
+                
+            } 
+            checkBoxes.add(c); 
             popupContent.getChildren().add(c);
             i++;
         }
@@ -866,20 +919,18 @@ public class AddressBookController implements OnEditable {
         popHBox.getChildren().addAll(popupContent, next);
         popup.getContent().add(popHBox);
 
-        // Aggiungi l'azione per il bottone di aggiungere tag
         addTagButton.setOnAction(e -> {
             String customTag = customTagField.getText();
             if (!customTag.isEmpty()) {
-                // Aggiungi il tag personalizzato alla lista
+              
                 Tag newTag = new Tag();
                 newTag.setNameValue(customTag);
 
-                // Controlla se il tag esiste già in temporaryTag o taggableList
-                boolean tagExists = temporaryTag.stream().anyMatch(t -> t.getNameValue().equals(newTag.getNameValue())) 
+                boolean tagExists = temporaryTags.stream().anyMatch(t -> t.getNameValue().equals(newTag.getNameValue())) 
                                     || taggableList.getTagMap().containsKey(newTag);
 
                 if (!tagExists) {
-                    temporaryTag.add(newTag);  
+                    temporaryTags.add(newTag);  
                     CheckBox newTagCheckBox = new CheckBox(newTag.getNameValue());
                     popupContent.getChildren().add(newTagCheckBox);  // Aggiungi la checkbox per il nuovo tag
                     checkBoxes.add(newTagCheckBox); // Aggiungi la nuova checkbox alla lista
@@ -888,31 +939,28 @@ public class AddressBookController implements OnEditable {
             }
         });
 
-        // Imposta azione per chiudere il popup
+  
         closeButton.setOnAction(e -> {
-            // Aggiungi solo i tag associati alle checkbox selezionate in temporaryTag
-            for (CheckBox c : checkBoxes) {
-                if (c.isSelected()) {
+            for(CheckBox cb : checkBoxes) {
+                if (cb.isSelected()) {
                     Tag t = new Tag();
-                    t.setNameValue(c.getText());
+                    t.setNameValue(cb.getText());
 
-                    // Verifica se il tag è già presente in temporaryTag (escludendo i nuovi tag)
-                    boolean tagExists = temporaryTag.stream().anyMatch(existingTag -> existingTag.getNameValue().equals(t.getNameValue())) 
+                    boolean tagExists = temporaryTags.stream().anyMatch(existingTag -> existingTag.getNameValue().equals(t.getNameValue())) 
                                         || taggableList.getTagMap().containsKey(t);
                     if (!tagExists) {
-                        temporaryTag.add(t);  // Aggiungi solo se non esiste
+                        selectedTags.add(t);  
                     }
                 }
             }
+            temporaryTags.clear();
             popup.hide();
-            pane.setVisible(false); // Nascondi l'overlay quando il popup è chiuso
+            pane.setVisible(false);
         });
 
-        // Mostra il popup sopra la finestra
-        popup.show(tagButton.getScene().getWindow());
-
-        // Mostra l'overlay
-        pane.setVisible(true);
+            popup.show(tagButton.getScene().getWindow());
+            pane.setVisible(true);
+        }
     }
     
     @FXML
@@ -922,7 +970,7 @@ public class AddressBookController implements OnEditable {
         
         FileChooser fileChooser = new FileChooser();
         
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif");
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", ".png", ".jpg", ".jpeg", ".gif");
         fileChooser.getExtensionFilters().add(imageFilter);
         
         File selectedFile = fileChooser.showOpenDialog(null); 
