@@ -1,5 +1,3 @@
-
-
 .button {
     -fx-background-color: lightblue;
     background-color: lightblue;
@@ -31,12 +29,19 @@
     -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.7), 15, 0.4, 0, 0);
 }
 
-* {
+.button {
     -fx-font-family: "Helvetica";
     font-family: "Helvetica";
     -fx-font-weight: bold;
     font-weight: bold;
 }
 
+.column-header-background {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
 
-
+.list-view {
+    -fx-background-color: transparent;
+}
