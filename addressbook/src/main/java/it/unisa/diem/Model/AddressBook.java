@@ -8,6 +8,7 @@ import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
 import it.unisa.diem.Utility.FileManager;
+import java.io.Serializable;
 import java.util.HashMap;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.MapProperty;
@@ -25,7 +26,7 @@ import javafx.collections.FXCollections;
  * @invariant tagMap != null
  * @invariant recentlyDeleted != null
  */
-public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan {
+public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan, Serializable {
     private SetProperty<Contact> contactsList; /**< The list of contacts to manage */
     private MapProperty<Tag, SetProperty<Contact>> tagMap; /**< The map that stores all the tags and the sets of contacts marked with them */
     private RecentlyDeleted recentlyDeleted; /** The list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days */
