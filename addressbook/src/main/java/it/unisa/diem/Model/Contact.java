@@ -49,8 +49,8 @@ import javafx.collections.FXCollections;
  */
 
 public class Contact implements Comparable<Contact>, Serializable, Taggable {
-    public static final int MAX_EMAILS = 3; /**< The maximum number of emails that can be associated with a contact */
-    public static final int MAX_PHONENUMBERS = 3; /**< The maximum number of phone numbers that can be associated with a contact */
+    public transient static final int MAX_EMAILS = 3; /**< The maximum number of emails that can be associated with a contact */
+    public transient static final int MAX_PHONENUMBERS = 3; /**< The maximum number of phone numbers that can be associated with a contact */
     
     private transient StringProperty name; /** The given name(s) of the person to be associated with the contact */
     private transient StringProperty surname; /** The family name(s) of the person to be associated with the contact */
@@ -181,17 +181,39 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      * @param[in] picture the path of the picture to assign to the contact
      * @throws IOException if the picture cannot be copied in the assets folder, or the specified path is not valid
      */
-    public void setPicture(String picture) throws FileNotFoundException, IOException {
-        Path profilePicturePath = Paths.get(picture);
-        if(!Files.exists(profilePicturePath)) {
-            throw new FileNotFoundException("File: " + picture + " does not exist.");
+    public void setPicture(String profilePicture) throws FileNotFoundException, IOException {
+        Path profilePicturePath = Paths.get(profilePicture);
+        if(profilePicture.isEmpty()){
+            this.picture = FileManager.DEFAULT_PICTURE_PATH;
+        } else if(!Files.exists(profilePicturePath)) {
+            throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
+        } else {
+            String fileName = profilePicturePath.getFileName().toString();
+            String extension = fileName.substring(fileName.lastIndexOf('.') + 1); 
+            Path destinationPath = Paths.get(FileManager.generateProfilePicturePath(extension)); 
+            String newProfilePicturePath = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
+            
+            // Delete the old profile picture if it is not the default picture
+            if (!this.picture.equals(FileManager.DEFAULT_PICTURE_PATH)&&!this.picture.isEmpty()) {
+            System.out.println(Files.deleteIfExists(Paths.get(this.picture))? "Old profile picture deleted" : "Old profile picture not deleted");
+            }
+            this.picture = newProfilePicturePath;
         }
-        
-        String fileName = profilePicturePath.getFileName().toString();
-        String extension= fileName.substring(fileName.lastIndexOf('.')+1);
-        Path destinationPath = Paths.get(FileManager.generateContactPicturePath(extension));
-        this.picture = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
     }
+
+
+    //public void setPicture(String picture) throws IOException {
+        // Path profilePicturePath = Paths.get(picture);
+        // if(!Files.exists(profilePicturePath)) {
+        //     throw new FileNotFoundException("File: " + picture + " does not exist.");
+        // }
+        
+        // String fileName = profilePicturePath.getFileName().toString();
+        // String extension= fileName.substring(fileName.lastIndexOf('.')+1);
+        // Path destinationPath = Paths.get(FileManager.generateContactPicturePath(extension));
+        // this.picture = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
+    //}
+
     /**
      * Returns the internal path of the picture of the Contact.
      * 
@@ -522,7 +544,6 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         out.defaultWriteObject();
         out.writeUTF(name.get());
         out.writeUTF(surname.get());
-        out.writeUTF(fullName.get());
         for (Tag tag : tags) {
             out.writeUTF(tag.getNameValue());
         }
@@ -532,14 +553,18 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         in.defaultReadObject();
         name = new SimpleStringProperty(in.readUTF());
         surname = new SimpleStringProperty(in.readUTF());
-        fullName = new SimpleStringProperty(in.readUTF());
+        fullName = new SimpleStringProperty();
         fullName.bind(Bindings.concat(surname, " ", name));
         tags = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
         Tag t;
-        while (in.available() > 0) {
-            t=new Tag();
-            t.setName(in.readUTF());
-            tags.add(t);
+        try {
+            while (true) {
+                t = new Tag();
+                t.setName(in.readUTF());
+                tags.add(t);
+            }
+        } catch (IOException e) {
+            // End of file reached
         }
     }
 
@@ -603,10 +628,10 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         StructuredName sn = vCard.getStructuredName();
         String vName=sn.getGiven();
         String vSurname=sn.getFamily();
-        if (vName.isEmpty()&&vSurname.isEmpty()) {throw new StreamCorruptedException("Invalid VCard format: name and surname are both empty");}
-        if (!vName.isEmpty())
+        if (vName==null&&vSurname==null) {throw new StreamCorruptedException("Invalid VCard format: name and surname are both empty");}
+        if (vName!=null)
             result.name.set(sn.getGiven());
-        if (!vSurname.isEmpty())
+        if (vSurname!=null)
             result.surname.set(sn.getFamily());
 
         // Add email addresses

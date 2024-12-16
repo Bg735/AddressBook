@@ -12,6 +12,12 @@
     -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.7), 15, 0.4, 0, 0); 
 }
 
+.list-cell {
+    -fx-background-color: transparent;
+}
+.list-view {
+    -fx-background-color: transparent;
+}
 
 .image-view {
     -fx-shape: "M 50, 50 m -50, 0 a 50,50 0 1,0 100,0 a 50,50 0 1,0 -100,0"; /* Cerchio */

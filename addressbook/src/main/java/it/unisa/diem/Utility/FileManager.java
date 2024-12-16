@@ -1,4 +1,3 @@
-
 package it.unisa.diem.Utility;
 
 import java.io.StreamCorruptedException;
@@ -96,9 +95,13 @@ public class FileManager {
      */
     @SuppressWarnings("unchecked")
     public static <T> T importFromFile(String path) throws StreamCorruptedException, ClassCastException, IOException {
+        if(!Files.exists(Paths.get(path))){
+            Files.createFile(Paths.get(path));
+        }
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path)))) {
             return (T) ois.readObject();  // Deserialize the object
-        } catch (IOException e) {
+        }
+         catch (IOException e) {
             throw new IOException("Failed to import from file: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new ClassCastException("Failed to import from file: " + e.getMessage());
@@ -134,7 +137,8 @@ public class FileManager {
         try (FileInputStream fis = new FileInputStream(path); VCardReader reader = new VCardReader(fis)) {
             VCard vCard;
             while ((vCard = reader.readNext()) != null) {
-                addressBook.add(Contact.fromVCard(vCard));
+                addressBook.add(
+                    Contact.fromVCard(vCard));
             }
         } catch (IOException e) {
             throw new StreamCorruptedException("Failed to import from VCard: " + e.getMessage());
@@ -150,6 +154,25 @@ public class FileManager {
      * @throws StreamCorruptedException If the file stream is corrupted.
      */
     public static void exportAsVCard(String path, AddressBook ab) throws StreamCorruptedException, IOException {
+        if (path == null) {
+            throw new IllegalArgumentException("Path cannot be null");
+        }
+        if(ab == null){
+            throw new IllegalArgumentException("AddressBook cannot be null");
+        }
+        if(path.isEmpty()){
+            throw new IllegalArgumentException("Path cannot be empty");
+        }
+        if(!path.endsWith(".vcf")){
+            throw new IllegalArgumentException("Specified path is not a .vcf file");
+        }
+        if(!Files.exists(Paths.get(path))){
+            try {
+                Files.createFile(Paths.get(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try (VCardWriter vCardWriter = new VCardWriter(new BufferedWriter(new FileWriter(path)), VCardVersion.V4_0)) {            
             // Iterate over AddressBook contacts and write them as VCards
             for (Contact contact : ab.contacts()) {

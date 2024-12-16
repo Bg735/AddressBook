@@ -28,7 +28,7 @@ public class TagFilter extends FilterDecorator {
         String sub = getSubstring();
         Set<Tag> tags = contact.getTags().get();
         for (Tag tag: tags)
-            if (tag.getNameValue().contains(sub))
+            if (tag.getNameValue().toLowerCase().contains(sub))
                 return true;
         return false;
     }

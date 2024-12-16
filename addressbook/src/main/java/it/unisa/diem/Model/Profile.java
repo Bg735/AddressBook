@@ -18,7 +18,7 @@ import javafx.beans.property.StringProperty;
  * Represents a profile in the application.
  * 
  * A profile is characterized by a name, a phone number, a profile picture and an address book. Only the name field is mandatory.
- * The name is subject to a maximum length of {@link #MAX_NAMELEN} characters.
+ * The name is subject to a maximum length of {@value #MAX_NAMELEN} characters.
  * The phone number is subject to the constraints of {@link ItalianPhoneChecker}.
  * It is created to grant full compatibility with a JavaFX UI
  * 
@@ -28,12 +28,23 @@ import javafx.beans.property.StringProperty;
  * @invariant addressBookPath!=null
  */
 public class Profile implements Serializable{
-    public static final int MAX_NAMELEN = 50; /**< The maximum length of the name */
+    public static final int MAX_NAMELEN = 50; //< The maximum length of the name */
 
-    private transient StringProperty name; /**< The name of the profile */
-    private transient StringProperty phone; /**< The phone number associated to the profile */
-    private String profilePicture; /**< The path to the profile picture */
-    private String addressBookPath; /**< The internal assets path to the address book associated to the profile */
+    private transient StringProperty name; //< The name of the profile */
+    private transient StringProperty phone; //< The phone number associated to the profile */
+    private String profilePicture; //< The path to the profile picture */
+    private String addressBookPath; //< The internal assets path to the address book associated to the profile */
+
+
+    /**
+     * Creates a new Profile with empty fields.
+     */
+    public Profile(){
+        name=new SimpleStringProperty();
+        phone=new SimpleStringProperty();
+        profilePicture=FileManager.DEFAULT_PICTURE_PATH;
+        addressBookPath="";
+    }
 
     /**
      * Creates a new Profile with the given name, phone number, profile picture and address book path.
@@ -43,13 +54,16 @@ public class Profile implements Serializable{
      * @param profilePicture
      * @param addressBookPath
      */
-    public Profile(StringProperty name, StringProperty phone, StringProperty profilePicture, StringProperty addressBookPath) throws IOException {
+    public Profile(StringProperty name, StringProperty phone, StringProperty profilePicture, StringProperty addressBookPath) {
         // Constructor implementation
-        this.name = name; 
-        this.phone = phone; 
-        setProfilePicture(profilePicture.get()); 
-        setAddressBookPath(addressBookPath.get()); 
-        
+        try{
+            this.name = name; 
+            this.phone = phone; 
+            setProfilePicture(profilePicture.get()); 
+            setAddressBookPath(addressBookPath.get()); 
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -65,7 +79,7 @@ public class Profile implements Serializable{
     }
 
     /**
-     * Sets the name of the profile, given that it satisfies the satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@link #MAX_NAMELEN}).
+     * Sets the name of the profile, given that it satisfies the satisfies the condition of {@link CharacterLimitStringChecker} (character limit is set to {@value #MAX_NAMELEN}).
      * 
      * @param name the new name of the profile
      * @return true if the name is valid
@@ -132,14 +146,16 @@ public class Profile implements Serializable{
      * @param addressBookPath the internal assets path of the address book associated to the profile
      * @throws IOException if the specified path is not valid
      */
-    public void setAddressBookPath(String addressBookPath) throws IOException {
-        if (! (addressBookPath == null || addressBookPath.trim().isEmpty())) {
+    public void setAddressBookPath(String addressBookPath){
+        try{
             Path path = Paths.get(addressBookPath);
             if(!Files.exists(path)) {
                 throw new IOException("File: " + addressBookPath + " does not exist.");
             }
+            this.addressBookPath = addressBookPath;
+        }catch(IOException e){
+            e.printStackTrace();
         }
-        this.addressBookPath = addressBookPath;
     }
 
     /**
@@ -149,19 +165,23 @@ public class Profile implements Serializable{
      * @throws FileNotFoundException if the picture cannot be copied in the assets folder, or the specified path is not valid
      */
     public void setProfilePicture(String profilePicture) throws FileNotFoundException, IOException {
-        if (profilePicture == null || profilePicture.trim().isEmpty()){
-            this.profilePicture = profilePicture;
-            return;
-        }
         Path profilePicturePath = Paths.get(profilePicture);
-        if(!Files.exists(profilePicturePath)) {
+        if(profilePicture.isEmpty()){
+            this.profilePicture = FileManager.DEFAULT_PICTURE_PATH;
+        } else if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
+        } else {
+            String fileName = profilePicturePath.getFileName().toString();
+            String extension = fileName.substring(fileName.lastIndexOf('.') + 1); 
+            Path destinationPath = Paths.get(FileManager.generateProfilePicturePath(extension)); 
+            String newProfilePicturePath = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
+            
+            // Delete the old profile picture if it is not the default picture
+            if (!this.profilePicture.equals(FileManager.DEFAULT_PICTURE_PATH)&&!this.profilePicture.isEmpty()) {
+            System.out.println(Files.deleteIfExists(Paths.get(this.profilePicture))? "Old profile picture deleted" : "Old profile picture not deleted");
+            }
+            this.profilePicture = newProfilePicturePath;
         }
-        
-        String fileName = profilePicturePath.getFileName().toString();
-        String extension = fileName.substring(fileName.lastIndexOf('.')+1); 
-        Path destinationPath = Paths.get(FileManager.generateProfilePicturePath(extension)); 
-        this.profilePicture = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString(); 
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {

@@ -1,6 +1,5 @@
 package it.unisa.diem.Utility;
 
-import java.io.IOError;
 import java.io.IOException;
 
 import it.unisa.diem.AddressBookApplication;
@@ -16,19 +15,24 @@ import javafx.stage.Stage;
  */
 public class SceneManager {
 
-    private static ProfileSelectionController profileSelectionController=null; /**< The controller of the ProfileSelection view */
-    private static AddressBookController addressBookController=null; /**< The controller of the AddressBook view */
     private static Stage stage;
     private static Scene scene;
+    private static String pathToAddressBook;
+    private static Runnable psrun;
+    private static Runnable abrun;
+
 
     /**
      * Loads the view specified by the given FXML file.
-     * @param fxml
+     * @param[in] fxml
      */
-    private static void loadScene(String fxml, Stage stage) throws IOException {
+    private static void loadScene(String fxml, Stage stage, String pathToAddressBook) throws IOException {
         SceneManager.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(AddressBookApplication.class.getResource(fxml + "View.fxml"));
         try { 
+            if(pathToAddressBook==null){
+                fxmlLoader.setController(Class.forName("it.unisa.diem.Controller."+fxml.substring(0, 1).toUpperCase() + fxml.substring(1)+"Controller").getConstructor(String.class).newInstance(pathToAddressBook));    
+            }
             fxmlLoader.setController(Class.forName("it.unisa.diem.Controller."+fxml.substring(0, 1).toUpperCase() + fxml.substring(1)+"Controller").getConstructor().newInstance());
         } catch (Exception e) {
             System.exit(1);
@@ -44,14 +48,44 @@ public class SceneManager {
      * If the related controller has already been instantiated for the current session, it is reused.
      */
     public static void loadProfileSelection(Stage stage) throws IOException {
-        loadScene("ProfileSelection", stage);   
+        loadScene("ProfileSelection", stage,null);   
     }
 
     /**
      * Loads the AddressBook view.
      * If the related controller has already been instantiated for the current session, it is reused.
      */
-    public static void loadAddressBook(Stage stage) throws IOException {
-        loadScene("AddressBook", stage);
+    public static void loadAddressBook(Stage stage, String pathToAddressBook) throws IOException {
+        loadScene("AddressBook", stage, pathToAddressBook);
+    }
+
+    /**
+     * Used by the ProfileSelectionController to specify the address book to load.
+     */
+    public static void setAddressBook(String path){
+        pathToAddressBook=path;
+    }
+
+    /**
+     * Used by the AddressBookController to get the address book to load.
+     */
+    public static String getAddressBook(){
+        return pathToAddressBook;
+    }
+
+    public static void setPSRunnable(Runnable run){
+        SceneManager.psrun=run;
+    }
+
+    public static Runnable getPSRunnable(){
+        return psrun;
+    }
+
+    public static void setABRunnable(Runnable run){
+        SceneManager.abrun=run;
+    }
+
+    public static Runnable getABRunnable(){
+        return abrun;
     }
 }

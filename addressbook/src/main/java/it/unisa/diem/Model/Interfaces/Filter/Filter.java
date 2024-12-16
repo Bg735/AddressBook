@@ -1,7 +1,6 @@
 package it.unisa.diem.Model.Interfaces.Filter;
 
 import it.unisa.diem.Model.Contact;
-import javafx.beans.property.StringProperty;
 
 
 /**

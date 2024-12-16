@@ -10,7 +10,7 @@ public interface Taggable {
     /**
      * Adds a {@link Tag} to the list of tags.
      * 
-     * @param[in] string the name of the Tag to add
+     * @param[in] tag the Tag to add
      * @return true, as specified by Collection.add(Tag)
      */
     boolean addTag(String string);
@@ -18,7 +18,7 @@ public interface Taggable {
     /**
      * Removes a {@link Tag} from the list of tags.
      * 
-     * @param[in] string the name of the Tag to remove
+     * @param[in] tag the Tag to remove
      * @return true if the Tag has been successfully removed
      *         false otherwise
      */

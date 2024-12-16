@@ -1,5 +1,10 @@
 package it.unisa.diem.Model;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -8,8 +13,6 @@ import it.unisa.diem.Model.Interfaces.ContactList;
 import it.unisa.diem.Model.Interfaces.TaggableList;
 import it.unisa.diem.Model.Interfaces.TrashCan;
 import it.unisa.diem.Utility.FileManager;
-import java.io.Serializable;
-import java.util.HashMap;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -26,11 +29,60 @@ import javafx.collections.FXCollections;
  * @invariant tagMap != null
  * @invariant recentlyDeleted != null
  */
-public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan, Serializable {
-    private SetProperty<Contact> contactsList; /**< The list of contacts to manage */
-    private MapProperty<Tag, SetProperty<Contact>> tagMap; /**< The map that stores all the tags and the sets of contacts marked with them */
-    private RecentlyDeleted recentlyDeleted; /** The list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days */
+public class AddressBook implements Serializable, ContactList, TaggableList<Contact>, TrashCan {
+    private transient SetProperty<Contact> contactsList; /**< The list of contacts to manage */
+    private transient MapProperty<Tag, SetProperty<Contact>> tagMap; /**< The map that stores all the tags and the sets of contacts marked with them */
+    private RecentlyDeleted recentlyDeleted; /**< The list of contacts that have been deleted within {@link RecentlyDeleted#RETENTION_PERIOD_DAYS} days */
     
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        if(!contactsList.isEmpty())
+            contactsList.get().forEach((c) -> {
+                try {
+                    out.writeObject(c);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        if(!tagMap.isEmpty())    
+            for (Map.Entry<Tag, SetProperty<Contact>> entry : tagMap.entrySet()) {
+                out.writeObject(entry.getKey().getNameValue());
+                for (Contact contact : entry.getValue()) {
+                    out.writeObject(contact);
+                }
+            }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        contactsList = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+        tagMap = new SimpleMapProperty<>(FXCollections.observableMap(new TreeMap<>()));
+    
+        Object obj;
+        try{
+            obj = in.readObject();
+            do {
+                contactsList.add((Contact)obj);
+            } while((obj = in.readObject()) instanceof Contact);
+            
+            do {
+                Tag tag = new Tag();
+                tag.setName((String)obj);
+                SetProperty<Contact> objs = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+                while((obj = in.readObject())!=null){
+                    if(obj instanceof Tag)
+                        break;
+                    objs.add((Contact)obj);
+                }
+                tagMap.put(tag, objs);
+            } while((obj = in.readObject()) instanceof Contact);
+        } catch (EOFException e) {
+            // End of file reached
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Constructs an empty AddressBook.
      * @post contactsList != null 
@@ -56,9 +108,12 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
     public AddressBook(String path) {
         // Constructor implementation
         this();
-        if(path == null)
-            throw new IllegalArgumentException("Path cannot be null");
-        AddressBook loadedBook = readFromFile(path);
+        AddressBook loadedBook = null;
+        try{loadedBook = readFromFile(path);}
+        catch(IOException e){
+            System.err.println("Error reading AddressBook from file. Created a new AddressBook instead. Error details: " + e.getMessage());
+            loadedBook = new AddressBook();
+        }
         if (loadedBook != null) {
             this.contactsList = loadedBook.contactsList;
             this.tagMap = loadedBook.tagMap;
@@ -145,7 +200,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
      * @post recentlyDeleted.size() == recentlyDeleted.size()@pre + 1
      */
     public void addToTagMap(Contact c) {
-        for (Tag tag : c.getTags().get()) {
+        for (Tag tag : c.getTags()) {
             if (!tagMap.containsKey(tag))
                 tagMap.put(tag, new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>())));
             tagMap.get(tag).add(c);
@@ -160,7 +215,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
      * @post the contact is not part of any set of contacts marked with a tag
      */
     public void removeFromTagMap(Contact c) {
-        for (Tag tag : c.getTags().get()) {
+        for (Tag tag : c.getTags()) {
             if (tagMap.containsKey(tag)) {
                 tagMap.get(tag).remove(c);
                 if (tagMap.get(tag).isEmpty()) {
@@ -184,7 +239,15 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
         if (c == null) {
             throw new IllegalArgumentException("Contact cannot be null");
         }
-        trashCan().remove(c);
+        for(Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : recentlyDeleted.get().entrySet()){
+            if(entry.getValue().contains(c)){
+                entry.getValue().remove(c);
+                if(entry.getValue().isEmpty()){
+                    recentlyDeleted.get().remove(entry.getKey());
+                }
+                break;
+            }
+        }
         contactsList.add(c);
     }
 
@@ -202,8 +265,7 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
     public void addTagToContact(Tag t, Contact c) {
         if (t == null || c == null) {
             throw new IllegalArgumentException("Tag and contact cannot be null");
-        } 
-        c.addTag(t.getNameValue());
+        }
         addToTagMap(c);
     }
 
@@ -222,13 +284,12 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
             throw new IllegalArgumentException("Tag and contact cannot be null");
         }
         if (tagMap.containsKey(t)) {
-            tagMap.get(t).get().remove(c);
+            tagMap.get(t).remove(c);
    
-            if (tagMap.get(t).get().isEmpty()) {
+            if (tagMap.get(t).isEmpty()) {
                 tagMap.remove(t);
             }
         }
-        c.removeTag(t.getNameValue());
     }
 
     /**
@@ -239,17 +300,11 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
      * @see FileManager#importFromFile(String)
      */
     
-    public static AddressBook readFromFile(String path) {
+    public static AddressBook readFromFile(String path) throws IOException{
         if (path == null) {
             throw new IllegalArgumentException("Path cannot be null");
         }
-        
-        try {
-            return FileManager.importFromFile(path);
-        } catch (Exception e) {
-            System.err.println("Error reading AddressBook from file: " + e.getMessage());
-            return null;
-        }
+        return FileManager.importFromFile(path);
     }
 
 
@@ -270,7 +325,6 @@ public class AddressBook implements ContactList, TaggableList<Contact>, TrashCan
             System.err.println("Error writing AddressBook to file: " + e.getMessage());
         }
     }
-
 
     /**
      * Returns the specified contact retrieved from the list of contacts.

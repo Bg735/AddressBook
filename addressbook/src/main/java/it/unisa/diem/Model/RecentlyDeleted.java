@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 
 
+
 /**
  * Represents a trash can with {@link Contact}s deleted less than {@link #RETENTION_PERIOD_DAYS} days from a {@link ContactList}.
  * 
@@ -30,7 +31,7 @@ import javafx.collections.FXCollections;
  * @invariant trashCan != null
  */
 public class RecentlyDeleted implements Serializable {
-    public static final int RETENTION_PERIOD_DAYS = 30; /**< The number of days a contact can be restored after its deletion */
+    public static transient final int RETENTION_PERIOD_DAYS = 30; /**< The number of days a contact can be restored after its deletion */
     private transient MapProperty<LocalDateProperty, SetProperty<Contact>> trashCan; /**< The map of deleted contacts */
 
     /**
@@ -75,34 +76,34 @@ public class RecentlyDeleted implements Serializable {
         return contactsProperty;
     }
     
-    public void put(Contact contact) {
+    public void put(Contact c) {
         LocalDateProperty today = new LocalDateProperty(LocalDate.now());
-        if (trashCan.get().containsKey(today)){
-            SetProperty<Contact> contacts = trashCan.get().get(today);
-            contacts.add(contact);
-            trashCan.get().put(today,contacts);
-        } else {
-            SetProperty<Contact> contacts = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
-            contacts.add(contact);
-            trashCan.get().put(today, contacts);
+        SetProperty<Contact> contacts;
+        try{
+            if((contacts=trashCan.get().get(today))!=null){
+                contacts=trashCan.get().get(today);
+                contacts.add(c);
+            }else{
+                contacts = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+                contacts.add(c);
+                trashCan.get().put(today, contacts);
+            }
+        }catch(NullPointerException e){
+            //trashCan is null
+            initializeTrashCan();
         }
     }
     
     
     
-    public void remove(Contact contact) {
-        Iterator<Map.Entry<LocalDateProperty, SetProperty<Contact>>> iterator = trashCan.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<LocalDateProperty, SetProperty<Contact>> entry = iterator.next();
-            SetProperty<Contact> contacts = entry.getValue();
-
-            if (contacts.contains(contact)) {
-                contacts.remove(contact); // Rimuove il contatto dal set
-                if (contacts.get().isEmpty()) { // Controlla se il set è vuoto
-                    iterator.remove(); // Rimuove l'intera entry dalla mappa
+     public void remove(Contact c){
+        for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
+            if (entry.getValue().contains(c)) {
+                entry.getValue().remove(c);
+                if (entry.getValue().isEmpty()) {
+                    trashCan.remove(entry.getKey());
                 }
-                return; // Contatto trovato e rimosso, uscire
+                return;
             }
         }
     }
@@ -117,7 +118,6 @@ public class RecentlyDeleted implements Serializable {
      * @post trashCan.get().size() <= trashCan.get().size()@pre
      */
     public void removeExpired() {
-        // TODO: Remeber to understand where it need to be called
         LocalDate today = LocalDate.now();
         Iterator<Map.Entry<LocalDateProperty, SetProperty<Contact>>> iterator = trashCan.entrySet().iterator();
         
@@ -138,17 +138,31 @@ public class RecentlyDeleted implements Serializable {
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
-            out.writeObject(entry.getKey());
-            out.writeObject(entry.getValue());
+            out.writeObject(entry.getKey().get());
+            for (Contact contact : entry.getValue().get()) {
+                out.writeObject(contact);
+            }
         }
     }
-    
-    @SuppressWarnings("unchecked")
+
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initializeTrashCan();
-        while (in.available() > 0) {
-            trashCan.put((LocalDateProperty) in.readObject(), (SetProperty<Contact>) in.readObject());
+        Object obj;
+        try{
+            obj = in.readObject();
+            do {
+                LocalDate ld = (LocalDate) obj;
+                SetProperty<Contact> objs = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+                while((obj = in.readObject())!=null){
+                    if(obj instanceof LocalDate)
+                        break;
+                    objs.add((Contact)obj);
+                }
+                trashCan.put(new LocalDateProperty(ld), objs);
+            } while((obj = in.readObject()) instanceof Contact);
+        } catch(Exception e){
+            //EOF
         }
     }
 }

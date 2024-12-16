@@ -42,6 +42,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
@@ -244,6 +247,7 @@ public class ProfileSelectionController implements Initializable {
         private Label nameLabel;
         private Label phoneLabel;
         private ContextMenu contextMenu;
+        private VBox rect;
 
         public ProfileView(Profile profile){
             try {
@@ -254,8 +258,8 @@ public class ProfileSelectionController implements Initializable {
             this.profile=profile;
             profilePicture=(ImageView)pane.lookup("#profilePicture");
             nameLabel=(Label)pane.lookup("#nameLabel");
-            nameLabel.setMinWidth(Region.USE_PREF_SIZE);
-            nameLabel.setMaxWidth(Region.USE_PREF_SIZE);
+            nameLabel.setMinWidth(nameLabel.getParent().minWidth(3));
+            nameLabel.setMaxWidth(nameLabel.getParent().maxWidth(3));
             nameLabel.textProperty().addListener((ov, prevText, currText) -> {
                 Platform.runLater(() -> {
                     Text text = new Text(currText);
@@ -264,8 +268,21 @@ public class ProfileSelectionController implements Initializable {
                             + nameLabel.getPadding().getLeft() + nameLabel.getPadding().getRight() // Add the padding of the TextField
                             + 2d; // Add some spacing
                     nameLabel.setPrefWidth(width); // Set the width
+
+                    // Adjust font size to fit the parent width
+                    double parentWidth = ((Region) nameLabel.getParent()).getWidth();
+                    double fontSize = nameLabel.getFont().getSize();
+                    while (width > parentWidth && fontSize > 0) {
+                        fontSize -= 1;
+                        text.setFont(new Font(nameLabel.getFont().getName(), fontSize));
+                        width = text.getLayoutBounds().getWidth()
+                                + nameLabel.getPadding().getLeft() + nameLabel.getPadding().getRight()
+                                + 2d;
+                    }
+                    nameLabel.setFont(new Font(nameLabel.getFont().getName(), fontSize));
                 });
             });
+
             phoneLabel=(Label)pane.lookup("#phoneLabel");
             phoneLabel.setMinWidth(Region.USE_PREF_SIZE);
             phoneLabel.setMaxWidth(Region.USE_PREF_SIZE);
@@ -295,7 +312,9 @@ public class ProfileSelectionController implements Initializable {
             profileMenu.setOnMouseClicked((e)->{
                 contextMenu.show(profileMenu, e.getScreenX(), e.getScreenY());
             });
-            this.pane.setOnMouseClicked((e)->{
+
+            rect=(VBox)pane.lookup("#rect");
+            rect.setOnMouseClicked((e)->{
                 toAddressBook(this.profile);
             });
         }
@@ -415,7 +434,8 @@ public class ProfileSelectionController implements Initializable {
     @FXML
     public void exit() {
         profileList.export();
-    Platform.exit();
+        SceneManager.getABRunnable().run();
+        Platform.exit();
     }
 
     /**
@@ -499,7 +519,7 @@ public class ProfileSelectionController implements Initializable {
             p=new Profile();
             try {
                 String path=Files.createFile(Paths.get(FileManager.generateAddressBookPath())).toAbsolutePath().toString();
-                FileManager.exportToFile(path, new AddressBook());
+                new AddressBook().writeToFile(path);
                 p.setAddressBookPath(path);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -560,10 +580,10 @@ public class ProfileSelectionController implements Initializable {
     * 
     * @post The address book is saved to the application's assets and the user is taken back to the profile selection view.
     * @see SceneManager#loadAddressBook()
-    * @see #onSave()
     */
     @FXML
     public void toAddressBook(Profile profile) {
+        SceneManager.setPSRunnable(()->{profileList.export();});
         SceneManager.setAddressBook(profile.getAddressBookPath());
         try {
             AddressBookApplication.setRoot("AddressBook");

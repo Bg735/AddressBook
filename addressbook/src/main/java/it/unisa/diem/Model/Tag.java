@@ -18,14 +18,14 @@ import javafx.beans.property.StringProperty;
 public class Tag implements Comparable<Tag> {
     public static final int MAX_TAGLENGTH = 20; /**< The maximum length of a tag */
     private transient StringProperty name; /**< The name of the tag */
-    
+
     /**
      * Creates an empty tag.
      */
     public Tag() {
         name = new SimpleStringProperty();
     }
-
+    
     /**
      * Returns the StringProperty containing the name of the tag.
      *
@@ -41,7 +41,6 @@ public class Tag implements Comparable<Tag> {
      * @param name the StringProperty containing the name of the tag
      */
     public boolean setName(String name) {
-        name = name.trim();
         if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
             this.name.set(name);
             return true;
