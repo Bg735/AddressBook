@@ -9,10 +9,16 @@ import java.util.TreeMap;
 
 import it.unisa.diem.Model.Interfaces.ContactList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SetProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 
 
@@ -35,7 +41,7 @@ public class RecentlyDeleted implements Serializable {
     }
     
     /**
-     * Initializes the trash can.
+     * Initializes the trash can as an empty, ordered map.
      * 
      * @invariant trashCan != null
      */
@@ -51,6 +57,54 @@ public class RecentlyDeleted implements Serializable {
      */
     public MapProperty<LocalDateProperty, SetProperty<Contact>> get() {
         return trashCan;
+    }
+    
+    /**
+     * Returns the list of contacts.
+     * @important The returned collection is intended to be read-only.
+     * 
+     * @invariant contactsList != null
+     * @return the list of contacts
+     */
+    public ListProperty<Contact> contacts() {
+        List<Contact> allContacts = new ArrayList<>();
+
+        trashCan.get().forEach((deletionDate, contactsSet) -> allContacts.addAll(contactsSet));
+        
+        ListProperty<Contact> contactsProperty = new SimpleListProperty<>(FXCollections.observableArrayList(allContacts));
+        return contactsProperty;
+    }
+    
+    public void put(Contact contact) {
+        LocalDateProperty today = new LocalDateProperty(LocalDate.now());
+        if (trashCan.get().containsKey(today)){
+            SetProperty<Contact> contacts = trashCan.get().get(today);
+            contacts.add(contact);
+            trashCan.get().put(today,contacts);
+        } else {
+            SetProperty<Contact> contacts = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
+            contacts.add(contact);
+            trashCan.get().put(today, contacts);
+        }
+    }
+    
+    
+    
+    public void remove(Contact contact) {
+        Iterator<Map.Entry<LocalDateProperty, SetProperty<Contact>>> iterator = trashCan.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<LocalDateProperty, SetProperty<Contact>> entry = iterator.next();
+            SetProperty<Contact> contacts = entry.getValue();
+
+            if (contacts.contains(contact)) {
+                contacts.remove(contact); // Rimuove il contatto dal set
+                if (contacts.get().isEmpty()) { // Controlla se il set è vuoto
+                    iterator.remove(); // Rimuove l'intera entry dalla mappa
+                }
+                return; // Contatto trovato e rimosso, uscire
+            }
+        }
     }
 
     /**

@@ -181,7 +181,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      * @param[in] picture the path of the picture to assign to the contact
      * @throws IOException if the picture cannot be copied in the assets folder, or the specified path is not valid
      */
-    public void setPicture(String picture) throws IOException {
+    public void setPicture(String picture) throws FileNotFoundException, IOException {
         Path profilePicturePath = Paths.get(picture);
         if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + picture + " does not exist.");
@@ -190,8 +190,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         String fileName = profilePicturePath.getFileName().toString();
         String extension= fileName.substring(fileName.lastIndexOf('.')+1);
         Path destinationPath = Paths.get(FileManager.generateContactPicturePath(extension));
-        this.picture = Files
-        .copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
+        this.picture = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
     }
     /**
      * Returns the internal path of the picture of the Contact.
