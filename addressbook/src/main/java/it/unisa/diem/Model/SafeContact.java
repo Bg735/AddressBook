@@ -17,7 +17,6 @@ public class SafeContact extends Contact {
      * @see SafeContact#safeContact()
      */
     private SafeContact() {
-        // TODO: Implement this method
         super(); 
     }
 
@@ -26,7 +25,7 @@ public class SafeContact extends Contact {
      * Creates a new SafeContact with default values.
      * @see SafeContact#SafeContact()
      */
-    public SafeContact safeContact(){
+    public static SafeContact safeContact(){
         return new SafeContact();
     }
 
@@ -39,12 +38,8 @@ public class SafeContact extends Contact {
      * @see SafeContact#safeContact(String, String)
      */
     private SafeContact(String name, String surname) {
-        // TODO: Implement this method
         super(name ,surname);  
     }
-
-
-    //!
 
     /**
      * Creates a new SafeContact with the given name and surname, but only if they're valid, according to the {@link Checker} implementations.
@@ -54,13 +49,12 @@ public class SafeContact extends Contact {
      * @see SafeContact#SafeContact(String, String)
      * @return SafeContact if name and surname are valid, null otherwise
      */
-    public SafeContact safeContact(String name, String surname){
-        //TODO: Implement this method
+    public static SafeContact safeContact(String name, String surname){
         if ((name == null || name.isEmpty()) && (surname == null || surname.isEmpty())) {
             return null; 
         }
-        if (name == null) name = " "; 
-        if (surname == null) surname = " "; 
+        if (name == null) name = ""; 
+        if (surname == null) surname = ""; 
         CharacterLimitStringChecker nameStringChecker = new CharacterLimitStringChecker(MAX_NAME_LEN); 
         CharacterLimitStringChecker surnameStringChecker = new CharacterLimitStringChecker(MAX_SURNAME_LEN); 
         if(nameStringChecker.check(name) && surnameStringChecker.check(surname)) 
@@ -76,7 +70,6 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean setName(String name) {
-        // TODO: Implement this method
         if(name == null) return false;  
         if(name.trim().isEmpty() && super.getSurnameValue().isEmpty()) return false; 
         
@@ -96,7 +89,6 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean setSurname(String surname) {
-        // TODO: Implement this method
         if(surname == null) return false;  
         if(surname.trim().isEmpty() && super.getNameValue().isEmpty()) return false; 
         
@@ -116,7 +108,6 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean addEmail(String... email) {
-        // TODO: Implement this method
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
         for(int i=0 ; i<email.length ; i++) {
             if(email[i] != null && !emailChecker.check(email[i])) return false; 
@@ -134,7 +125,6 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean setEmail(String email, int index) {
-        // TODO: Implement this method
         SimpleEmailChecker emailChecker = new SimpleEmailChecker(); 
         if(emailChecker.check(email)) {
             super.setEmail(email.trim(), index);
@@ -150,11 +140,10 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean addPhoneNumber(String... phoneNumber) {
-        // TODO: Implement this method
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
         for(int i=0 ; i<phoneNumber.length ; i++) {
-            if(phoneNumber[i] != null && !phoneChecker.check(phoneNumber[i])) return false; 
-            phoneNumber[i] = phoneNumber[i].trim(); 
+            if(phoneNumber[i] != null && !phoneChecker.check(phoneNumber[i])) return false;
+            phoneNumber[i] = phoneNumber[i].trim();
         }
         super.addPhoneNumber(phoneNumber); 
         return true; 
@@ -168,7 +157,6 @@ public class SafeContact extends Contact {
      */
     @Override
     public boolean setPhoneNumber(String phoneNumber, int index) {
-        // TODO: Implement this method
         ItalianPhoneChecker phoneChecker = new ItalianPhoneChecker(); 
         if(phoneChecker.check(phoneNumber)) {
             super.setPhoneNumber(phoneNumber.trim(), index);
