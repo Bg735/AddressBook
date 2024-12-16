@@ -41,6 +41,7 @@ public class Tag implements Comparable<Tag> {
      * @param name the StringProperty containing the name of the tag
      */
     public boolean setName(String name) {
+        name = name.trim();
         if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
             this.name.set(name);
             return true;
