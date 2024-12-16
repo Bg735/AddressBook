@@ -15,12 +15,12 @@ import javafx.beans.property.StringProperty;
  * 
  * At the actual state, this class is a wrapper for a StringProperty, but it could be extended eventually to include more information about the tag.
  */
-public class Tag {
+public class Tag implements Comparable<Tag> {
     public static final int MAX_TAGLENGTH = 20; /**< The maximum length of a tag */
     private transient StringProperty name; /**< The name of the tag */
-
+    
     /**
-     * Constructs a Tag with an empty name.
+     * Creates an empty tag.
      */
     public Tag() {
         name = new SimpleStringProperty();
@@ -36,6 +36,19 @@ public class Tag {
     }
 
     /**
+     * Sets the StringProperty containing the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
+     *
+     * @param name the StringProperty containing the name of the tag
+     */
+    public boolean setName(String name) {
+        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
+            this.name.set(name);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Returns the name of the tag.
      *
      * @return the name of the tag.
@@ -47,13 +60,10 @@ public class Tag {
     /**
      * Sets the name of the tag, given that it satisfies the condition of {@link CharacterLimitStringChecker} (the character limit is set to {@link #MAX_TAGLENGTH}).
      *
-     * @pre !name.isEmpty()
      * @param name the new name of the tag
-     * @return true if the name is valid, false otherwise
      */
-    public boolean setName(String name) {
-        name = name.trim();
-        if(!name.isEmpty() && new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
+    public boolean setNameValue(String name) {
+        if(new CharacterLimitStringChecker(MAX_TAGLENGTH).check(name)){
             this.name.set(name);
             return true;
         }
@@ -69,4 +79,10 @@ public class Tag {
         in.defaultReadObject();
         name = new SimpleStringProperty((String) in.readObject());
     }
+
+    @Override
+    public int compareTo(Tag o) {
+        return name.get().compareTo(o.name.get());
+    }
+
 }
