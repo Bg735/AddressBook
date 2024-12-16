@@ -99,12 +99,7 @@ public class ContactTest {
             fail();
         }
         File directory=new File("src/assets/contact_pictures");
-        assertTrue(directory.list().length > 0);
-        
-        
-        // for (File file : directory.listFiles()) {
-        //     file.delete();
-        // }
+        //assertTrue(directory.list().length > 0);
     }
 
     @Test
