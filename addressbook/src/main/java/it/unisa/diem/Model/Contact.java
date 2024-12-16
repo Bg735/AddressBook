@@ -12,21 +12,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeSet;
 
 import ezvcard.VCard;
 import ezvcard.parameter.ImageType;
 import ezvcard.property.Categories;
 import ezvcard.property.Email;
-import ezvcard.property.FormattedName;
 import ezvcard.property.Photo;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import it.unisa.diem.Model.Interfaces.Taggable;
-import it.unisa.diem.Model.Interfaces.Checker.ItalianPhoneChecker;
 import it.unisa.diem.Utility.FileManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SetProperty;
@@ -182,9 +180,8 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      * 
      * @param[in] picture the path of the picture to assign to the contact
      * @throws IOException if the picture cannot be copied in the assets folder, or the specified path is not valid
-     * @return true (allowing for possible constrains to this class' paths' version of the method)
      */
-    public boolean setPicture(String picture) {
+    public void setPicture(String picture) throws IOException {
         Path profilePicturePath = Paths.get(picture);
         if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + picture + " does not exist.");
@@ -195,7 +192,6 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
         Path destinationPath = Paths.get(FileManager.generateContactPicturePath(extension));
         this.picture = Files
         .copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
-        return True
     }
     /**
      * Returns the internal path of the picture of the Contact.
@@ -403,10 +399,12 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      * @post getTagsSet().size() == old.getTagsSet().size() - 1
      * @post !getTagsSet().contains(tag)
      * @param[in] tag the {@link Tag} to remove
-     * @return true if the tag has been removed (hence it was present), false otherwise
+     * @return true if the name string was valid and the tag has been removed (hence it was present), false otherwise
      */
     public boolean removeTag(String string) {
-        return this.tags.remove(string);
+        Tag t=new Tag();
+        if(!t.setName(string)){return false;}
+        return this.tags.remove(t);
     }
 
     /**
@@ -490,9 +488,14 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     @Override
     public int compareTo(Contact other) {
-        int result=getFullNameValue().compareTo(other.getFullNameValue());
+        int result=getFullNameValue().toLowerCase().compareTo(other.getFullNameValue().toLowerCase());
         if(result==0){
-            return -1; //This way, even if two contacts have the same name, they are considered different.
+            if(this.equals(other)){
+                return 0;
+            }
+            else{
+                return -1;
+            }
         }
         return result;
     }
@@ -502,7 +505,18 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
      */
     @Override
     public boolean equals(Object obj) {
+       if(obj==this){return true;}
+       if(obj==null){return false;}
+       if(obj instanceof Contact){
+           Contact c=(Contact)obj;
+           return ((c.getFullNameValue().equals(this.getFullNameValue()))&&(c.getTags().equals(this.getTags()))&&(c.getEmailList().equals(this.getEmailList()))&&(c.getPhoneNumberList().equals(this.getPhoneNumberList())));
+        }
         return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullName.get(), Arrays.hashCode(email), Arrays.hashCode(phoneNumber), tags);
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
