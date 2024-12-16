@@ -1,12 +1,18 @@
+
 package it.unisa.diem.Utility;
 
 import java.io.StreamCorruptedException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardReader;
 import ezvcard.io.text.VCardWriter;
 import it.unisa.diem.Model.AddressBook;
 import it.unisa.diem.Model.Contact;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,10 +23,11 @@ import java.io.ObjectOutputStream;
 
 public class FileManager {
 
-    public static final String profileListPath   = "src/main/resources/it/unisa/diem/assets/profile_list.obj";
-    public static final String profilePictureDir = "src/main/resources/it/unisa/diem/assets/profile_pictures";
-    public static final String addressBookDir    = "src/main/resources/it/unisa/diem/assets/address_books";
-    public static final String contactPictureDir = "src/main/resources/it/unisa/diem/assets/contact_pictures";
+    private static final String profilePictureDir = "addressbook\\assets\\profile_pictures";
+    private static final String profileListPath = "addressbook\\assets\\profile_list.obj";
+    private static final String addressBookDir = "addressbook\\assets\\address_books";
+    private static final String contactPictureDir = "addressbook\\assets\\contact_pictures";
+    public static final String DEFAULT_PICTURE_PATH = "addressbook\\assets\\view_resources\\default_picture.png";
 
     /**
      * Returns the path to the profile list file.
@@ -29,8 +36,19 @@ public class FileManager {
      */
     public static String getProfileListPath() {
         return profileListPath;
+        
     }
     
+    public static void createPaths(){
+        try {
+            Files.createDirectories(Paths.get(profilePictureDir));
+            Files.createDirectories(Paths.get(addressBookDir));
+            Files.createDirectories(Paths.get(contactPictureDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Generates the file path for an address book, based on the profile index.
      * The path will be in the format: "address_books/address_book_[timestamp].obj".
@@ -40,54 +58,32 @@ public class FileManager {
      */
     public static String generateAddressBookPath() {
         long timestamp = System.currentTimeMillis();
-        return addressBookDir + "/address_book_" + timestamp + ".obj";
+        return addressBookDir + "\\address_book_" + timestamp + ".obj";
     }
     
     /**
-    * Checks if the provided file extension is supported for images.
-    * Supported extensions are: "jpg", "jpeg", "png", and "gif".
-    *
-    * @param extension The file extension to check (case-sensitive).
-    * @return true if the extension is supported; false otherwise.
-    */
-   public static boolean isSupportedImageExtension(String extension) {
-       return extension != null && (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("gif"));
-   }
-
-   /**
-    * Generates a unique file path for a contact picture, using a timestamp for uniqueness.
-    * The path will be in the format: "contact_pictures/contactPicture_[timestamp].[fileExtension]".
-    *
-    * @param fileExtension The file extension (e.g., "jpg", "png") for the contact picture.
-    *                     Must be a supported image extension.
-    * @return The generated file path for the contact picture.
-    * @throws IllegalArgumentException if the provided file extension is not supported.
-    */
-   public static String generateContactPicturePath(String fileExtension) {
-       if (!isSupportedImageExtension(fileExtension)) {
-           throw new IllegalArgumentException("Unsupported file extension: " + fileExtension);
-       }
-       long timestamp = System.currentTimeMillis();
-       return contactPictureDir + "/contactPicture_" + timestamp + "." + fileExtension;
-   }
-
-   /**
-    * Generates a unique file path for a profile picture, using a timestamp for uniqueness.
-    * The path will be in the format: "profile_pictures/profilePicture_[timestamp].[fileExtension]".
-    *
-    * @param fileExtension The file extension (e.g., "jpg", "png") for the profile picture.
-    *                     Must be a supported image extension.
-    * @return The generated file path for the profile picture.
-    * @throws IllegalArgumentException if the provided file extension is not supported.
-    */
-   public static String generateProfilePicturePath(String fileExtension) {
-       if (!isSupportedImageExtension(fileExtension)) {
-           throw new IllegalArgumentException("Unsupported file extension: " + fileExtension);
-       }
-       long timestamp = System.currentTimeMillis();
-       return profilePictureDir + "/profilePicture_" + timestamp + "." + fileExtension;
-   }
-
+     * Generates a unique file path for a contact picture, using a timestamp for uniqueness.
+     * The path will be in the format: "contact_pictures/contactPicture_[timestamp].[fileExtension]".
+     * 
+     * @param fileExtension The file extension (e.g., "jpg", "png") for the contact picture.
+     * @return The generated file path for the contact picture.
+     */
+    public static String generateContactPicturePath(String fileExtension) {
+        long timestamp = System.currentTimeMillis();
+        return contactPictureDir + "\\contactPicture_" + timestamp + "." + fileExtension;
+    }
+    
+    /**
+     * Generates a unique file path for a profile picture, using a timestamp for uniqueness.
+     * The path will be in the format: "profile_pictures/profilePicture_[timestamp].[fileExtension]".
+     * 
+     * @param fileExtension The file extension (e.g., "jpg", "png") for the profile picture.
+     * @return The generated file path for the profile picture.
+     */
+    public static String generateProfilePicturePath(String fileExtension) {
+        long timestamp = System.currentTimeMillis();
+        return profilePictureDir + "\\profilePicture_" + timestamp + "." + fileExtension;
+    }
 
     /**
      * Imports an object from a file.
@@ -95,17 +91,20 @@ public class FileManager {
      * @param path The file path to import the object from.
      * @param <T> The type of the object.
      * @return The deserialized object.
-     * @throws StreamCorruptedException If the file stream is corrupted.
+     * @throws IOException If the file stream is corrupted or not found.
      * @throws ClassCastException If the class of the object does not match.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T importFromFile(String path) throws StreamCorruptedException, ClassCastException, IOException {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path)))) {
             return (T) ois.readObject();  // Deserialize the object
-        } catch (IOException | ClassNotFoundException e) {
-            throw new StreamCorruptedException("Failed to import from file: " + e.getMessage());
+        } catch (IOException e) {
+            throw new IOException("Failed to import from file: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new ClassCastException("Failed to import from file: " + e.getMessage());
         }
     }
-
+    
     /**
      * Exports an object to a file.
      * 
@@ -116,7 +115,6 @@ public class FileManager {
      * @throws ClassCastException If the object type is incorrect.
      */
     public static <T> void exportToFile(String path, T data) throws StreamCorruptedException, ClassCastException {
-        if (data == null) throw new IllegalArgumentException("Data to export cannot be null");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
             oos.writeObject(data);  // Serialize the object
         } catch (IOException e) {
@@ -152,9 +150,7 @@ public class FileManager {
      * @throws StreamCorruptedException If the file stream is corrupted.
      */
     public static void exportAsVCard(String path, AddressBook ab) throws StreamCorruptedException, IOException {
-        if (!path.endsWith(".vcf")) throw new IllegalArgumentException("Destination file must be ad .vcf");
-        try (VCardWriter vCardWriter = new VCardWriter(new BufferedWriter(new FileWriter(path)), VCardVersion.V3_0)) {
-                     
+        try (VCardWriter vCardWriter = new VCardWriter(new BufferedWriter(new FileWriter(path)), VCardVersion.V4_0)) {            
             // Iterate over AddressBook contacts and write them as VCards
             for (Contact contact : ab.contacts()) {
                 // Write the vCard to the output stream
