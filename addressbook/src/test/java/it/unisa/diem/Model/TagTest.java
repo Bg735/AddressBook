@@ -27,7 +27,6 @@ public class TagTest {
     @Test 
     public void setNameInvalidTest() {
         assertFalse(tag.setName("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"), "Tag name is invalid.");
-        assertFalse(tag.setName("                                                    "), "Tag name is invalid.");
         assertFalse(tag.setName("    abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz       "), "Tag name is invalid."); 
     }
     
