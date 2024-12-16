@@ -14,9 +14,11 @@ public class ItalianPhoneChecker implements PhoneChecker{
     @Override
     public boolean check(String string) {
         if (string == null) {return false;}
-        // Check if the length is either 9 or 10
+        string.trim().replace(" ", "");
+        if (string.startsWith("+39")) {
+            string = string.substring(3);
+        }
         int length = string.length();
         return PhoneChecker.super.check(string) && (length == 9 || length == 10);
+        }
     }
-
-}
