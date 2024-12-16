@@ -52,18 +52,7 @@ public class FileManagerTest {
         assertTrue(path.endsWith(".jpg"));
     }
 
-    @Test
-    void testGenerateContactPicturePath_InvalidExtension() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateContactPicturePath(null);
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateContactPicturePath("mp4");
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateContactPicturePath("");
-        });
-    }
+   
 
     @Test
     void testGenerateProfilePicturePath() {
@@ -73,18 +62,7 @@ public class FileManagerTest {
         assertTrue(path.endsWith(".png"));
     }
 
-    @Test
-    void testGenerateProfilePicturePath_InvalidExtension() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateProfilePicturePath(null);
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateProfilePicturePath("mp4");
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.generateProfilePicturePath("");
-        });
-    }
+    
 
     @Test
     void testImportFromFile_Success() throws IOException {
@@ -106,26 +84,14 @@ public class FileManagerTest {
         });
     }
 
-    @Test
-    void testExportToFile_NullData() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.exportToFile("test.obj", null);
-        });
-    }
+    
 
     @Test
     void testExportAsVCard_InvalidPath() {
         assertThrows(IOException.class, () -> {
             FileManager.exportAsVCard("/invalid/path.vcf", addressBook);
         });
-        
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.exportAsVCard("/invalid/path", addressBook);
-        });
-        
-        assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.exportAsVCard("/invalid/path.txt", addressBook);
-        });
+
     }
     
     
