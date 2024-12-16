@@ -75,25 +75,25 @@ public class RecentlyDeleted implements Serializable {
         return contactsProperty;
     }
     
-    public void put(Contact c) {
+    public void put(Contact contact) {
         LocalDateProperty today = new LocalDateProperty(LocalDate.now());
         if (trashCan.get().containsKey(today)){
             SetProperty<Contact> contacts = trashCan.get().get(today);
-            contacts.add(c);
+            contacts.add(contact);
             trashCan.get().put(today,contacts);
         } else {
             SetProperty<Contact> contacts = new SimpleSetProperty<>(FXCollections.observableSet(new TreeSet<>()));
-            contacts.add(c);
+            contacts.add(contact);
             trashCan.get().put(today, contacts);
         }
     }
     
     
     
-     public void remove(Contact c){
+     public void remove(Contact contact){
         for (Map.Entry<LocalDateProperty, SetProperty<Contact>> entry : trashCan.entrySet()) {
-            if (entry.getValue().contains(c)) {
-                entry.getValue().remove(c);
+            if (entry.getValue().contains(contact)) {
+                entry.getValue().remove(contact);
                 if (entry.getValue().isEmpty()) {
                     trashCan.remove(entry.getKey());
                 }
