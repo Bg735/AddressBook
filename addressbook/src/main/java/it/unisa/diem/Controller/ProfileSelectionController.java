@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -43,7 +45,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -109,6 +110,9 @@ public class ProfileSelectionController implements Initializable {
 
     @FXML
     private HBox addButtonPane;
+
+    @FXML
+    private Label limitReached;
 
     public LayerPane lp;
 
@@ -264,7 +268,7 @@ public class ProfileSelectionController implements Initializable {
                 Platform.runLater(() -> {
                     Text text = new Text(currText);
                     text.setFont(nameLabel.getFont()); // Set the same font, so the size is the same
-                    double width = text.getLayoutBounds().getWidth() // This big is the Text in the TextField
+                    double width = text.getLayoutBounds().getWidth() // This big is the Text in the Label
                             + nameLabel.getPadding().getLeft() + nameLabel.getPadding().getRight() // Add the padding of the TextField
                             + 2d; // Add some spacing
                     nameLabel.setPrefWidth(width); // Set the width
@@ -273,7 +277,7 @@ public class ProfileSelectionController implements Initializable {
                     double parentWidth = ((Region) nameLabel.getParent()).getWidth();
                     double fontSize = nameLabel.getFont().getSize();
                     while (width > parentWidth && fontSize > 0) {
-                        fontSize -= 1;
+                        fontSize--;
                         text.setFont(new Font(nameLabel.getFont().getName(), fontSize));
                         width = text.getLayoutBounds().getWidth()
                                 + nameLabel.getPadding().getLeft() + nameLabel.getPadding().getRight()
@@ -294,12 +298,24 @@ public class ProfileSelectionController implements Initializable {
                             + phoneLabel.getPadding().getLeft() + phoneLabel.getPadding().getRight() // Add the padding of the TextField
                             + 2d; // Add some spacing
                     phoneLabel.setPrefWidth(width); // Set the width
+
+                    // Adjust font size to fit the parent width
+                    double parentWidth = ((Region) nameLabel.getParent()).getWidth();
+                    double fontSize = nameLabel.getFont().getSize();
+                    while (width > parentWidth && fontSize > 0) {
+                        fontSize--;
+                        text.setFont(new Font(nameLabel.getFont().getName(), fontSize));
+                        width = text.getLayoutBounds().getWidth()
+                                + nameLabel.getPadding().getLeft() + nameLabel.getPadding().getRight()
+                                + 2d;
+                    }
+                    nameLabel.setFont(new Font(nameLabel.getFont().getName(), fontSize));
                 });
             });
 
             profileMenu=(ImageView)pane.lookup("#profileMenu");
-            profileMenu.setImage(new Image(new File("addressbook\\assets\\view_resources\\dot-menu.png").toURI().toString()));
-            profilePicture.setImage(new Image(new File(profile.getProfilePicture()).toURI().toString()));
+            profileMenu.setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/dot_menu.png").toExternalForm()));
+            profilePicture.setImage(new Image(profile.getProfilePicture()));
             nameLabel.textProperty().bind(profile.getName());
             phoneLabel.textProperty().bind(profile.getPhone());
             contextMenu = new ContextMenu();
@@ -352,14 +368,14 @@ public class ProfileSelectionController implements Initializable {
         }
 
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-        exitButton.setImage(new Image(new File("addressbook\\assets\\view_resources\\exit_button.png").toURI().toString()));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        exitButton.setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/exit_button.png").toExternalForm()));
+
         exitButton.setOnMouseClicked((e)->{exit();});
         exitButton.setOnMouseEntered((e)->{startHover(e);});
         exitButton.setOnMouseExited((e)->{endHover(e);});
-
-        ((ImageView)addButtonPane.getChildren().get(0)).setImage(new Image(new File("addressbook\\assets\\view_resources\\plus_button.png").toURI().toString()));
+        ((ImageView)addButtonPane.getChildren().get(0)).setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/plus_button.png").toExternalForm()));
 
         noImagePane.setOnMouseClicked((e)->{
             chooseImage(e);
@@ -373,10 +389,15 @@ public class ProfileSelectionController implements Initializable {
         editProfilePicture.setOnMouseEntered((e)->{startHover(e);});
         editProfilePicture.setOnMouseExited((e)->{endHover(e);});
 
-
-        addButtonPane.setDisable(profileList.getProfileList().size() >= MAX_PROFILES);
         profileList.getProfileList().addListener((observable, oldValue, newValue) -> {
-            addButtonPane.setDisable(profileList.getProfileList().size() >= MAX_PROFILES);
+            if(observable.getValue().size() >= MAX_PROFILES){
+                addButtonPane.setDisable(true);
+                limitReached.setVisible(true);
+            }
+            else{
+                addButtonPane.setDisable(false);
+                limitReached.setVisible(false);
+            }
         });
         addButtonPane.setVisible(true);
         lp=new LayerPane(stack);
@@ -399,6 +420,8 @@ public class ProfileSelectionController implements Initializable {
         addButtonPane.setOnMouseClicked(event -> {
             onAdd(null);
         });
+
+        limitReached.setVisible(false);
     }
 
 
@@ -434,7 +457,8 @@ public class ProfileSelectionController implements Initializable {
     @FXML
     public void exit() {
         profileList.export();
-        SceneManager.getABRunnable().run();
+        Runnable r;
+        if((r =SceneManager.getABRunnable())!=null) r.run();
         Platform.exit();
     }
 
@@ -493,7 +517,7 @@ public class ProfileSelectionController implements Initializable {
         pm.setProfile(profile);
         editNameField.setText(profile.getName().get());
         editPhoneField.setText(profile.getPhone().get());
-        if(profile.getProfilePicture().equals(FileManager.DEFAULT_PICTURE_PATH)){
+        if(profile.getProfilePicture().equals(getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm())){
             editProfilePicture.setVisible(false);
             noImagePane.setVisible(true);
         }
@@ -503,9 +527,7 @@ public class ProfileSelectionController implements Initializable {
         }
         createEditProfileLabel.setText("Edit Profile");
     }
-    // 1. Una volta imoostato una immagine non ti fa cambuare l'immagine ma ti mette in automatico la èrima che hai messo 
-    // 2. Non modifica correttamente il numero di telefono 
-    // 3. Provare a rimuovere un profilo e ricrearlo
+
     /**
      * Save the changes made to the list of profiles.
      * Called by {@link #onEdit(ActionEvent)} and {@link #onAdd(ActionEvent)} when the user clicks on the save button in the contact's edit view.
@@ -593,6 +615,11 @@ public class ProfileSelectionController implements Initializable {
         }
     }
 
+    /**
+     * Opens a file chooser to select a profile picture. 
+     * 
+     * @post The selected image is loaded in the view's image view, if the IO operation goes well.
+     */
     @FXML
     void chooseImage(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -612,7 +639,7 @@ public class ProfileSelectionController implements Initializable {
 
     @FXML
     void startHover(MouseEvent event) {
-        ((Node)event.getSource()).setStyle("-fx-background-color:rgb(224, 167, 69);");
+        ((Node)event.getSource()).setStyle("-fx-background-color:rgba(52, 152, 219, 0.7);");
     }
 
     @FXML

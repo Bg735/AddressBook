@@ -19,6 +19,18 @@
     -fx-background-color: transparent;
 }
 
+#profileSelectionBox {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #e6e6e6);
+    -fx-border-color: #cccccc;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.2, 0, 0);
+}
+
+
+
 .image-view {
     -fx-shape: "M 50, 50 m -50, 0 a 50,50 0 1,0 100,0 a 50,50 0 1,0 -100,0"; /* Cerchio */
     -fx-background-radius: 50%; 
@@ -35,11 +47,31 @@
     -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.7), 15, 0.4, 0, 0);
 }
 
+#addButtonPane{
+    -fx-background-color: linear-gradient(to bottom right, white, #fbb304);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+#addButtonPane:hover{
+    -fx-background-color: linear-gradient(to bottom right, #fbb304, white);
+}
+
 .button {
     -fx-font-family: "Helvetica";
     font-family: "Helvetica";
     -fx-font-weight: bold;
     font-weight: bold;
+}
+
+
+.rectangle {
+    -fx-arc-width: 20;
+    -fx-arc-height: 20;
+    -fx-border-width: 2px;
+    border-width: 2px;
+    -fx-border-radius: 15;
+    border-radius: 15;
 }
 
 .column-header-background {

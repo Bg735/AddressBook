@@ -226,10 +226,9 @@ public class AddressBookController implements Initializable {
                     exitButton.setOnMouseClicked(e->{
                         exit();}
                     );
-                    exitButton.setImage(new Image(new File("addressbook\\assets\\view_resources\\exit_button.png").toURI().toString()));
+                    exitButton.setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/exit_button.png").toExternalForm()));
                     exitButton.setOnMouseClicked((e)->{exit();});
-                    exitButton.setLayoutX(-5d);
-                    exitButton.setLayoutY(-5d);
+                    exitButton.setLayoutY(-2d);
                     SplitPaneLeft.setMaxSize(300,300);
                     SplitPaneRight.setMaxSize(500,500);
                     SplitPaneRight.setMinSize(100,200);
@@ -556,7 +555,7 @@ public class AddressBookController implements Initializable {
                     if(selectedContact != null && selectedContact.getPicture()!=null && !selectedContact.getPicture().isEmpty()) {
                         profilePicture.setImage(new Image(selectedContact.getPicture()));
                     } else
-                        profilePicture.setImage(new Image(new File("addressbook\\assets\\view_resources\\default_profile.png").toURI().toString()));
+                        profilePicture.setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm()));
                 }
                 
                 private void notEditable() {
@@ -861,7 +860,7 @@ public class AddressBookController implements Initializable {
         if(c.getPicture()!=null &&  !c.getPicture().isEmpty()) {
             profilePicture.setImage(new Image(c.getPicture()));
         } else
-            profilePicture.setImage(new Image(new File("addressbook\\assets\\view_resources\\default_profile.png").toURI().toString()));
+            profilePicture.setImage(new Image(getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm()));
 
                 
         for(int i=0 ; i<c.getEmailList().length ; i++) {

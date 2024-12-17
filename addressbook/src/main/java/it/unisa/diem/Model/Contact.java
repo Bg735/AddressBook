@@ -24,6 +24,7 @@ import ezvcard.property.Email;
 import ezvcard.property.Photo;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
+import it.unisa.diem.Controller.ProfileSelectionController;
 import it.unisa.diem.Model.Interfaces.Taggable;
 import it.unisa.diem.Utility.FileManager;
 import javafx.beans.binding.Bindings;
@@ -184,7 +185,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
     public void setPicture(String profilePicture) throws FileNotFoundException, IOException {
         Path profilePicturePath = Paths.get(profilePicture);
         if(profilePicture.isEmpty()){
-            this.picture = FileManager.DEFAULT_PICTURE_PATH;
+            this.picture = getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm();
         } else if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
         } else {
@@ -194,7 +195,7 @@ public class Contact implements Comparable<Contact>, Serializable, Taggable {
             String newProfilePicturePath = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
             
             // Delete the old profile picture if it is not the default picture
-            if (!this.picture.equals(FileManager.DEFAULT_PICTURE_PATH)&&!this.picture.isEmpty()) {
+            if (!this.picture.equals(getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm())&&!this.picture.isEmpty()) {
             System.out.println(Files.deleteIfExists(Paths.get(this.picture))? "Old profile picture deleted" : "Old profile picture not deleted");
             }
             this.picture = newProfilePicturePath;

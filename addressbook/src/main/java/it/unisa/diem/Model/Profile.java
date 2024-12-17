@@ -42,7 +42,7 @@ public class Profile implements Serializable{
     public Profile(){
         name=new SimpleStringProperty();
         phone=new SimpleStringProperty();
-        profilePicture=FileManager.DEFAULT_PICTURE_PATH;
+        profilePicture=getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm();
         addressBookPath="";
     }
 
@@ -167,7 +167,7 @@ public class Profile implements Serializable{
     public void setProfilePicture(String profilePicture) throws FileNotFoundException, IOException {
         Path profilePicturePath = Paths.get(profilePicture);
         if(profilePicture.isEmpty()){
-            this.profilePicture = FileManager.DEFAULT_PICTURE_PATH;
+            this.profilePicture = getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm();
         } else if(!Files.exists(profilePicturePath)) {
             throw new FileNotFoundException("File: " + profilePicture + " does not exist.");
         } else {
@@ -177,7 +177,7 @@ public class Profile implements Serializable{
             String newProfilePicturePath = Files.copy(profilePicturePath, destinationPath, StandardCopyOption.REPLACE_EXISTING).toString();
             
             // Delete the old profile picture if it is not the default picture
-            if (!this.profilePicture.equals(FileManager.DEFAULT_PICTURE_PATH)&&!this.profilePicture.isEmpty()) {
+            if (!this.profilePicture.equals(getClass().getResource("/it/unisa/diem/view_resources/default_picture.png").toExternalForm())&&!this.profilePicture.isEmpty()) {
             System.out.println(Files.deleteIfExists(Paths.get(this.profilePicture))? "Old profile picture deleted" : "Old profile picture not deleted");
             }
             this.profilePicture = newProfilePicturePath;

@@ -10,6 +10,7 @@ import ezvcard.io.text.VCardReader;
 import ezvcard.io.text.VCardWriter;
 import it.unisa.diem.Model.AddressBook;
 import it.unisa.diem.Model.Contact;
+import javafx.scene.image.Image;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -26,7 +27,6 @@ public class FileManager {
     private static final String profileListPath = "addressbook\\assets\\profile_list.obj";
     private static final String addressBookDir = "addressbook\\assets\\address_books";
     private static final String contactPictureDir = "addressbook\\assets\\contact_pictures";
-    public static final String DEFAULT_PICTURE_PATH = "addressbook\\assets\\view_resources\\default_picture.png";
 
     /**
      * Returns the path to the profile list file.
