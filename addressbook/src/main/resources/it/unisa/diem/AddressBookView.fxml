@@ -304,7 +304,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="580.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ButtonBar fx:id="menuBar" nodeOrientation="RIGHT_TO_LEFT" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="19.0" prefWidth="555.0" HBox.hgrow="ALWAYS">
+                        <ButtonBar fx:id="menuBar" nodeOrientation="RIGHT_TO_LEFT" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="19.0" prefWidth="700.0" HBox.hgrow="ALWAYS">
                           <buttons>
                               <Button id="exportButton" fx:id="exportButton" alignment="CENTER" mnemonicParsing="false" onAction="#onExportToVCardFile" prefHeight="25.0" prefWidth="55.0" text="Export">
                                  <font>
