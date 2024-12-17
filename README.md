@@ -1,19 +1,48 @@
-# Progetto Ingegneria del Software A.A. 2024/2025
+# 📚 **Progetto di Ingegneria del Software**  
+### Anno Accademico 2024/2025  
 
-### Partecipanti:
-> Landi Francesco Gennaro  
-> Lanzara Francesco  
-> Melillo Maurizio  
-> Palmisano Elettra
+---
 
-Documentazione sul progetto disponibile [qui](https://bg735.github.io/AddressBook/)
+## 👥 **Partecipanti**  
+- **Landi Francesco Gennaro**  
+- **Lanzara Francesco**  
+- **Melillo Maurizio**  
+- **Palmisano Elettra**  
 
-Presentazione del progetto disponibile [qui](https://prezi.com/view/oFzh2lJIniSK2AXfiiNM/)
+---
 
+## 📄 **Documentazione del Progetto**  
+La documentazione completa è disponibile al seguente link:  
+🔗 [Documentazione del Progetto](https://bg735.github.io/AddressBook/)  
 
-Nel progetto si fa utilizzo dell'API:   
-https://github.com/mangstadt/ez-vcard   
-per facilitare la manipolazione di file in formato VCard.      
+---
 
-La documentazione è disponibile al seguente link:   
-https://mangstadt.github.io/ez-vcard/javadocs/latest/index.html
+## 🎥 **Presentazione del Progetto**  
+Per una panoramica generale, puoi consultare la presentazione:  
+🔗 [Presentazione su Prezi](https://prezi.com/view/oFzh2lJIniSK2AXfiiNM/)  
+
+---
+
+### 📌 **API utilizzata: `ez-vcard`**  
+Per facilitare la manipolazione dei file in formato **VCard**.  
+- Repository GitHub: [ez-vcard](https://github.com/mangstadt/ez-vcard)  
+- Documentazione ufficiale: [Javadoc ez-vcard](https://mangstadt.github.io/ez-vcard/javadocs/latest/index.html)  
+
+---
+
+## 🛠️ **Requisiti Tecnici**  
+- **Linguaggio di programmazione**: Java  
+- **Gestione dipendenze**: Maven  
+
+---
+
+## 🌟 **Descrizione del Progetto**  
+Il progetto è un'applicazione software che permette di **gestire più rubriche di contatti**, accessibili da **diversi profili utente**.  
+
+### ✨ **Funzionalità principali**  
+- **Creazione** di contatti  
+- **Modifica (editing)** di contatti esistenti  
+- **Aggiunta** di nuovi contatti  
+- **Ricerca avanzata** all'interno delle rubriche  
+- **Creazione e gestione** di profili multipli  
+---
