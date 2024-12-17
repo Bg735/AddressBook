@@ -8,7 +8,7 @@
 
 Documentazione sul progetto disponibile [qui](https://bg735.github.io/AddressBook/)
 
-Presentazione del progetto disponibile [qui](https://prezi.com/view/v2sL7u2TNj6Sff8qMYvS/)
+Presentazione del progetto disponibile [qui](https://prezi.com/view/oFzh2lJIniSK2AXfiiNM/)
 
 
 Nel progetto si fa utilizzo dell'API:   
